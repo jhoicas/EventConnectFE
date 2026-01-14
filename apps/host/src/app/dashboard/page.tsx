@@ -249,26 +249,26 @@ export default function DashboardPage() {
 
               <Box bg="white" p={{ base: 3, md: 4 }} borderRadius="lg" mb={3}>
                 <HStack justify="space-between" mb={2} flexWrap="wrap">
-                  <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }}>{reservaPendiente.nombre}</Text>
+                  <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }}>{reservaPendiente?.nombre}</Text>
                   <Text fontSize={{ base: "xs", md: "sm" }} color="gray.500">
-                    {reservaPendiente.codigo}
+                    {reservaPendiente?.codigo}
                   </Text>
                 </HStack>
                 <Text fontSize={{ base: "xs", md: "sm" }} color="gray.600" mb={2}>
-                  📅 {new Date(reservaPendiente.fechaEvento).toLocaleDateString('es-ES', {
+                  📅 {reservaPendiente?.fechaEvento && new Date(reservaPendiente.fechaEvento).toLocaleDateString('es-ES', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
                   })}
                 </Text>
                 <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" color="blue.600">
-                  ${reservaPendiente.total.toLocaleString()}
+                  ${reservaPendiente?.total?.toLocaleString()}
                 </Text>
               </Box>
 
               <Progress value={75} size="sm" colorScheme="orange" borderRadius="full" mb={2} />
               <Text fontSize="xs" color="orange.600" mb={3}>
-                Quedan {reservaPendiente.tiempoRestante} horas para asegurar tu reserva
+                Quedan {reservaPendiente?.tiempoRestante} horas para asegurar tu reserva
               </Text>
 
               <Button
@@ -292,8 +292,8 @@ export default function DashboardPage() {
               overflow="hidden"
             >
               <Image
-                src={proximaReserva.imagen}
-                alt={proximaReserva.nombre}
+                src={proximaReserva?.imagen}
+                alt={proximaReserva?.nombre}
                 h={{ base: "150px", md: "200px" }}
                 w="100%"
                 objectFit="cover"
@@ -302,11 +302,11 @@ export default function DashboardPage() {
                 <HStack justify="space-between" mb={2} flexWrap="wrap" gap={2}>
                   <Badge colorScheme="green">Confirmada</Badge>
                   <Text fontSize={{ base: "xs", md: "sm" }} color="gray.500">
-                    {proximaReserva.codigo}
+                    {proximaReserva?.codigo}
                   </Text>
                 </HStack>
                 <Heading size={{ base: "sm", md: "md" }} mb={2}>
-                  {proximaReserva.nombre}
+                  {proximaReserva?.nombre}
                 </Heading>
                 <HStack 
                   spacing={4} 
@@ -317,7 +317,7 @@ export default function DashboardPage() {
                   <HStack>
                     <Icon as={Calendar} boxSize={4} color="gray.500" />
                     <Text fontSize={{ base: "xs", md: "sm" }} color="gray.600">
-                      {new Date(proximaReserva.fechaEvento).toLocaleDateString('es-ES', {
+                      {proximaReserva?.fechaEvento && new Date(proximaReserva.fechaEvento).toLocaleDateString('es-ES', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
@@ -327,7 +327,7 @@ export default function DashboardPage() {
                   <HStack>
                     <Icon as={Package} boxSize={4} color="gray.500" />
                     <Text fontSize={{ base: "xs", md: "sm" }} color="gray.600">
-                      {proximaReserva.items} productos
+                      {proximaReserva?.items} productos
                     </Text>
                   </HStack>
                 </HStack>
@@ -436,24 +436,24 @@ export default function DashboardPage() {
                     <Box key={idx}>
                       <HStack spacing={3}>
                         <Image
-                          src={producto.imagen}
-                          alt={producto.nombre}
+                          src={producto?.imagen}
+                          alt={producto?.nombre}
                           boxSize={{ base: "40px", md: "50px" }}
                           borderRadius="md"
                           objectFit="cover"
                         />
                         <VStack flex={1} align="start" spacing={0}>
                           <Text fontSize={{ base: "xs", md: "sm" }} fontWeight="medium" noOfLines={1}>
-                            {producto.nombre}
+                            {producto?.nombre}
                           </Text>
                           <HStack spacing={1}>
                             <Icon as={Star} boxSize={3} color="yellow.400" fill="yellow.400" />
                             <Text fontSize="xs" color="gray.600">
-                              {producto.calificacion}
+                              {producto?.calificacion}
                             </Text>
                           </HStack>
                           <Text fontSize="xs" fontWeight="bold" color="blue.600">
-                            ${producto.precio.toLocaleString()}/día
+                            ${producto?.precio?.toLocaleString()}/día
                           </Text>
                         </VStack>
                       </HStack>
