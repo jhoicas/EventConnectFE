@@ -1,8 +1,8 @@
 # Multi-stage build para optimizar tamaño de imagen
 FROM node:20-alpine AS base
 
-# Instalar pnpm globalmente
-RUN npm install -g pnpm@8.15.0
+# Instalar pnpm globalmente (versión actualizada para evitar warnings)
+RUN npm install -g pnpm@latest
 
 # Stage 1: Instalar dependencias
 FROM base AS deps
@@ -14,7 +14,9 @@ COPY turbo.json ./
 
 # Copiar package.json de cada workspace
 COPY apps/host/package.json ./apps/host/
-COPY packages/*/package.json ./packages/*/ 2>/dev/null || true
+
+# Crear directorio packages vacío (pnpm manejará workspaces vacíos sin errores)
+RUN mkdir -p ./packages
 
 # Instalar dependencias con frozen lockfile para builds reproducibles
 RUN pnpm install --frozen-lockfile
