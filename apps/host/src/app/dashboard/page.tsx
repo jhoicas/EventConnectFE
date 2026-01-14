@@ -224,7 +224,6 @@ export default function DashboardPage() {
                 Explorar Catálogo
               </Button>
             </Box>
-          )}
         </VStack>
 
         {/* Columna Derecha */}
