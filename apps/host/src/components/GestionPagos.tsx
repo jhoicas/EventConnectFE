@@ -231,7 +231,7 @@ export default function GestionPagos({ reservaId, totalReserva }: GestionPagosPr
                 </Text>
               ) : (
                 <Stack spacing={3}>
-                  {resumen.transacciones.map((transaccion) => (
+                  {resumen.transacciones.map((transaccion: any) => (
                     <Card key={transaccion.id} variant="outline">
                       <CardBody>
                         <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
