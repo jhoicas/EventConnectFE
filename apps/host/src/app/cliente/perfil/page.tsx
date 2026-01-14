@@ -19,9 +19,8 @@ import {
   Icon,
   Badge,
   SimpleGrid,
-  Flex,
 } from '@chakra-ui/react';
-import { User, Mail, Phone, MapPin, CreditCard, HelpCircle, LogOut, Edit2 } from 'lucide-react';
+import { CreditCard, HelpCircle, LogOut, Edit2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '../../../store/store';
 
@@ -51,97 +50,6 @@ export default function PerfilPage() {
       ? user.avatar_URL 
       : `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.nombre_Completo || 'U')}&background=6366f1&color=fff&size=150`,
   };
-
-  console.log('Usuario actual:', user);
-  console.log('Avatar a mostrar:', usuario.avatar);
-
-  const handleUpdateAvatar = async () => {
-    console.log('=== INICIO handleUpdateAvatar ===');
-    console.log('avatarUrl:', avatarUrl);
-    console.log('user:', user);
-    
-    if (!avatarUrl.trim()) {
-      console.log('ERROR: URL vacía');
-      toast({
-        title: 'Error',
-        description: 'Por favor ingresa una URL válida',
-        status: 'error',
-        duration: 3000,
-      });
-      return;
-    }
-
-    setIsUpdating(true);
-    console.log('Enviando petición a:', `http://localhost:5555/api/Usuario/${user?.id}/perfil`);
-    
-    try {
-      const token = localStorage.getItem('token');
-      console.log('Token:', token ? 'Existe' : 'No existe');
-      
-      const requestBody = {
-        Avatar_URL: avatarUrl,
-      };
-      console.log('Body de la petición:', JSON.stringify(requestBody));
-      
-      const response = await fetch(`http://localhost:5555/api/Usuario/${user?.id}/perfil`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Respuesta del servidor:', data);
-        
-        // Actualizar Redux con el nuevo avatar
-        const token = localStorage.getItem('token');
-        const updatedUser = { ...user!, avatar_URL: avatarUrl };
-        
-        console.log('Actualizando Redux con:', updatedUser);
-        
-        dispatch(setCredentials({
-          user: updatedUser,
-          token: token || '',
-        }));
-        
-        toast({
-          title: 'Éxito',
-          description: 'Avatar actualizado correctamente',
-          status: 'success',
-          duration: 3000,
-        });
-        
-        onClose();
-        setAvatarUrl('');
-      } else {
-        const errorData = await response.json();
-        console.error('Error del servidor:', errorData);
-        throw new Error(errorData.message || 'Error al actualizar avatar');
-      }
-    } catch (error: any) {
-      console.error('Error en catch:', error);
-      toast({
-        title: 'Error',
-        description: error.message || 'No se pudo actualizar el avatar',
-        status: 'error',
-        duration: 3000,
-      });
-    } finally {
-      setIsUpdating(false);
-      console.log('=== FIN handleUpdateAvatar ===');
-    }
-  };
-
-  const direcciones = [
-    { id: 1, nombre: 'Casa', direccion: 'Calle 123 #45-67, Bogotá', principal: true },
-    { id: 2, nombre: 'Oficina', direccion: 'Carrera 7 #80-20, Bogotá', principal: false },
-  ];
 
   return (
     <Box bg={bgColor} minH="100vh">
@@ -202,54 +110,6 @@ export default function PerfilPage() {
               </VStack>
             </CardBody>
           </Card>
-
-          {/* Direcciones Guardadas - Comentado temporalmente hasta implementar funcionalidad
-          <Card bg={cardBg} borderColor={borderColor} borderWidth="1px">
-            <CardBody>
-              <VStack spacing={4} align="stretch">
-                <HStack justify="space-between">
-                  <Text fontSize="lg" fontWeight="bold">
-                    Direcciones Guardadas
-                  </Text>
-                  <Button size="sm" leftIcon={<Icon as={MapPin} />} colorScheme="blue">
-                    Nueva Dirección
-                  </Button>
-                </HStack>
-                <Divider />
-                <VStack spacing={3} align="stretch">
-                  {direcciones.map((dir) => (
-                    <Box
-                      key={dir.id}
-                      p={4}
-                      borderWidth="1px"
-                      borderColor={borderColor}
-                      borderRadius="lg"
-                    >
-                      <Flex justify="space-between" align="start">
-                        <VStack align="start" spacing={1}>
-                          <HStack>
-                            <Text fontWeight="bold">{dir.nombre}</Text>
-                            {dir.principal && (
-                              <Badge colorScheme="green" fontSize="xs">
-                                Principal
-                              </Badge>
-                            )}
-                          </HStack>
-                          <Text fontSize="sm" color="gray.600">
-                            {dir.direccion}
-                          </Text>
-                        </VStack>
-                        <Button size="xs" variant="ghost">
-                          Editar
-                        </Button>
-                      </Flex>
-                    </Box>
-                  ))}
-                </VStack>
-              </VStack>
-            </CardBody>
-          </Card>
-          */}
 
           {/* Opciones */}
           <VStack spacing={3}>
