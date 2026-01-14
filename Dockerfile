@@ -32,7 +32,8 @@ COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=deps /app/package.json ./package.json
 COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=deps /app/turbo.json ./turbo.json
-COPY --from=deps /app/.npmrc ./\nCOPY --from=deps /app/apps/host/package.json ./apps/host/package.json
+COPY --from=deps /app/.npmrc ./
+COPY --from=deps /app/apps/host/package.json ./apps/host/package.json
 
 # Copiar código fuente completo
 COPY . .
