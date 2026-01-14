@@ -14,6 +14,7 @@ import {
   Badge,
   Progress,
   Divider,
+  Avatar,
   Image,
   Alert,
   AlertIcon,
@@ -22,6 +23,7 @@ import {
   CloseButton,
   useDisclosure,
 } from '@chakra-ui/react';
+import { Card } from '@eventconnect/ui';
 import { useAppSelector } from '../../store/store';
 import {
   ShoppingBag,
@@ -29,13 +31,17 @@ import {
   MessageCircle,
   TrendingUp,
   Clock,
+  CheckCircle,
+  Star,
   Package,
+  MapPin,
   Sparkles,
   ArrowRight,
   UserPlus,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../config/env';
 
 // Interfaz para los datos simulados (mocks)
 interface MockReserva {
@@ -69,7 +75,7 @@ export default function DashboardPage() {
       if (user?.rol === 'SuperAdmin' || user?.rol === 'Admin-Proveedor') {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch('http://localhost:5555/api/Usuario/pendientes/count', {
+          const response = await fetch(`${API_BASE_URL}Usuario/pendientes/count`, {
             headers: {
               'Authorization': `Bearer ${token}`,
             },
@@ -87,9 +93,11 @@ export default function DashboardPage() {
     fetchPendingUsers();
   }, [user?.rol]);
 
+  const bgColor = localColorMode === 'dark' ? '#0d1117' : localColorMode === 'blue' ? '#0a1929' : '#f7fafc';
   const cardBg = localColorMode === 'dark' ? '#161b22' : localColorMode === 'blue' ? '#0d1b2a' : '#ffffff';
   const borderColor = localColorMode === 'dark' ? '#30363d' : localColorMode === 'blue' ? '#1e3a5f' : '#e2e8f0';
 
+  // TODO: Conectar con API real para obtener estadísticas del usuario
   const estadisticas = [
     {
       label: 'Cotizaciones Activas',
