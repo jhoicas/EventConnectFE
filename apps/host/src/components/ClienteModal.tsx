@@ -70,10 +70,10 @@ export const ClienteModal = ({ isOpen, onClose, cliente }: ClienteModalProps) =>
     if (isOpen) {
       if (cliente) {
         reset({
-          tipo_Cliente: cliente.tipo_Cliente,
+          tipo_Cliente: cliente.tipo_Cliente as "Persona" | "Empresa",
           nombre: cliente.nombre,
           documento: cliente.documento,
-          tipo_Documento: cliente.tipo_Documento,
+          tipo_Documento: cliente.tipo_Documento as "CC" | "NIT" | "CE" | "PAS",
           email: cliente.email || '',
           telefono: cliente.telefono || '',
           direccion: cliente.direccion || '',
