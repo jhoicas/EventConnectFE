@@ -25,6 +25,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateClienteMutation, useUpdateClienteMutation, type Cliente } from '../store/api/clienteApi';
 import { clienteSchema, type ClienteFormData } from '../lib/validations/clienteSchema';
+import { useColorModeLocal } from '../hooks/useColorModeLocal';
 
 interface ClienteModalProps {
   isOpen: boolean;
