@@ -25,12 +25,28 @@ RUN pnpm install --frozen-lockfile
 FROM base AS builder
 WORKDIR /app
 
-# Copiar node_modules desde stage de dependencias
+# Copiar archivos de configuración del monorepo
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY turbo.json ./
+COPY .npmrc ./
+
+# Copiar package.json de cada workspace
+COPY apps/host/package.json ./apps/host/
+
+# Crear directorio packages vacío
+RUN mkdir -p ./packages
+
+# Copiar toda la estructura de node_modules desde stage deps
+# Incluye .pnpm store y todos los enlaces simbólicos
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
 
-# Copiar código fuente
+# Copiar código fuente completo
 COPY . .
+
+# Verificar y reparar enlaces de pnpm (más rápido que reinstalar completo)
+# Esto asegura que los binarios estén correctamente vinculados
+RUN pnpm install --offline --frozen-lockfile || pnpm install --frozen-lockfile
 
 # Build de producción
 RUN pnpm build --filter @eventconnect/host
