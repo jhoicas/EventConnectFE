@@ -1,7 +1,7 @@
 # Multi-stage build para optimizar tamaño de imagen
 FROM node:20-alpine AS base
 
-# Instalar pnpm globalmente (versión actualizada para evitar warnings)
+# Instalar pnpm globalmente
 RUN npm install -g pnpm@latest
 
 # Stage 1: Instalar dependencias
@@ -13,32 +13,30 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY turbo.json ./
 COPY .npmrc ./
 
-# Copiar package.json de cada workspace
+# Copiar package.json de la aplicación host
 COPY apps/host/package.json ./apps/host/
 
-# Crear directorio packages vacío (pnpm manejará workspaces vacíos sin errores)
-RUN mkdir -p ./packages
+# --- CORRECCIÓN: Copiar package.json de los paquetes compartidos ---
+# Es necesario crear los directorios primero para asegurar la estructura
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/shared/package.json ./packages/shared/
+# -----------------------------------------------------------------
 
-# Instalar dependencias con hoisting (usa .npmrc) y lockfile
+# Instalar dependencias
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: Build de la aplicación
 FROM base AS builder
 WORKDIR /app
 
-# Copiar configuración y dependencias ya instaladas
+# Copiar dependencias instaladas desde el stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=deps /app/package.json ./package.json
-COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=deps /app/turbo.json ./turbo.json
-COPY --from=deps /app/.npmrc ./
-COPY --from=deps /app/apps/host/package.json ./apps/host/package.json
 
 # Copiar código fuente completo
 COPY . .
 
-# Build de producción (usa deps ya instaladas)
+# Build de producción
 RUN pnpm build --filter @eventconnect/host
 
 # Stage 3: Runtime
@@ -48,12 +46,12 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Crear usuario no-root para seguridad
+# Crear usuario no-root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Copiar archivos necesarios para ejecución
-# El output standalone de Next.js incluye todo lo necesario
+# Next.js standalone output
 COPY --from=builder --chown=nextjs:nodejs /app/apps/host/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/host/.next/static ./apps/host/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/host/public ./apps/host/public
@@ -65,5 +63,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# El servidor puede estar en diferentes ubicaciones según la estructura del standalone
 CMD ["node", "apps/host/server.js"]
