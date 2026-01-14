@@ -14,7 +14,6 @@ import {
   Badge,
   Progress,
   Divider,
-  Avatar,
   Image,
   Alert,
   AlertIcon,
@@ -23,7 +22,6 @@ import {
   CloseButton,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Card } from '@eventconnect/ui';
 import { useAppSelector } from '../../store/store';
 import {
   ShoppingBag,
@@ -31,16 +29,24 @@ import {
   MessageCircle,
   TrendingUp,
   Clock,
-  CheckCircle,
-  Star,
   Package,
-  MapPin,
   Sparkles,
   ArrowRight,
   UserPlus,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+
+// Interfaz para los datos simulados (mocks)
+interface MockReserva {
+  nombre: string;
+  codigo: string;
+  fechaEvento: string;
+  total: number;
+  tiempoRestante?: number;
+  imagen?: string;
+  items?: number;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -81,11 +87,9 @@ export default function DashboardPage() {
     fetchPendingUsers();
   }, [user?.rol]);
 
-  const bgColor = localColorMode === 'dark' ? '#0d1117' : localColorMode === 'blue' ? '#0a1929' : '#f7fafc';
   const cardBg = localColorMode === 'dark' ? '#161b22' : localColorMode === 'blue' ? '#0d1b2a' : '#ffffff';
   const borderColor = localColorMode === 'dark' ? '#30363d' : localColorMode === 'blue' ? '#1e3a5f' : '#e2e8f0';
 
-  // TODO: Conectar con API real para obtener estadísticas del usuario
   const estadisticas = [
     {
       label: 'Cotizaciones Activas',
@@ -121,13 +125,9 @@ export default function DashboardPage() {
     },
   ];
 
-  // TODO: Obtener de API - reservasAPI.getByEstado('Pendiente')
-  const reservaPendiente = null;
-
-  // TODO: Obtener de API - reservasAPI.getByEstado('Confirmada')
-  const proximaReserva = null;
-
-  // TODO: Obtener de API - productosAPI.getPopulares()
+  // CORRECCIÓN: Tipado explícito para permitir que sean null sin romper el build
+  const reservaPendiente: MockReserva | null = null;
+  const proximaReserva: MockReserva | null = null;
   const productosPopulares: any[] = [];
 
   return (
@@ -505,4 +505,3 @@ export default function DashboardPage() {
     </VStack>
   );
 }
-
