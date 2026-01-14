@@ -255,7 +255,7 @@ export default function DashboardPage() {
                   </Text>
                 </HStack>
                 <Text fontSize={{ base: "xs", md: "sm" }} color="gray.600" mb={2}>
-                  📅 {reservaPendiente?.fechaEvento && new Date(reservaPendiente.fechaEvento).toLocaleDateString('es-ES', {
+                  📅 {reservaPendiente?.fechaEvento && new Date(reservaPendiente?.fechaEvento).toLocaleDateString('es-ES', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -317,7 +317,7 @@ export default function DashboardPage() {
                   <HStack>
                     <Icon as={Calendar} boxSize={4} color="gray.500" />
                     <Text fontSize={{ base: "xs", md: "sm" }} color="gray.600">
-                      {proximaReserva?.fechaEvento && new Date(proximaReserva.fechaEvento).toLocaleDateString('es-ES', {
+                      {proximaReserva?.fechaEvento && new Date(proximaReserva?.fechaEvento).toLocaleDateString('es-ES', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
