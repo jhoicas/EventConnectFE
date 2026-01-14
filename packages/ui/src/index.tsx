@@ -1,2 +1,222 @@
-// Exporta tus componentes UI aquí
+import React from 'react';
+import {
+  Box,
+  Button as ChakraButton,
+  ButtonProps,
+  Input as ChakraInput,
+  InputProps,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Card as ChakraCard,
+  CardBody,
+  CardHeader,
+  Heading,
+  Text,
+  Spinner,
+  Flex,
+  useColorModeValue,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  IconButton,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  VStack,
+  HStack,
+  Badge,
+} from '@chakra-ui/react';
+import { HamburgerIcon, BellIcon } from '@chakra-ui/icons';
+import { FiUser, FiLogOut } from 'react-icons/fi';
+
+// Re-exportar todo de Chakra
 export * from "@chakra-ui/react";
+
+// --- ATOMS ---
+export interface CustomButtonProps extends ButtonProps {
+  isLoading?: boolean;
+}
+export const Button: React.FC<CustomButtonProps> = ({ children, isLoading, ...props }) => (
+  <ChakraButton colorScheme="blue" fontWeight="bold" isLoading={isLoading} {...props}>{children}</ChakraButton>
+);
+
+export interface CustomInputProps extends InputProps {
+  label?: string;
+  error?: string;
+}
+export const Input: React.FC<CustomInputProps> = ({ label, error, ...props }) => (
+  <FormControl isInvalid={!!error}>
+    {label && <FormLabel>{label}</FormLabel>}
+    <ChakraInput borderColor={useColorModeValue('gray.300', 'gray.600')} {...props} />
+    {error && <FormErrorMessage>{error}</FormErrorMessage>}
+  </FormControl>
+);
+
+export const Card: React.FC<{ children: React.ReactNode; title?: string }> = ({ children, title }) => {
+  const bg = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  return (
+    <ChakraCard bg={bg} borderWidth="1px" borderColor={borderColor} borderRadius="lg" overflow="hidden">
+      {title && <CardHeader borderBottomWidth="1px" borderColor={borderColor} py={4}><Heading size="md">{title}</Heading></CardHeader>}
+      <CardBody>{children}</CardBody>
+    </ChakraCard>
+  );
+};
+
+export const Loading: React.FC<{ text?: string }> = ({ text = "Cargando..." }) => (
+  <Flex justify="center" align="center" direction="column" h="100%" minH="200px" gap={4}>
+    <Spinner size="xl" color="blue.500" thickness="4px" />
+    <Text color="gray.500" fontWeight="medium">{text}</Text>
+  </Flex>
+);
+
+export const ErrorMessage: React.FC<{ title?: string; message: string }> = ({ title = "Error", message }) => (
+  <Box p={4} bg="red.50" color="red.700" borderRadius="md" borderWidth="1px" borderColor="red.200">
+    <Text fontWeight="bold">{title}</Text>
+    <Text fontSize="sm">{message}</Text>
+  </Box>
+);
+
+// --- MOLECULES ---
+export const FormContainer: React.FC<{
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  onSubmit: (e: React.FormEvent) => void;
+  footer?: React.ReactNode;
+}> = ({ title, description, children, onSubmit, footer }) => (
+  <Box w="full" maxW="md" mx="auto">
+    <Card>
+      <VStack spacing={6} as="form" onSubmit={onSubmit} align="stretch">
+        <Box textAlign="center">
+          <Heading size="lg" mb={2}>{title}</Heading>
+          {description && <Text color="gray.500">{description}</Text>}
+        </Box>
+        <VStack spacing={4} align="stretch">{children}</VStack>
+        {footer && <Box pt={2}>{footer}</Box>}
+      </VStack>
+    </Card>
+  </Box>
+);
+
+export interface Column<T> {
+  header: string;
+  accessor: keyof T | string;
+  cell?: (item: T) => React.ReactNode;
+  width?: string;
+  hideOnMobile?: boolean;
+}
+interface DataTableProps<T> {
+  data: T[];
+  columns: Column<T>[];
+  isLoading?: boolean;
+}
+export function DataTable<T>({ data, columns, isLoading }: DataTableProps<T>) {
+  if (isLoading) return <Loading />;
+  if (!data || data.length === 0) return <Box p={8} textAlign="center"><Text color="gray.500">No hay datos</Text></Box>;
+  return (
+    <Box overflowX="auto">
+      <Table variant="simple">
+        <Thead>
+          <Tr>
+            {columns.map((col, idx) => (
+              <Th key={idx} width={col.width} display={col.hideOnMobile ? { base: 'none', md: 'table-cell' } : 'table-cell'}>{col.header}</Th>
+            ))}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.map((item, rowIdx) => (
+            <Tr key={rowIdx}>
+              {columns.map((col, colIdx) => (
+                <Td key={colIdx} display={col.hideOnMobile ? { base: 'none', md: 'table-cell' } : 'table-cell'}>
+                  {col.cell ? col.cell(item) : (item as any)[col.accessor]}
+                </Td>
+              ))}
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </Box>
+  );
+}
+
+// --- ORGANISMS ---
+export interface NavbarProps {
+  title: string;
+  username?: string;
+  userAvatar?: string;
+  userRole?: string;
+  userEmail?: string;
+  pendingUsersCount?: number;
+  onMenuClick: () => void;
+  onProfileClick?: () => void;
+  onNotificationClick?: () => void;
+  onLogout: () => void;
+}
+export const Navbar: React.FC<NavbarProps> = ({ title, username, userAvatar, userRole, userEmail, pendingUsersCount, onMenuClick, onProfileClick, onNotificationClick, onLogout }) => {
+  const bg = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  return (
+    <Flex as="header" position="sticky" top={0} zIndex={1000} bg={bg} h="64px" px={4} align="center" justify="space-between" borderBottomWidth="1px" borderColor={borderColor} boxShadow="sm">
+      <HStack spacing={4}>
+        <IconButton aria-label="Menu" icon={<HamburgerIcon />} variant="ghost" onClick={onMenuClick} />
+        <Heading size="md" color="blue.500">{title}</Heading>
+      </HStack>
+      <HStack spacing={3}>
+        {pendingUsersCount !== undefined && pendingUsersCount > 0 && (
+           <IconButton aria-label="Notifications" icon={<Box position="relative"><BellIcon boxSize={5} /><Badge position="absolute" top="-1px" right="-1px" colorScheme="red" borderRadius="full" boxSize="16px" fontSize="xs" display="flex" alignItems="center" justifyContent="center">{pendingUsersCount}</Badge></Box>} variant="ghost" onClick={onNotificationClick} />
+        )}
+        <Menu>
+          <MenuButton as={Button} variant="ghost" rightIcon={<Avatar size="xs" src={userAvatar} name={username} />} px={2}>
+            <Box textAlign="right" display={{ base: 'none', md: 'block' }} mr={2}>
+              <Text fontSize="sm" fontWeight="bold">{username}</Text>
+              <Text fontSize="xs" color="gray.500">{userRole}</Text>
+            </Box>
+          </MenuButton>
+          <MenuList>
+            <Box px={4} py={2} display={{ base: 'block', md: 'none' }}><Text fontWeight="bold">{username}</Text><Text fontSize="sm" color="gray.500">{userEmail}</Text></Box>
+            <MenuDivider display={{ base: 'block', md: 'none' }} />
+            <MenuItem icon={<FiUser />} onClick={onProfileClick}>Mi Perfil</MenuItem>
+            <MenuDivider />
+            <MenuItem icon={<FiLogOut />} onClick={onLogout} color="red.500">Cerrar Sesión</MenuItem>
+          </MenuList>
+        </Menu>
+      </HStack>
+    </Flex>
+  );
+};
+
+export interface MenuItemType { label: string; icon: React.ElementType; href: string; isActive?: boolean; }
+export interface SidebarProps { isOpen: boolean; onClose: () => void; items: MenuItemType[]; onItemClick: (href: string) => void; }
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItemClick }) => {
+  const bg = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const SidebarContent = (
+    <VStack align="stretch" spacing={1} h="100%" py={4}>
+      {items.map((item) => (
+        <Button key={item.href} variant="ghost" justifyContent="flex-start" leftIcon={<item.icon />} isActive={item.isActive} onClick={() => onItemClick(item.href)} borderRadius="0" position="relative" _active={{ bg: 'blue.50', color: 'blue.600', _dark: { bg: 'blue.900', color: 'blue.200' } }} _before={item.isActive ? { content: '\"\"', position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', bg: 'blue.500' } : undefined}>
+          {item.label}
+        </Button>
+      ))}
+    </VStack>
+  );
+  return (
+    <>
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="xs"><DrawerOverlay display={{ md: 'none' }} /><DrawerContent display={{ md: 'none' }} bg={bg}><DrawerCloseButton /><DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader><DrawerBody p={0}>{SidebarContent}</DrawerBody></DrawerContent></Drawer>
+      <Box display={{ base: 'none', md: 'block' }} w="250px" pos="fixed" h="calc(100vh - 64px)" mt="64px" bg={bg} borderRightWidth="1px" borderColor={borderColor} transform={isOpen ? 'translateX(0)' : 'translateX(-100%)'} transition="transform 0.3s" zIndex={900}>{SidebarContent}</Box>
+    </>
+  );
+};
