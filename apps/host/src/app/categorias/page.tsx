@@ -25,10 +25,12 @@ import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { DataTable } from '@eventconnect/ui';
 import { useGetCategoriasQuery, useDeleteCategoriaMutation, type Categoria } from '../../store/api/categoriaApi';
 import { CategoriaModal } from '../../components/CategoriaModal';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function CategoriasPage() {
   const { colorMode } = useColorMode();
+  const [localColorMode, setLocalColorMode] = useState<'light' | 'dark' | 'blue'>('light');
+  
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
@@ -39,10 +41,19 @@ export default function CategoriasPage() {
   
   const { data: categorias, isLoading, error } = useGetCategoriasQuery();
   const [deleteCategoria, { isLoading: isDeleting }] = useDeleteCategoriaMutation();
+
+  // Efecto para sincronizar el modo de color local (incluyendo 'blue')
+  useEffect(() => {
+    const stored = localStorage.getItem('chakra-ui-color-mode');
+    if (stored === 'light' || stored === 'dark' || stored === 'blue') {
+      setLocalColorMode(stored);
+    }
+  }, [colorMode]);
   
-  const borderColor = colorMode === 'dark' ? '#2d3548' : colorMode === 'blue' ? '#2a4255' : '#e2e8f0';
-  const bgColor = colorMode === 'dark' ? '#1a2035' : colorMode === 'blue' ? '#192734' : '#ffffff';
-  const mutedColor = colorMode === 'dark' ? '#9ca3af' : colorMode === 'blue' ? '#94a3b8' : '#718096';
+  // Usar localColorMode en lugar de colorMode para las comparaciones
+  const borderColor = localColorMode === 'dark' ? '#2d3548' : localColorMode === 'blue' ? '#2a4255' : '#e2e8f0';
+  const bgColor = localColorMode === 'dark' ? '#1a2035' : localColorMode === 'blue' ? '#192734' : '#ffffff';
+  const mutedColor = localColorMode === 'dark' ? '#9ca3af' : localColorMode === 'blue' ? '#94a3b8' : '#718096';
 
   const handleCreate = () => {
     setSelectedCategoria(undefined);
