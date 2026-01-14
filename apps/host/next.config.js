@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
   transpilePackages: ['@eventconnect/ui', '@eventconnect/shared'],
   experimental: {
     optimizePackageImports: ['@chakra-ui/react', 'lucide-react']
