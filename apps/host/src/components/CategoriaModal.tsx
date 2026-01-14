@@ -162,9 +162,6 @@ export const CategoriaModal = ({ isOpen, onClose, categoria }: CategoriaModalPro
     onClose();
   };
 
-  // Obtener color mode y colores del hook personalizado
-  const { bgColor, inputBg, borderColor } = useColorModeLocal();
-
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size={{ base: "full", md: "md" }} scrollBehavior="inside">
       <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
