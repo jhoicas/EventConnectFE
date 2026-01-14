@@ -11,6 +11,7 @@ WORKDIR /app
 # Copiar archivos de configuración del monorepo
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY turbo.json ./
+COPY .npmrc ./
 
 # Copiar package.json de cada workspace
 COPY apps/host/package.json ./apps/host/
@@ -18,37 +19,25 @@ COPY apps/host/package.json ./apps/host/
 # Crear directorio packages vacío (pnpm manejará workspaces vacíos sin errores)
 RUN mkdir -p ./packages
 
-# Instalar dependencias con frozen lockfile para builds reproducibles
+# Instalar dependencias con hoisting (usa .npmrc) y lockfile
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: Build de la aplicación
 FROM base AS builder
 WORKDIR /app
 
-# Copiar archivos de configuración del monorepo
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY turbo.json ./
-COPY .npmrc ./
-
-# Copiar package.json de cada workspace
-COPY apps/host/package.json ./apps/host/
-
-# Crear directorio packages vacío
-RUN mkdir -p ./packages
-
-# Copiar toda la estructura de node_modules desde stage deps
-# Incluye .pnpm store y todos los enlaces simbólicos
+# Copiar configuración y dependencias ya instaladas
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=deps /app/package.json ./package.json
+COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=deps /app/turbo.json ./turbo.json
+COPY --from=deps /app/.npmrc ./\nCOPY --from=deps /app/apps/host/package.json ./apps/host/package.json
 
 # Copiar código fuente completo
 COPY . .
 
-# Verificar y reparar enlaces de pnpm (más rápido que reinstalar completo)
-# Esto asegura que los binarios estén correctamente vinculados
-RUN pnpm install --offline --frozen-lockfile || pnpm install --frozen-lockfile
-
-# Build de producción
+# Build de producción (usa deps ya instaladas)
 RUN pnpm build --filter @eventconnect/host
 
 # Stage 3: Runtime
