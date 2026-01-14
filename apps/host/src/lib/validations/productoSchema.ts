@@ -47,8 +47,8 @@ export const productoSchema = z.object({
     .max(500, 'La URL no puede exceder 500 caracteres')
     .optional()
     .or(z.literal('')),
-  es_Alquilable: z.boolean().default(true),
-  es_Vendible: z.boolean().default(false),
+  es_Alquilable: z.boolean(),
+  es_Vendible: z.boolean(),
   peso_Kg: z
     .number()
     .min(0, 'El peso no puede ser negativo')

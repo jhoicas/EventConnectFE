@@ -23,7 +23,7 @@ export const configuracionSchema = z.object({
     .max(500, 'La descripción no puede exceder 500 caracteres')
     .optional()
     .or(z.literal('')),
-  es_Global: z.boolean().default(false),
+  es_Global: z.boolean(),
 });
 
 export type ConfiguracionFormData = z.infer<typeof configuracionSchema>;
