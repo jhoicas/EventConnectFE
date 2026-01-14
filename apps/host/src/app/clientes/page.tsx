@@ -26,11 +26,14 @@ import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { DataTable } from '@eventconnect/ui';
 import { useGetClientesQuery, useDeleteClienteMutation, type Cliente } from '../../store/api/clienteApi';
 import { ClienteModal } from '../../components/ClienteModal';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAppSelector } from '../../store/store';
 
 export default function ClientesPage() {
   const { colorMode } = useColorMode();
+  // Estado local para manejar temas personalizados como 'blue'
+  const [localColorMode, setLocalColorMode] = useState<'light' | 'dark' | 'blue'>('light');
+
   const { user } = useAppSelector((state) => state.auth);
   const isSuperAdmin = user?.rol === 'SuperAdmin';
   const toast = useToast();
@@ -44,8 +47,16 @@ export default function ClientesPage() {
   const { data: clientes, isLoading, error } = useGetClientesQuery();
   const [deleteCliente, { isLoading: isDeleting }] = useDeleteClienteMutation();
   
-  const borderColor = colorMode === 'dark' ? '#2d3548' : colorMode === 'blue' ? '#2a4255' : '#e2e8f0';
-  const bgColor = colorMode === 'dark' ? '#1a2035' : colorMode === 'blue' ? '#192734' : '#ffffff';
+  // Sincronizar el colorMode local
+  useEffect(() => {
+    const stored = localStorage.getItem('chakra-ui-color-mode');
+    if (stored === 'light' || stored === 'dark' || stored === 'blue') {
+      setLocalColorMode(stored);
+    }
+  }, [colorMode]);
+
+  const borderColor = localColorMode === 'dark' ? '#2d3548' : localColorMode === 'blue' ? '#2a4255' : '#e2e8f0';
+  const bgColor = localColorMode === 'dark' ? '#1a2035' : localColorMode === 'blue' ? '#192734' : '#ffffff';
 
   const handleCreate = () => {
     setSelectedCliente(undefined);

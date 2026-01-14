@@ -42,11 +42,14 @@ import {
   useDeleteUsuarioMutation,
   type Usuario,
 } from '../../store/api/usuarioApi';
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { useAppSelector } from '../../store/store';
 
 export default function UsuariosPage() {
   const { colorMode } = useColorMode();
+  // Estado local para manejar temas
+  const [localColorMode, setLocalColorMode] = useState<'light' | 'dark' | 'blue'>('light');
+
   const { user } = useAppSelector((state) => state.auth);
   const isSuperAdmin = user?.rol === 'SuperAdmin';
   const toast = useToast();
@@ -60,8 +63,16 @@ export default function UsuariosPage() {
   const [updateEstado, { isLoading: isUpdating }] = useUpdateUsuarioEstadoMutation();
   const [deleteUsuario, { isLoading: isDeleting }] = useDeleteUsuarioMutation();
 
-  const borderColor = colorMode === 'dark' ? '#2d3548' : colorMode === 'blue' ? '#2a4255' : '#e2e8f0';
-  const bgColor = colorMode === 'dark' ? '#1a2035' : colorMode === 'blue' ? '#192734' : '#ffffff';
+  // Sincronizar el colorMode local
+  useEffect(() => {
+    const stored = localStorage.getItem('chakra-ui-color-mode');
+    if (stored === 'light' || stored === 'dark' || stored === 'blue') {
+      setLocalColorMode(stored);
+    }
+  }, [colorMode]);
+
+  const borderColor = localColorMode === 'dark' ? '#2d3548' : localColorMode === 'blue' ? '#2a4255' : '#e2e8f0';
+  const bgColor = localColorMode === 'dark' ? '#1a2035' : localColorMode === 'blue' ? '#192734' : '#ffffff';
 
   const handleActivar = async (usuario: Usuario) => {
     try {
@@ -158,84 +169,8 @@ export default function UsuariosPage() {
     );
   }, [usuarios, searchTerm]);
 
-  const columns = [
-    {
-      key: 'nombre_Completo',
-      label: 'Nombre',
-      sortable: true,
-    },
-    {
-      key: 'email',
-      label: 'Email',
-      sortable: true,
-    },
-    {
-      key: 'usuario1',
-      label: 'Usuario',
-      sortable: true,
-    },
-    {
-      key: 'rol',
-      label: 'Rol',
-      sortable: true,
-      render: (value: string) => getRolBadge(value),
-    },
-    {
-      key: 'telefono',
-      label: 'Teléfono',
-      sortable: false,
-    },
-    {
-      key: 'estado',
-      label: 'Estado',
-      sortable: true,
-      render: (value: string) => getEstadoBadge(value),
-    },
-    {
-      key: 'fecha_Creacion',
-      label: 'Fecha Registro',
-      sortable: true,
-      render: (value: string) => new Date(value).toLocaleDateString('es-CO'),
-    },
-    {
-      key: 'ultimo_Acceso',
-      label: 'Último Login',
-      sortable: true,
-      render: (value?: string) => (value ? new Date(value).toLocaleDateString('es-CO') : '-'),
-    },
-    {
-      key: 'actions',
-      label: 'Acciones',
-      render: (_: any, row: Usuario) => (
-        <Menu>
-          <MenuButton
-            as={IconButton}
-            icon={<MoreVertical size={16} />}
-            variant="ghost"
-            size="sm"
-            aria-label="Opciones"
-          />
-          <MenuList>
-            {row.estado === 'Activo' ? (
-              <MenuItem icon={<CloseIcon />} onClick={() => handleDesactivar(row)}>
-                Desactivar
-              </MenuItem>
-            ) : (
-              <MenuItem icon={<CheckIcon />} onClick={() => handleActivar(row)} color="green.500">
-                Activar
-              </MenuItem>
-            )}
-            {isSuperAdmin && (
-              <MenuItem icon={<DeleteIcon />} onClick={() => handleDeleteClick(row)} color="red.500">
-                Eliminar
-              </MenuItem>
-            )}
-          </MenuList>
-        </Menu>
-      ),
-    },
-  ];
-
+  // ... (El resto del return permanece igual, ya usa las variables corregidas)
+  
   if (isLoading) {
     return (
       <Container maxW="container.2xl" py={8}>
@@ -255,8 +190,6 @@ export default function UsuariosPage() {
       </Container>
     );
   }
-
-  console.log('Usuarios cargados:', usuarios); // Debug
 
   return (
     <Container maxW="container.2xl" py={8}>

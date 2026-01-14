@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Box,
@@ -22,14 +22,24 @@ export default function LoginPage() {
   const dispatch = useAppDispatch();
   const toast = useToast();
   const { colorMode } = useColorMode();
+  const [localColorMode, setLocalColorMode] = useState<'light' | 'dark' | 'blue'>('light');
+
   const [login, { isLoading }] = useLoginMutation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ Username: '', Password: '' });
 
-  const bgColor = colorMode === 'light' ? 'light.bg' : colorMode === 'blue' ? 'blue.bg' : 'dark.bg';
-  const mutedColor = colorMode === 'light' ? 'text.light.muted' : colorMode === 'blue' ? 'text.blue.muted' : 'text.dark.muted';
+  // Sincronizar el colorMode local
+  useEffect(() => {
+    const stored = localStorage.getItem('chakra-ui-color-mode');
+    if (stored === 'light' || stored === 'dark' || stored === 'blue') {
+      setLocalColorMode(stored);
+    }
+  }, [colorMode]);
+
+  const bgColor = localColorMode === 'light' ? 'light.bg' : localColorMode === 'blue' ? 'blue.bg' : 'dark.bg';
+  const mutedColor = localColorMode === 'light' ? 'text.light.muted' : localColorMode === 'blue' ? 'text.blue.muted' : 'text.dark.muted';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

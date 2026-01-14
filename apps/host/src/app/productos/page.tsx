@@ -26,10 +26,13 @@ import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { DataTable } from '@eventconnect/ui';
 import { useGetProductosQuery, useDeleteProductoMutation, type Producto } from '../../store/api/productoApi';
 import { ProductoModal } from '../../components/ProductoModal';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function ProductosPage() {
   const { colorMode } = useColorMode();
+  // Estado local para manejar temas personalizados
+  const [localColorMode, setLocalColorMode] = useState<'light' | 'dark' | 'blue'>('light');
+
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
@@ -41,8 +44,16 @@ export default function ProductosPage() {
   const { data: productos, isLoading, error } = useGetProductosQuery();
   const [deleteProducto, { isLoading: isDeleting }] = useDeleteProductoMutation();
   
-  const borderColor = colorMode === 'dark' ? '#2d3548' : colorMode === 'blue' ? '#2a4255' : '#e2e8f0';
-  const bgColor = colorMode === 'dark' ? '#1a2035' : colorMode === 'blue' ? '#192734' : '#ffffff';
+  // Sincronizar el colorMode local
+  useEffect(() => {
+    const stored = localStorage.getItem('chakra-ui-color-mode');
+    if (stored === 'light' || stored === 'dark' || stored === 'blue') {
+      setLocalColorMode(stored);
+    }
+  }, [colorMode]);
+
+  const borderColor = localColorMode === 'dark' ? '#2d3548' : localColorMode === 'blue' ? '#2a4255' : '#e2e8f0';
+  const bgColor = localColorMode === 'dark' ? '#1a2035' : localColorMode === 'blue' ? '#192734' : '#ffffff';
 
   const handleCreate = () => {
     setSelectedProducto(undefined);
