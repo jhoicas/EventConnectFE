@@ -68,11 +68,13 @@ const baseQueryWithErrorHandling: BaseQueryFn<string | FetchArgs, unknown, Fetch
         errors = errorData.errors;
         // Convertir arrays de errores a strings
         const errorMessages: string[] = [];
-        Object.keys(errors).forEach((key) => {
-          if (Array.isArray(errors![key])) {
-            errorMessages.push(...errors![key]);
-          }
-        });
+        if (errors) {
+          Object.keys(errors).forEach((key) => {
+            if (Array.isArray(errors![key])) {
+              errorMessages.push(...errors![key]);
+            }
+          });
+        }
         if (errorMessages.length > 0) {
           message = errorMessages.join(', ');
         }
