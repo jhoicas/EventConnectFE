@@ -31,6 +31,7 @@ import {
   StatNumber,
   StatHelpText,
   SimpleGrid,
+  Icon, // Agregamos Icon aquí
 } from '@chakra-ui/react';
 import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { FileBox, Warehouse, MapPin } from 'lucide-react';
@@ -137,7 +138,8 @@ export default function BodegasPage() {
           <Stat>
             <HStack>
               <Box color="blue.500">
-                <Warehouse size={{ base: 20, md: 24 }} />
+                {/* CORRECCIÓN: Usar Icon as={Warehouse} para soportar boxSize responsive */}
+                <Icon as={Warehouse} boxSize={{ base: 5, md: 6 }} />
               </Box>
               <Box>
                 <StatLabel fontSize={{ base: "xs", md: "sm" }}>Total Bodegas</StatLabel>
