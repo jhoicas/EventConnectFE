@@ -125,9 +125,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const handleProfileSave = (data: any) => {
     console.log('Datos de perfil actualizados:', data);
     // Actualizar Redux con los nuevos datos del perfil
+    if (!user) return;
+    
     dispatch(setCredentials({
       user: {
-        ...user,
+        id: user.id,
+        email: user.email || '',
+        rol: user.rol || '',
         nombre_Completo: data.nombre_Completo,
         telefono: data.telefono,
         avatar_URL: data.avatar_URL,
