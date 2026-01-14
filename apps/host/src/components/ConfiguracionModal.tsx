@@ -77,7 +77,7 @@ export function ConfiguracionModal({ isOpen, onClose, configuracion }: Configura
           clave: configuracion.clave,
           valor: configuracion.valor || '',
           descripcion: configuracion.descripcion || '',
-          tipo_Dato: configuracion.tipo_Dato,
+          tipo_Dato: configuracion.tipo_Dato as "string" | "int" | "bool" | "json",
           es_Global: configuracion.es_Global,
         });
       } else {
