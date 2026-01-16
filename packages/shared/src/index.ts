@@ -51,3 +51,43 @@ export interface LoginRequest {
   Username: string;
   Password: string;
 }
+
+// Tipos de Cotización
+export interface Cotizacion {
+  [key: string]: any;
+}
+
+export interface CreateCotizacionRequest {
+  [key: string]: any;
+}
+
+export interface UpdateCotizacionRequest {
+  [key: string]: any;
+}
+
+export interface ConvertirCotizacionRequest {
+  [key: string]: any;
+}
+
+export interface ExtenderVencimientoRequest {
+  [key: string]: any;
+}
+
+export interface EstadisticasCotizaciones {
+  [key: string]: any;
+}
+
+// Tipos de Pago
+export interface TransaccionPago {
+  [key: string]: any;
+}
+
+export interface CreateTransaccionPagoRequest {
+  [key: string]: any;
+}
+
+export interface ResumenPagos {
+  transacciones: any[];
+  [key: string]: any;
+}
+
