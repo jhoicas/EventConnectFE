@@ -28,6 +28,7 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { Camera, User, Lock, Save } from "lucide-react";
+import { API_BASE_URL } from '@eventconnect/shared';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -132,7 +133,7 @@ export default function ProfileModal({ isOpen, onClose, user, onSave }: ProfileM
       console.log('Payload a enviar:', payload);
       console.log('JSON stringificado:', JSON.stringify(payload));
 
-      const response = await fetch(`http://localhost:5555/api/Usuario/${user?.id}/perfil`, {
+      const response = await fetch(`${API_BASE_URL}Usuario/${user?.id}/perfil`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -208,7 +209,7 @@ export default function ProfileModal({ isOpen, onClose, user, onSave }: ProfileM
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:5555/api/Usuario/${user?.id}/cambiar-password`, {
+      const response = await fetch(`${API_BASE_URL}Usuario/${user?.id}/cambiar-password`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

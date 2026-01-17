@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@eventconnect/shared';
 import {
   Box,
   Button,
@@ -125,7 +126,7 @@ export default function RegistroPage() {
       };
 
       // Llamar al endpoint de registro de cliente
-      const response = await fetch('http://localhost:5555/api/Auth/register-cliente', {
+      const response = await fetch(`${API_BASE_URL}Auth/register-cliente`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(clienteData),
