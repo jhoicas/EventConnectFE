@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@eventconnect/shared';
 import {
   Box,
   Container,
@@ -66,7 +67,7 @@ export default function MensajesPage() {
     const fetchConversaciones = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5555/api/Chat/conversaciones', {
+        const response = await fetch(`${API_BASE_URL}Chat/conversaciones`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -90,7 +91,7 @@ export default function MensajesPage() {
       const fetchMensajes = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch(`http://localhost:5555/api/Chat/mensajes/${selectedChat}`, {
+          const response = await fetch(`${API_BASE_URL}Chat/mensajes/${selectedChat}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -279,7 +280,7 @@ export default function MensajesPage() {
                       if (e.key === 'Enter' && mensaje.trim()) {
                         try {
                           const token = localStorage.getItem('token');
-                          const response = await fetch('http://localhost:5555/api/Chat/mensajes', {
+                          const response = await fetch(`${API_BASE_URL}Chat/mensajes`, {
                             method: 'POST',
                             headers: {
                               'Authorization': `Bearer ${token}`,
@@ -294,7 +295,7 @@ export default function MensajesPage() {
                             setMensaje('');
                             // Recargar mensajes
                             const mensajesResponse = await fetch(
-                              `http://localhost:5555/api/Chat/mensajes/${selectedChat}`,
+                              `${API_BASE_URL}Chat/mensajes/${selectedChat}`,
                               {
                                 headers: { 'Authorization': `Bearer ${token}` }
                               }
@@ -318,7 +319,7 @@ export default function MensajesPage() {
                       if (mensaje.trim()) {
                         try {
                           const token = localStorage.getItem('token');
-                          const response = await fetch('http://localhost:5555/api/Chat/mensajes', {
+                          const response = await fetch(`${API_BASE_URL}Chat/mensajes`, {
                             method: 'POST',
                             headers: {
                               'Authorization': `Bearer ${token}`,
@@ -333,7 +334,7 @@ export default function MensajesPage() {
                             setMensaje('');
                             // Recargar mensajes
                             const mensajesResponse = await fetch(
-                              `http://localhost:5555/api/Chat/mensajes/${selectedChat}`,
+                              `${API_BASE_URL}Chat/mensajes/${selectedChat}`,
                               {
                                 headers: { 'Authorization': `Bearer ${token}` }
                               }
