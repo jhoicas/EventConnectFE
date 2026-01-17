@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { API_BASE_URL } from '@eventconnect/shared';
 import {
   Box,
   Container,
@@ -20,9 +19,15 @@ import {
   Icon,
   Center,
   Spinner,
+  useToast,
 } from '@chakra-ui/react';
 import { Search, Send, MessageCircle } from 'lucide-react';
 import { useAppSelector } from '../../../store/store';
+import {
+  useGetConversacionesQuery,
+  useGetMensajesQuery,
+  useSendMensajeMutation,
+} from '../../../store/api/chatApi';
 
 interface ConversacionDTO {
   id: number;
@@ -48,13 +53,20 @@ interface MensajeDTO {
 
 export default function MensajesPage() {
   const { colorMode } = useColorMode();
+  const toast = useToast();
   const { user } = useAppSelector((state) => state.auth);
   const [localColorMode, setLocalColorMode] = useState<'light' | 'dark' | 'blue'>('light');
   const [selectedChat, setSelectedChat] = useState<number | null>(null);
   const [mensaje, setMensaje] = useState('');
-  const [conversaciones, setConversaciones] = useState<ConversacionDTO[]>([]);
-  const [mensajes, setMensajes] = useState<MensajeDTO[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // RTK Query hooks
+  const { data: conversaciones = [], isLoading: isLoadingConversaciones } = useGetConversacionesQuery();
+  const { data: mensajes = [], isLoading: isLoadingMensajes } = useGetMensajesQuery(
+    selectedChat?.toString() ?? '',
+    { skip: !selectedChat }
+  );
+  const [sendMensaje] = useSendMensajeMutation();
 
   useEffect(() => {
     const stored = localStorage.getItem('chakra-ui-color-mode');
@@ -63,57 +75,38 @@ export default function MensajesPage() {
     }
   }, [colorMode]);
 
-  useEffect(() => {
-    const fetchConversaciones = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE_URL}Chat/conversaciones`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setConversaciones(data);
-        }
-      } catch (error) {
-        console.error('Error al cargar conversaciones:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const handleEnviarMensaje = async () => {
+    if (!mensaje.trim() || !selectedChat) return;
 
-    fetchConversaciones();
-  }, []);
+    try {
+      await sendMensaje({
+        conversacion_Id: selectedChat,
+        contenido: mensaje,
+      }).unwrap();
 
-  useEffect(() => {
-    if (selectedChat) {
-      const fetchMensajes = async () => {
-        try {
-          const token = localStorage.getItem('token');
-          const response = await fetch(`${API_BASE_URL}Chat/mensajes/${selectedChat}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          if (response.ok) {
-            const data = await response.json();
-            setMensajes(data);
-          }
-        } catch (error) {
-          console.error('Error al cargar mensajes:', error);
-        }
-      };
-
-      fetchMensajes();
+      setMensaje('');
+      toast({
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error: any) {
+      console.error('Error al enviar mensaje:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo enviar el mensaje',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
-  }, [selectedChat]);
+  };
 
   const bgColor = localColorMode === 'dark' ? '#0d1117' : localColorMode === 'blue' ? '#0a1929' : '#f7fafc';
   const cardBg = localColorMode === 'dark' ? '#161b22' : localColorMode === 'blue' ? '#0d1b2a' : '#ffffff';
   const borderColor = localColorMode === 'dark' ? '#30363d' : localColorMode === 'blue' ? '#1e3a5f' : '#e2e8f0';
 
-  if (isLoading) {
+  if (isLoadingConversaciones) {
     return (
       <Center h="100vh">
         <Spinner size="xl" color="blue.500" />
@@ -276,38 +269,10 @@ export default function MensajesPage() {
                     placeholder="Escribe un mensaje..."
                     value={mensaje}
                     onChange={(e) => setMensaje(e.target.value)}
-                    onKeyPress={async (e) => {
+                    onKeyPress={(e) => {
                       if (e.key === 'Enter' && mensaje.trim()) {
-                        try {
-                          const token = localStorage.getItem('token');
-                          const response = await fetch(`${API_BASE_URL}Chat/mensajes`, {
-                            method: 'POST',
-                            headers: {
-                              'Authorization': `Bearer ${token}`,
-                              'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                              conversacion_Id: selectedChat,
-                              contenido: mensaje
-                            })
-                          });
-                          if (response.ok) {
-                            setMensaje('');
-                            // Recargar mensajes
-                            const mensajesResponse = await fetch(
-                              `${API_BASE_URL}Chat/mensajes/${selectedChat}`,
-                              {
-                                headers: { 'Authorization': `Bearer ${token}` }
-                              }
-                            );
-                            if (mensajesResponse.ok) {
-                              const data = await mensajesResponse.json();
-                              setMensajes(data);
-                            }
-                          }
-                        } catch (error) {
-                          console.error('Error al enviar mensaje:', error);
-                        }
+                        e.preventDefault();
+                        handleEnviarMensaje();
                       }
                     }}
                   />
@@ -315,40 +280,7 @@ export default function MensajesPage() {
                     aria-label="Enviar"
                     icon={<Icon as={Send} />}
                     colorScheme="blue"
-                    onClick={async () => {
-                      if (mensaje.trim()) {
-                        try {
-                          const token = localStorage.getItem('token');
-                          const response = await fetch(`${API_BASE_URL}Chat/mensajes`, {
-                            method: 'POST',
-                            headers: {
-                              'Authorization': `Bearer ${token}`,
-                              'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                              conversacion_Id: selectedChat,
-                              contenido: mensaje
-                            })
-                          });
-                          if (response.ok) {
-                            setMensaje('');
-                            // Recargar mensajes
-                            const mensajesResponse = await fetch(
-                              `${API_BASE_URL}Chat/mensajes/${selectedChat}`,
-                              {
-                                headers: { 'Authorization': `Bearer ${token}` }
-                              }
-                            );
-                            if (mensajesResponse.ok) {
-                              const data = await mensajesResponse.json();
-                              setMensajes(data);
-                            }
-                          }
-                        } catch (error) {
-                          console.error('Error al enviar mensaje:', error);
-                        }
-                      }
-                    }}
+                    onClick={handleEnviarMensaje}
                   />
                 </Flex>
               </>
