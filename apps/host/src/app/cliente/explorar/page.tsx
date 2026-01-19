@@ -63,13 +63,45 @@ export default function ExplorarPage() {
   const { data: empresas = [] } = useGetEmpresasQuery();
   const error = queryError ? 'Error al cargar los datos. Por favor, intenta de nuevo.' : null;
 
-  // Cargar datos de la API
   useEffect(() => {
     const stored = localStorage.getItem('chakra-ui-color-mode');
     if (stored === 'light' || stored === 'dark' || stored === 'blue') {
       setLocalColorMode(stored);
     }
   }, [colorMode]);
+
+  // Cargar datos de la API
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const [productosData, empresasData] = await Promise.all([
+          productosAPI.getAll(),
+          empresasAPI.getAll(),
+        ]);
+        
+        setProductos(productosData);
+        setEmpresas(empresasData);
+        
+        // Verificar si hay datos
+        if (productosData.length === 0) {
+          console.warn('No se encontraron productos en la base de datos');
+        }
+        if (empresasData.length === 0) {
+          console.warn('No se encontraron empresas en la base de datos');
+        }
+      } catch (err) {
+        console.error('Error loading data:', err);
+        setError('Error al cargar los datos. Verifica que el backend esté corriendo en http://localhost:5555');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const bgColor = localColorMode === 'dark' ? '#0d1117' : localColorMode === 'blue' ? '#0a1929' : '#f7fafc';
   const cardBg = localColorMode === 'dark' ? '#161b22' : localColorMode === 'blue' ? '#0d1b2a' : '#ffffff';

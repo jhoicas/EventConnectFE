@@ -67,7 +67,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   // Menú para clientes
   const clienteMenuItems: MenuItemType[] = [
     { label: 'Explorar', icon: LayoutDashboard, href: '/cliente/explorar', isActive: pathname === '/cliente/explorar' },
-    { label: 'Cotizar', icon: ShoppingCart, href: '/cliente/cotizaciones', isActive: pathname === '/cliente/cotizaciones' },
+    { label: 'Cotizaciones', icon: ShoppingCart, href: '/cliente/cotizaciones', isActive: pathname === '/cliente/cotizaciones' },
     { label: 'Reservas', icon: Calendar, href: '/cliente/reservas', isActive: pathname === '/cliente/reservas' },
     { label: 'Mensajes', icon: MessageCircle, href: '/cliente/mensajes', isActive: pathname === '/cliente/mensajes' },
   ];
@@ -76,13 +76,25 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const adminMenuItems: MenuItemType[] = [
     { label: 'Dashboard', icon: LayoutDashboard, href: ROUTES.DASHBOARD, isActive: pathname === ROUTES.DASHBOARD },
     { label: 'Chat', icon: MessageCircle, href: ROUTES.CHAT, isActive: pathname === ROUTES.CHAT },
-    { label: 'Categorías', icon: Package, href: ROUTES.CATEGORIAS, isActive: pathname === ROUTES.CATEGORIAS },
-    { label: 'Productos', icon: ShoppingCart, href: ROUTES.PRODUCTOS, isActive: pathname === ROUTES.PRODUCTOS },
+    { 
+      label: 'Catálogo', 
+      icon: Package, 
+      submenu: [
+        { label: 'Categorías', icon: Package, href: ROUTES.CATEGORIAS, isActive: pathname === ROUTES.CATEGORIAS },
+        { label: 'Productos', icon: ShoppingCart, href: ROUTES.PRODUCTOS, isActive: pathname === ROUTES.PRODUCTOS },
+      ]
+    },
     { label: 'Clientes', icon: Users, href: ROUTES.CLIENTES, isActive: pathname === ROUTES.CLIENTES },
     { label: 'Reservas', icon: Calendar, href: ROUTES.RESERVAS, isActive: pathname === ROUTES.RESERVAS },
-    { label: 'Activos', icon: Warehouse, href: ROUTES.ACTIVOS, isActive: pathname === ROUTES.ACTIVOS },
-    { label: 'Bodegas', icon: FileBox, href: ROUTES.BODEGAS, isActive: pathname === ROUTES.BODEGAS },
-    { label: 'Lotes', icon: TrendingUp, href: ROUTES.LOTES, isActive: pathname === ROUTES.LOTES },
+    { 
+      label: 'Inventario', 
+      icon: Warehouse, 
+      submenu: [
+        { label: 'Activos', icon: Warehouse, href: ROUTES.ACTIVOS, isActive: pathname === ROUTES.ACTIVOS },
+        { label: 'Bodegas', icon: FileBox, href: ROUTES.BODEGAS, isActive: pathname === ROUTES.BODEGAS },
+        { label: 'Lotes', icon: TrendingUp, href: ROUTES.LOTES, isActive: pathname === ROUTES.LOTES },
+      ]
+    },
     { label: 'Mantenimientos', icon: Wrench, href: ROUTES.MANTENIMIENTOS, isActive: pathname === ROUTES.MANTENIMIENTOS },
   ];
 

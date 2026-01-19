@@ -199,24 +199,158 @@ export const Navbar: React.FC<NavbarProps> = ({ title, username, userAvatar, use
   );
 };
 
-export interface MenuItemType { label: string; icon: React.ElementType; href: string; isActive?: boolean; }
-export interface SidebarProps { isOpen: boolean; onClose: () => void; items: MenuItemType[]; onItemClick: (href: string) => void; }
+export interface MenuItemType { 
+  label: string; 
+  icon: React.ElementType; 
+  href?: string; 
+  isActive?: boolean;
+  submenu?: MenuItemType[];
+}
+export interface SidebarProps { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  items: MenuItemType[]; 
+  onItemClick: (href: string) => void; 
+}
+
+const MenuItem: React.FC<{
+  item: MenuItemType;
+  isExpanded: boolean;
+  onToggle: () => void;
+  onClick: () => void;
+  level?: number;
+}> = ({ item, isExpanded, onToggle, onClick, level = 0 }) => {
+  const activeBg = useColorModeValue('blue.50', 'blue.900');
+  const activeColor = useColorModeValue('blue.600', 'blue.200');
+  const hoverBg = useColorModeValue('gray.100', 'gray.700');
+  const hasSubmenu = item.submenu && item.submenu.length > 0;
+
+  return (
+    <Box>
+      <Box
+        as={ChakraButton}
+        variant="ghost"
+        w="100%"
+        justifyContent="flex-start"
+        leftIcon={<item.icon />}
+        rightIcon={hasSubmenu ? <Box transform={isExpanded ? 'rotate(180deg)' : 'rotate(0)'} transition="transform 0.2s">▼</Box> : undefined}
+        onClick={hasSubmenu ? onToggle : onClick}
+        borderRadius="0"
+        position="relative"
+        bg={item.isActive ? activeBg : 'transparent'}
+        color={item.isActive ? activeColor : 'inherit'}
+        _hover={{
+          bg: item.isActive ? activeBg : hoverBg,
+        }}
+        _before={item.isActive ? {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: '4px',
+          bg: 'blue.500',
+          borderRadius: '0 4px 4px 0',
+        } : undefined}
+        pl={4}
+        fontWeight={item.isActive ? 'semibold' : 'normal'}
+        fontSize="sm"
+      >
+        {item.label}
+      </Box>
+      {hasSubmenu && isExpanded && (
+        <VStack align="stretch" spacing={0} pl={4} py={1}>
+          {item.submenu!.map((subitem) => (
+            <Box
+              key={subitem.href}
+              as={ChakraButton}
+              variant="ghost"
+              w="100%"
+              justifyContent="flex-start"
+              leftIcon={<subitem.icon />}
+              onClick={() => onClick()}
+              borderRadius="0"
+              bg={subitem.isActive ? activeBg : 'transparent'}
+              color={subitem.isActive ? activeColor : 'inherit'}
+              _hover={{
+                bg: subitem.isActive ? activeBg : hoverBg,
+              }}
+              _before={subitem.isActive ? {
+                content: '""',
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: '3px',
+                bg: 'blue.400',
+              } : undefined}
+              position="relative"
+              pl={4}
+              fontSize="xs"
+              fontWeight={subitem.isActive ? 'semibold' : 'normal'}
+            >
+              {subitem.label}
+            </Box>
+          ))}
+        </VStack>
+      )}
+    </Box>
+  );
+};
+
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItemClick }) => {
   const bg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
+
+  const toggleItem = (label: string) => {
+    setExpandedItems((prev) =>
+      prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
+    );
+  };
+
   const SidebarContent = (
-    <VStack align="stretch" spacing={1} h="100%" py={4}>
+    <VStack align="stretch" spacing={0} h="100%" py={4}>
       {items.map((item) => (
-        <Button key={item.href} variant="ghost" justifyContent="flex-start" leftIcon={<item.icon />} isActive={item.isActive} onClick={() => onItemClick(item.href)} borderRadius="0" position="relative" _active={{ bg: 'blue.50', color: 'blue.600', _dark: { bg: 'blue.900', color: 'blue.200' } }} _before={item.isActive ? { content: '\"\"', position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', bg: 'blue.500' } : undefined}>
-          {item.label}
-        </Button>
+        <MenuItem
+          key={item.label}
+          item={item}
+          isExpanded={expandedItems.includes(item.label)}
+          onToggle={() => toggleItem(item.label)}
+          onClick={() => {
+            if (item.href) {
+              onItemClick(item.href);
+            }
+          }}
+        />
       ))}
     </VStack>
   );
+
   return (
     <>
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="xs"><DrawerOverlay display={{ md: 'none' }} /><DrawerContent display={{ md: 'none' }} bg={bg}><DrawerCloseButton /><DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader><DrawerBody p={0}>{SidebarContent}</DrawerBody></DrawerContent></Drawer>
-      <Box display={{ base: 'none', md: 'block' }} w="250px" pos="fixed" h="calc(100vh - 64px)" mt="64px" bg={bg} borderRightWidth="1px" borderColor={borderColor} transform={isOpen ? 'translateX(0)' : 'translateX(-100%)'} transition="transform 0.3s" zIndex={900}>{SidebarContent}</Box>
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="xs">
+        <DrawerOverlay display={{ md: 'none' }} />
+        <DrawerContent display={{ md: 'none' }} bg={bg}>
+          <DrawerCloseButton />
+          <DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader>
+          <DrawerBody p={0}>{SidebarContent}</DrawerBody>
+        </DrawerContent>
+      </Drawer>
+      <Box
+        display={{ base: 'none', md: 'block' }}
+        w="250px"
+        pos="fixed"
+        h="calc(100vh - 64px)"
+        mt="64px"
+        bg={bg}
+        borderRightWidth="1px"
+        borderColor={borderColor}
+        overflowY="auto"
+        zIndex={900}
+      >
+        {SidebarContent}
+      </Box>
     </>
   );
 };
