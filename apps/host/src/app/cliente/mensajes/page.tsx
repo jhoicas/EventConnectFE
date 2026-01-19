@@ -63,7 +63,7 @@ export default function MensajesPage() {
   // RTK Query hooks
   const { data: conversaciones = [], isLoading: isLoadingConversaciones } = useGetConversacionesQuery();
   const { data: mensajes = [], isLoading: isLoadingMensajes } = useGetMensajesQuery(
-    selectedChat?.toString() ?? '',
+    selectedChat ?? 0,
     { skip: !selectedChat }
   );
   const [sendMensaje] = useSendMensajeMutation();

@@ -41,7 +41,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       if (user?.rol === 'SuperAdmin' || user?.rol === 'Admin-Proveedor') {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch(`${API_BASE_URL}Usuario/pendientes/count`, {
+          const response = await fetch(`${API_BASE_URL}/Usuario/pendientes/count`, {
             headers: {
               'Authorization': `Bearer ${token}`,
             },
