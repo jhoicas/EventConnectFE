@@ -38,7 +38,7 @@ import {
   Center,
 } from '@chakra-ui/react';
 import { Clock, CheckCircle, Upload, Phone, MapPin, QrCode, Calendar, Package } from 'lucide-react';
-import { reservasAPI, type Reserva } from '../../../services/api';
+import { useGetReservasQuery, type Reserva } from '../../../store/api/reservaApi';
 
 export default function ReservasPage() {
   const { colorMode } = useColorMode();
@@ -47,9 +47,8 @@ export default function ReservasPage() {
   const [selectedReserva, setSelectedReserva] = useState<Reserva | null>(null);
   
   // Estados para datos de API
-  const [reservas, setReservas] = useState<Reserva[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: reservas = [], isLoading: loading, error: queryError } = useGetReservasQuery();
+  const error = queryError ? 'Error al cargar las reservas. Por favor, intenta de nuevo.' : null;
 
   useEffect(() => {
     const stored = localStorage.getItem('chakra-ui-color-mode');
@@ -58,34 +57,7 @@ export default function ReservasPage() {
     }
   }, [colorMode]);
 
-  // Cargar reservas de la API
-  useEffect(() => {
-    const loadReservas = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Verificar que el token existe
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.warn('No hay token de autenticación');
-          setError('No estás autenticado. Por favor, inicia sesión nuevamente.');
-          setLoading(false);
-          return;
-        }
-        
-        const data = await reservasAPI.getAll();
-        setReservas(data);
-      } catch (err) {
-        console.error('Error loading reservas:', err);
-        setError('Error al cargar las reservas. Por favor, intenta de nuevo.');
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    loadReservas();
-  }, []);
 
   const bgColor = localColorMode === 'dark' ? '#0d1117' : localColorMode === 'blue' ? '#0a1929' : '#f7fafc';
   const cardBg = localColorMode === 'dark' ? '#161b22' : localColorMode === 'blue' ? '#0d1b2a' : '#ffffff';
