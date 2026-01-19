@@ -69,35 +69,6 @@ export default function ExplorarPage() {
       setLocalColorMode(stored);
     }
   }, [colorMode]);
-
-  // Cargar datos de la API
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const [productosData, empresasData] = await Promise.all([
-          productosAPI.getAll(),
-          empresasAPI.getAll(),
-        ]);
-        
-        setProductos(productosData);
-        setEmpresas(empresasData);
-        
-        // Verificar si hay datos
-        if (productosData.length === 0) {
-          console.warn('No se encontraron productos en la base de datos');
-        }
-        if (empresasData.length === 0) {
-          console.warn('No se encontraron empresas en la base de datos');
-        }
-      } catch (err) {
-        console.error('Error loading data:', err);
-        setError('Error al cargar los datos. Verifica que el backend esté corriendo en http://localhost:5555');
-      } finally {
-        setLoading(false);
-      }
     };
 
     loadData();
