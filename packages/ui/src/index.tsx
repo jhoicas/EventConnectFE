@@ -213,7 +213,7 @@ export interface SidebarProps {
   onItemClick: (href: string) => void; 
 }
 
-const MenuItem: React.FC<{
+const SidebarMenuItem: React.FC<{
   item: MenuItemType;
   isExpanded: boolean;
   onToggle: () => void;
@@ -312,7 +312,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
   const SidebarContent = (
     <VStack align="stretch" spacing={0} h="100%" py={4}>
       {items.map((item) => (
-        <MenuItem
+        <SidebarMenuItem
           key={item.label}
           item={item}
           isExpanded={expandedItems.includes(item.label)}
