@@ -69,10 +69,6 @@ export default function ExplorarPage() {
       setLocalColorMode(stored);
     }
   }, [colorMode]);
-    };
-
-    loadData();
-  }, []);
 
   const bgColor = localColorMode === 'dark' ? '#0d1117' : localColorMode === 'blue' ? '#0a1929' : '#f7fafc';
   const cardBg = localColorMode === 'dark' ? '#161b22' : localColorMode === 'blue' ? '#0d1b2a' : '#ffffff';
