@@ -17,6 +17,7 @@ export const ROUTES = {
   CONFIGURACION: '/configuracion',
   CHAT: '/chat',
   PERFIL: '/perfil',
+  FACTURACION: '/facturacion',
 };
 
 export const API_ENDPOINTS = {

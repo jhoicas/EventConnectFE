@@ -29,9 +29,10 @@ import {
   ButtonGroup,
   Tag,
 } from '@chakra-ui/react';
-import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
-import { Warehouse } from 'lucide-react';
+import { AddIcon, EditIcon, DeleteIcon, ViewIcon } from '@chakra-ui/icons';
+import { Warehouse, FileText, QrCode, Image as ImageIcon } from 'lucide-react';
 import { ActivoModal } from '@/components/ActivoModal';
+import { ActivoHojaVidaModal } from '@/components/ActivoHojaVidaModal';
 import { 
   useGetActivosQuery, 
   useDeleteActivoMutation,
@@ -45,11 +46,13 @@ export default function ActivosPage() {
   const [localColorMode, setLocalColorMode] = useState<'light' | 'dark' | 'blue'>('light');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isHojaVidaOpen, onOpen: onHojaVidaOpen, onClose: onHojaVidaClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
   
   const [selectedActivo, setSelectedActivo] = useState<Activo | undefined>();
   const [activoToDelete, setActivoToDelete] = useState<Activo | null>(null);
+  const [activoHojaVida, setActivoHojaVida] = useState<Activo | null>(null);
   const [estadoFilter, setEstadoFilter] = useState<string>('Todos');
 
   const { data: activos = [], isLoading } = useGetActivosQuery();
@@ -108,16 +111,33 @@ export default function ActivosPage() {
   };
 
   const getEstadoBadgeColor = (estado: string) => {
-    switch (estado) {
-      case 'Activo':
-        return 'green';
-      case 'En Mantenimiento':
-        return 'yellow';
-      case 'Dado de Baja':
-        return 'red';
-      default:
-        return 'gray';
-    }
+    // Mapeo mejorado según requerimientos: Disponible=Verde, Alquilado=Azul, Mantenimiento=Rojo, Baja=Gris
+    const estadoMap: Record<string, string> = {
+      'Disponible': 'green',
+      'Activo': 'green',
+      'Alquilado': 'blue',
+      'En Mantenimiento': 'red',
+      'Mantenimiento': 'red',
+      'Dado de Baja': 'gray',
+      'Baja': 'gray',
+    };
+    return estadoMap[estado] || 'gray';
+  };
+
+  const handleVerHojaVida = (activo: Activo) => {
+    setActivoHojaVida(activo);
+    onHojaVidaOpen();
+  };
+
+  const handleImprimirQR = (activo: Activo) => {
+    toast({
+      title: 'Imprimir QR',
+      description: `Generando código QR para ${activo.codigo_Activo}`,
+      status: 'info',
+      duration: 3000,
+      isClosable: true,
+    });
+    // TODO: Implementar lógica de impresión de QR
   };
 
   const formatPrice = (price?: number) => {
@@ -297,6 +317,13 @@ export default function ActivosPage() {
         isOpen={isOpen}
         onClose={handleModalClose}
         activo={selectedActivo}
+      />
+
+      <ActivoHojaVidaModal
+        isOpen={isHojaVidaOpen}
+        onClose={onHojaVidaClose}
+        activo={activoHojaVida}
+        onImprimirQR={() => activoHojaVida && handleImprimirQR(activoHojaVida)}
       />
 
       <AlertDialog

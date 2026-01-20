@@ -22,6 +22,7 @@ import {
   RotateCcw,
   QrCode,
   AlertTriangle,
+  FileText,
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '../store/store';
 import { logout, setCredentials } from '../store/slices/authSlice';
@@ -79,21 +80,9 @@ const ROLE_MENUS: Record<UserRole, (pathname: string) => MenuItemType[]> = {
     createMenuItem('Mensajes', MessageCircle, '/cliente/mensajes', pathname),
   ],
 
-  // Menú para Admin-Proveedor y SuperAdmin
+  // Menú para Admin-Proveedor (limpiado y enfocado en su empresa)
   'Admin-Proveedor': (pathname: string): MenuItemType[] => [
     createMenuItem('Dashboard', LayoutDashboard, ROUTES.DASHBOARD, pathname),
-    createMenuItem('Chat', MessageCircle, ROUTES.CHAT, pathname),
-    createMenuItem(
-      'Catálogo',
-      Package,
-      '#',
-      pathname,
-      [
-        { label: 'Categorías', icon: Package, href: ROUTES.CATEGORIAS },
-        { label: 'Productos', icon: ShoppingCart, href: ROUTES.PRODUCTOS },
-      ]
-    ),
-    createMenuItem('Clientes', Users, ROUTES.CLIENTES, pathname),
     createMenuItem('Reservas', Calendar, ROUTES.RESERVAS, pathname),
     createMenuItem(
       'Inventario',
@@ -102,13 +91,13 @@ const ROLE_MENUS: Record<UserRole, (pathname: string) => MenuItemType[]> = {
       pathname,
       [
         { label: 'Activos', icon: Warehouse, href: ROUTES.ACTIVOS },
-        { label: 'Bodegas', icon: FileBox, href: ROUTES.BODEGAS },
         { label: 'Lotes', icon: TrendingUp, href: ROUTES.LOTES },
       ]
     ),
-    createMenuItem('Mantenimientos', Wrench, ROUTES.MANTENIMIENTOS, pathname),
-    createMenuItem('Usuarios', UserCog, ROUTES.USUARIOS, pathname),
+    createMenuItem('Clientes', Users, ROUTES.CLIENTES, pathname),
+    createMenuItem('Mi Equipo', UserCog, ROUTES.USUARIOS, pathname),
     createMenuItem('Configuración', Settings, ROUTES.CONFIGURACION, pathname),
+    createMenuItem('Facturación', FileText, ROUTES.FACTURACION, pathname),
   ],
 
   // Menú para SuperAdmin (mismo que Admin-Proveedor)
