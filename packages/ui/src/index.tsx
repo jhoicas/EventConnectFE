@@ -233,15 +233,17 @@ const SidebarMenuItem: React.FC<{
   const handleNavigation = (href: string) => {
     if (!href || href === '#') return;
     
-    // Llamar a onItemClick para navegar
+    // Navegar primero - esto ejecutará router.push
     onItemClick(href);
     
-    // Solo cerrar en móvil después de un delay
+    // Solo cerrar en móvil después de un delay para permitir que la navegación se complete
     if (isMobile && onClose) {
+      // Delay más largo para asegurar que la navegación se complete
       setTimeout(() => {
         onClose();
-      }, 150);
+      }, 500);
     }
+    // En escritorio, NO cerrar el sidebar - permanece abierto
   };
 
   // Si tiene submenú, solo toggle, no navegar
@@ -320,6 +322,7 @@ const SidebarMenuItem: React.FC<{
                     onClick={(e: React.MouseEvent) => {
                       e.preventDefault();
                       e.stopPropagation();
+                      // Navegar inmediatamente
                       handleNavigation(subitem.href!);
                     }}
                     cursor="pointer"
@@ -369,6 +372,7 @@ const SidebarMenuItem: React.FC<{
         onClick={(e: React.MouseEvent) => {
           e.preventDefault();
           e.stopPropagation();
+          // Navegar inmediatamente
           handleNavigation(item.href!);
         }}
         cursor="pointer"
@@ -416,8 +420,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
     );
   };
 
-  // Handler para items navegables - solo notifica al padre, no cierra aquí
-  // El cierre se maneja en el onClick del Link
+  // Handler para items navegables - solo notifica al padre
   const handleItemNavigation = (href: string) => {
     if (href && href !== '#') {
       onItemClick(href);
@@ -444,7 +447,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
       <Drawer 
         isOpen={isOpen} 
         placement="left" 
-        onClose={onClose} 
+        onClose={onClose}
         size="xs"
         closeOnOverlayClick={true}
         closeOnEsc={true}
@@ -459,9 +462,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
             onClick={(e) => {
               // Prevenir que el Drawer se cierre cuando se hace clic en un botón del menú
               const target = e.target as HTMLElement;
-              const button = target.closest('button');
-              if (button && button.type === 'button') {
+              const button = target.closest('button[type="button"]');
+              if (button) {
                 e.stopPropagation();
+                // NO llamar preventDefault para permitir que el onClick del botón funcione
               }
             }}
           >

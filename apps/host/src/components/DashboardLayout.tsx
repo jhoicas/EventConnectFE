@@ -244,15 +244,19 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     router.push(ROUTES.LOGIN);
   };
 
-  const handleMenuItemClick = (href: string) => {
+  const handleMenuItemClick = async (href: string) => {
     // Ignorar clics en items sin href válido (submenús padre)
     if (!href || href === '#') {
       return;
     }
 
-    // Navegar a la ruta usando Next.js router
-    // Usar router.push para navegar programáticamente
-    router.push(href);
+    try {
+      // Navegar a la ruta usando Next.js router
+      await router.push(href);
+      // La navegación se completa, el componente se renderizará automáticamente
+    } catch (error) {
+      console.error('Error al navegar:', error);
+    }
     
     // Nota: El cierre del sidebar en móvil se maneja en el componente Sidebar
     // usando useBreakpointValue, por lo que no necesitamos hacerlo aquí
