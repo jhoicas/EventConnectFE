@@ -148,7 +148,7 @@ const ROLE_MENUS: Record<UserRole, (pathname: string) => MenuItemType[]> = {
     createMenuItem('Dashboard', LayoutDashboard, ROUTES.DASHBOARD, pathname),
     createMenuItem('Tareas de Entrega', Truck, '/operario/entregas', pathname),
     createMenuItem('Tareas de Recogida', RotateCcw, '/operario/recogidas', pathname),
-    createMenuItem('Escáner QR', QrCode, '/operario/escanner', pathname),
+    createMenuItem('Escáner QR', QrCode, '/operario/scanner', pathname),
     createMenuItem('Reportar Incidente', AlertTriangle, '/operario/incidentes', pathname),
   ],
 };
