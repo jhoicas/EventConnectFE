@@ -1,4 +1,5 @@
 import React from 'react';
+import NextLink from 'next/link';
 import {
   Box,
   Button as ChakraButton,
@@ -219,58 +220,184 @@ const SidebarMenuItem: React.FC<{
   isExpanded: boolean;
   onToggle: () => void;
   onItemClick: (href: string) => void;
+  onClose?: () => void;
   level?: number;
-}> = ({ item, isExpanded, onToggle, onItemClick, level = 0 }) => {
+}> = ({ item, isExpanded, onToggle, onItemClick, onClose, level = 0 }) => {
   const activeBg = useColorModeValue('blue.50', 'blue.900');
   const activeColor = useColorModeValue('blue.600', 'blue.200');
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
   const hasSubmenu = item.submenu && item.submenu.length > 0;
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (hasSubmenu) {
-      onToggle();
-    } else if (item.href && item.href !== '#') {
-      onItemClick(item.href);
-    }
-  };
-
-  return (
-    <Box>
-      <Box
-        as={ChakraButton}
-        variant="ghost"
-        w="100%"
-        justifyContent="flex-start"
-        leftIcon={<item.icon />}
-        rightIcon={hasSubmenu ? <Box transform={isExpanded ? 'rotate(180deg)' : 'rotate(0)'} transition="transform 0.2s">▼</Box> : undefined}
-        onClick={handleClick}
-        borderRadius="0"
-        position="relative"
-        bg={item.isActive ? activeBg : 'transparent'}
-        color={item.isActive ? activeColor : 'inherit'}
-        _hover={{
-          bg: item.isActive ? activeBg : hoverBg,
-        }}
-        _before={item.isActive ? {
-          content: '""',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: '4px',
-          bg: 'blue.500',
-          borderRadius: '0 4px 4px 0',
-        } : undefined}
-        pl={4}
-        fontWeight={item.isActive ? 'semibold' : 'normal'}
-        fontSize="sm"
-        type="button"
-      >
-        {item.label}
+  // Si tiene submenú, solo toggle, no navegar
+  if (hasSubmenu) {
+    return (
+      <Box>
+        <Box
+          as={ChakraButton}
+          variant="ghost"
+          w="100%"
+          justifyContent="flex-start"
+          leftIcon={<item.icon />}
+          rightIcon={<Box transform={isExpanded ? 'rotate(180deg)' : 'rotate(0)'} transition="transform 0.2s">▼</Box>}
+          onClick={(e: React.MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onToggle();
+          }}
+          borderRadius="0"
+          position="relative"
+          bg={item.isActive ? activeBg : 'transparent'}
+          color={item.isActive ? activeColor : 'inherit'}
+          _hover={{
+            bg: item.isActive ? activeBg : hoverBg,
+          }}
+          _before={item.isActive ? {
+            content: '""',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '4px',
+            bg: 'blue.500',
+            borderRadius: '0 4px 4px 0',
+          } : undefined}
+          pl={4}
+          fontWeight={item.isActive ? 'semibold' : 'normal'}
+          fontSize="sm"
+          type="button"
+        >
+          {item.label}
+        </Box>
+        {isExpanded && (
+          <VStack align="stretch" spacing={0} pl={4} py={1}>
+            {item.submenu!.map((subitem) => {
+              // Si el subitem tiene href válido, usar Link
+              if (subitem.href && subitem.href !== '#') {
+                return (
+                  <NextLink key={subitem.href} href={subitem.href} passHref legacyBehavior>
+                    <Box
+                      as={ChakraButton}
+                      variant="ghost"
+                      w="100%"
+                      justifyContent="flex-start"
+                      leftIcon={<subitem.icon />}
+              onClick={(e: React.MouseEvent) => {
+                // Solo cerrar en móvil
+                if (isMobile && onClose) {
+                  setTimeout(() => {
+                    onClose();
+                  }, 100);
+                }
+                // No llamar a onItemClick aquí porque Next.js Link maneja la navegación
+              }}
+                      borderRadius="0"
+                      bg={subitem.isActive ? activeBg : 'transparent'}
+                      color={subitem.isActive ? activeColor : 'inherit'}
+                      _hover={{
+                        bg: subitem.isActive ? activeBg : hoverBg,
+                      }}
+                      _before={subitem.isActive ? {
+                        content: '""',
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: '3px',
+                        bg: 'blue.400',
+                      } : undefined}
+                      position="relative"
+                      pl={4}
+                      fontSize="xs"
+                      fontWeight={subitem.isActive ? 'semibold' : 'normal'}
+                      type="button"
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {subitem.label}
+                    </Box>
+                  </NextLink>
+                );
+              }
+              return null;
+            })}
+          </VStack>
+        )}
       </Box>
+    );
+  }
+
+  // Si no tiene submenú y tiene href válido, usar Link
+  if (item.href && item.href !== '#') {
+    return (
+      <NextLink href={item.href} passHref legacyBehavior>
+        <Box
+          as={ChakraButton}
+          variant="ghost"
+          w="100%"
+          justifyContent="flex-start"
+          leftIcon={<item.icon />}
+          onClick={(e: React.MouseEvent) => {
+            // Solo cerrar en móvil
+            if (isMobile && onClose) {
+              setTimeout(() => {
+                onClose();
+              }, 100);
+            }
+            // No llamar a onItemClick aquí porque Next.js Link maneja la navegación
+          }}
+          borderRadius="0"
+          position="relative"
+          bg={item.isActive ? activeBg : 'transparent'}
+          color={item.isActive ? activeColor : 'inherit'}
+          _hover={{
+            bg: item.isActive ? activeBg : hoverBg,
+          }}
+          _before={item.isActive ? {
+            content: '""',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '4px',
+            bg: 'blue.500',
+            borderRadius: '0 4px 4px 0',
+          } : undefined}
+          pl={4}
+          fontWeight={item.isActive ? 'semibold' : 'normal'}
+          fontSize="sm"
+          type="button"
+          style={{ textDecoration: 'none' }}
+        >
+          {item.label}
+        </Box>
+      </NextLink>
+    );
+  }
+
+  // Fallback para items sin href
+  return (
+    <Box
+      as={ChakraButton}
+      variant="ghost"
+      w="100%"
+      justifyContent="flex-start"
+      leftIcon={<item.icon />}
+      borderRadius="0"
+      position="relative"
+      bg={item.isActive ? activeBg : 'transparent'}
+      color={item.isActive ? activeColor : 'inherit'}
+      _hover={{
+        bg: item.isActive ? activeBg : hoverBg,
+      }}
+      pl={4}
+      fontWeight={item.isActive ? 'semibold' : 'normal'}
+      fontSize="sm"
+      type="button"
+      isDisabled
+    >
+      {item.label}
+    </Box>
+  );
       {hasSubmenu && isExpanded && (
         <VStack align="stretch" spacing={0} pl={4} py={1}>
           {item.submenu!.map((subitem) => (
@@ -330,16 +457,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
     );
   };
 
-  // Handler para items navegables que cierra el drawer solo en móvil
+  // Handler para items navegables - solo notifica al padre, no cierra aquí
+  // El cierre se maneja en el onClick del Link
   const handleItemNavigation = (href: string) => {
     if (href && href !== '#') {
       onItemClick(href);
-      // Solo cerrar el drawer en móvil después de la navegación
-      if (isMobile) {
-        setTimeout(() => {
-          onClose();
-        }, 100);
-      }
     }
   };
 
@@ -352,6 +474,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           isExpanded={expandedItems.includes(item.label)}
           onToggle={() => toggleItem(item.label)}
           onItemClick={handleItemNavigation}
+          onClose={onClose}
         />
       ))}
     </VStack>

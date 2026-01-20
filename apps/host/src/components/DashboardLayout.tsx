@@ -312,7 +312,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
         items={menuItems}
-        onItemClick={handleMenuItemClick}
+        onItemClick={handleMenuItemClick} // Mantener para compatibilidad, pero Next.js Link maneja la navegación
       />
 
       {/* Contenido principal con margen izquierdo dinámico - Push behavior en escritorio */}
