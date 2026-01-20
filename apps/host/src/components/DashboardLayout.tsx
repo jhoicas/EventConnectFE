@@ -151,6 +151,9 @@ const ROLE_MENUS: Record<UserRole, (pathname: string) => MenuItemType[]> = {
   ],
 };
 
+// Constante para el ancho del sidebar (debe coincidir con el ancho definido en el componente Sidebar)
+const SIDEBAR_WIDTH = 250;
+
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -269,48 +272,59 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <Box minH="100vh">
-      {/* Navbar ocupa todo el ancho */}
-      <Navbar
-        title="EventConnect"
-        username={user?.nombre_Completo}
-        userAvatar={user?.avatar_URL}
-        userRole={user?.rol}
-        userEmail={user?.email}
-        pendingUsersCount={userRole === 'SuperAdmin' || userRole === 'Admin-Proveedor' ? pendingUsersCount : undefined}
-        onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        onProfileClick={() => setIsProfileModalOpen(true)}
-        onNotificationClick={handleNotificationClick}
-        onLogout={handleLogout}
+    <Box minH="100vh" position="relative">
+      {/* Navbar con margen dinámico en escritorio cuando sidebar está abierto */}
+      <Box
+        as="header"
+        position="relative"
+        ml={{
+          base: 0,
+          md: isSidebarOpen ? `${SIDEBAR_WIDTH}px` : 0,
+        }}
+        transition="margin-left 0.3s ease-in-out"
+      >
+        <Navbar
+          title="EventConnect"
+          username={user?.nombre_Completo}
+          userAvatar={user?.avatar_URL}
+          userRole={user?.rol}
+          userEmail={user?.email}
+          pendingUsersCount={userRole === 'SuperAdmin' || userRole === 'Admin-Proveedor' ? pendingUsersCount : undefined}
+          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onProfileClick={() => setIsProfileModalOpen(true)}
+          onNotificationClick={handleNotificationClick}
+          onLogout={handleLogout}
+        />
+      </Box>
+
+      {/* Sidebar - Fixed position, controlado por el componente Sidebar */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        items={menuItems}
+        onItemClick={handleMenuItemClick}
       />
 
-      {/* Contenedor flex para sidebar y contenido */}
-      <Box display="flex" position="relative">
-        {/* Sidebar fijo a la izquierda */}
-        <Sidebar
-          isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-          items={menuItems}
-          onItemClick={handleMenuItemClick}
-        />
-
-        {/* Contenido principal con margen izquierdo dinámico */}
-        <Box
-          flex="1"
-          minW="0"
-          ml={{
-            base: 0, // En móvil: sin margen (sidebar es overlay/drawer)
-            md: isSidebarOpen ? "250px" : 0, // En escritorio: margen igual al ancho del sidebar (250px)
-            lg: isSidebarOpen ? "250px" : 0,
-          }}
-          transition="margin-left 0.3s ease"
-          position="relative"
-          zIndex={1}
-        >
-          <Container maxW="container.xl" py={6} px={{ base: 4, md: 6 }}>
-            {children}
-          </Container>
-        </Box>
+      {/* Contenido principal con margen izquierdo dinámico - Push behavior en escritorio */}
+      <Box
+        as="main"
+        minH="calc(100vh - 64px)"
+        mt="64px"
+        ml={{
+          base: 0, // En móvil: sin margen (sidebar es overlay/drawer)
+          md: isSidebarOpen ? `${SIDEBAR_WIDTH}px` : 0, // En escritorio: empuja el contenido
+        }}
+        w={{
+          base: "100%",
+          md: isSidebarOpen ? `calc(100% - ${SIDEBAR_WIDTH}px)` : "100%",
+        }}
+        transition="margin-left 0.3s ease-in-out, width 0.3s ease-in-out"
+        position="relative"
+        zIndex={1}
+      >
+        <Container maxW="container.xl" py={6} px={{ base: 4, md: 6 }}>
+          {children}
+        </Container>
       </Box>
 
       <ProfileModal

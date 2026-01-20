@@ -334,16 +334,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         </DrawerContent>
       </Drawer>
       <Box
-        display={{ base: 'none', md: 'block' }}
+        display={{ base: 'none', md: isOpen ? 'block' : 'none' }}
         w="250px"
         pos="fixed"
+        left="0"
+        top="64px"
         h="calc(100vh - 64px)"
-        mt="64px"
         bg={bg}
         borderRightWidth="1px"
         borderColor={borderColor}
         overflowY="auto"
         zIndex={900}
+        transition="transform 0.3s ease-in-out"
+        transform={{ base: 'none', md: isOpen ? 'translateX(0)' : 'translateX(-100%)' }}
       >
         {SidebarContent}
       </Box>
