@@ -339,46 +339,52 @@ const SidebarMenuItem: React.FC<{
     );
   }
 
-  // Si no tiene submenú y tiene href válido, usar botón con navegación programática
+  // Si no tiene submenú y tiene href válido, usar NextLink directamente
   if (item.href && item.href !== '#') {
     return (
-      <Box
-        as={ChakraButton}
-        variant="ghost"
-        w="100%"
-        justifyContent="flex-start"
-        leftIcon={<item.icon />}
-        borderRadius="0"
-        position="relative"
-        bg={item.isActive ? activeBg : 'transparent'}
-        color={item.isActive ? activeColor : 'inherit'}
-        _hover={{
-          bg: item.isActive ? activeBg : hoverBg,
-        }}
-        _before={item.isActive ? {
-          content: '""',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: '4px',
-          bg: 'blue.500',
-          borderRadius: '0 4px 4px 0',
-        } : undefined}
-        pl={4}
-        fontWeight={item.isActive ? 'semibold' : 'normal'}
-        fontSize="sm"
-        type="button"
-        onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
-          e.stopPropagation();
-          // Navegar inmediatamente
-          handleNavigation(item.href!);
-        }}
-        cursor="pointer"
-      >
-        {item.label}
-      </Box>
+      <NextLink href={item.href} passHref legacyBehavior>
+        <Box
+          as="a"
+          display="flex"
+          alignItems="center"
+          w="100%"
+          px={4}
+          py={3}
+          borderRadius="0"
+          position="relative"
+          bg={item.isActive ? activeBg : 'transparent'}
+          color={item.isActive ? activeColor : 'inherit'}
+          _hover={{
+            bg: item.isActive ? activeBg : hoverBg,
+            textDecoration: 'none',
+          }}
+          _before={item.isActive ? {
+            content: '""',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '4px',
+            bg: 'blue.500',
+            borderRadius: '0 4px 4px 0',
+          } : undefined}
+          fontWeight={item.isActive ? 'semibold' : 'normal'}
+          fontSize="sm"
+          cursor="pointer"
+          textDecoration="none"
+          onClick={(e: React.MouseEvent) => {
+            // Prevenir propagación al Drawer para que no se cierre automáticamente
+            e.stopPropagation();
+            // Ejecutar navegación programática también para asegurar consistencia
+            onItemClick(item.href!);
+            // Cerrar solo en móvil
+            handleLinkClick();
+          }}
+        >
+          <Box as={item.icon} mr={3} />
+          {item.label}
+        </Box>
+      </NextLink>
     );
   }
 
