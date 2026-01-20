@@ -251,11 +251,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     }
 
     // Navegar a la ruta usando Next.js router
-    // Usar router.push de forma asíncrona para asegurar que la navegación se complete
+    // Usar router.push para navegar programáticamente
     router.push(href);
     
-    // Nota: El cierre del sidebar en móvil ahora se maneja en el componente Sidebar
+    // Nota: El cierre del sidebar en móvil se maneja en el componente Sidebar
     // usando useBreakpointValue, por lo que no necesitamos hacerlo aquí
+    // En escritorio, el sidebar permanece abierto
   };
 
   const handleNotificationClick = () => {
