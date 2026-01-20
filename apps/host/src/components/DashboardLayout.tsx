@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Container } from '@chakra-ui/react';
+import { Box, Container, useToast } from '@chakra-ui/react';
 import { Navbar, Sidebar } from '@eventconnect/ui';
 import type { MenuItemType } from '@eventconnect/ui';
 import {
@@ -155,10 +155,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useAppDispatch();
+  const toast = useToast();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [pendingUsersCount, setPendingUsersCount] = useState<number>(0);
   const { user } = useAppSelector((state) => state.auth);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Obtener el rol del usuario de forma segura
   const userRole: UserRole | null = useMemo(() => {
@@ -186,13 +188,37 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               'Authorization': `Bearer ${token}`,
             },
           });
+
+          // Manejar respuesta 401 (Unauthorized)
+          if (response.status === 401) {
+            // Detener el intervalo si existe
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current);
+              intervalRef.current = null;
+            }
+
+            // Mostrar notificación
+            toast({
+              title: 'Sesión expirada',
+              description: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+              status: 'warning',
+              duration: 5000,
+              isClosable: true,
+            });
+
+            // Limpiar estado y redirigir
+            dispatch(logout());
+            router.push(ROUTES.LOGIN);
+            return;
+          }
+
           if (response.ok) {
             const data = await response.json();
             setPendingUsersCount(data.count);
           }
         } catch (error) {
-          console.dir(error); 
           console.error('Error al obtener usuarios pendientes:', error);
+          // No hacer nada en caso de error de red, el intervalo seguirá intentando
         }
       }
     };
@@ -200,9 +226,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     fetchPendingUsers();
     
     // Actualizar cada 2 minutos (120000 ms) en lugar de 30 segundos
-    const interval = setInterval(fetchPendingUsers, 120000);
-    return () => clearInterval(interval);
-  }, [userRole]);
+    intervalRef.current = setInterval(fetchPendingUsers, 120000);
+    
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [userRole, dispatch, router, toast]);
 
   const handleLogout = () => {
     dispatch(logout());
