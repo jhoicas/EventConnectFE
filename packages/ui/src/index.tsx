@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Box,
   Button as ChakraButton,
@@ -415,6 +418,7 @@ const SidebarMenuItem: React.FC<{
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItemClick }) => {
+  const router = useRouter();
   const bg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
@@ -430,6 +434,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
   const handleItemNavigation = (href: string) => {
     if (href && href !== '#') {
       onItemClick(href);
+    }
+  };
+
+  // Función de navegación como respaldo (aunque NextLink maneja la navegación)
+  const handleNavigation = (href: string) => {
+    if (!href || href === '#') return;
+    router.push(href);
+    // Cerrar solo en móvil
+    if (isMobile && onClose) {
+      setTimeout(() => {
+        onClose();
+      }, 300);
     }
   };
 
