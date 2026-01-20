@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Container } from '@chakra-ui/react';
 import { Navbar, Sidebar } from '@eventconnect/ui';
@@ -18,6 +18,10 @@ import {
   Settings,
   MessageCircle,
   UserCog,
+  Truck,
+  RotateCcw,
+  QrCode,
+  AlertTriangle,
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '../store/store';
 import { logout, setCredentials } from '../store/slices/authSlice';
@@ -25,6 +29,129 @@ import { ROUTES } from '@eventconnect/shared';
 import { usePathname } from 'next/navigation';
 import ProfileModal from './profile/ProfileModal';
 import { API_BASE_URL } from '../config/env';
+
+// Tipos para roles del sistema
+type UserRole = 'SuperAdmin' | 'Admin-Proveedor' | 'Operario' | 'Cliente' | 'Usuario';
+
+// Función helper para crear items de menú con estado activo
+const createMenuItem = (
+  label: string,
+  icon: React.ElementType,
+  href: string,
+  pathname: string,
+  submenu?: Omit<MenuItemType, 'isActive'>[]
+): MenuItemType => {
+  const baseItem: MenuItemType = {
+    label,
+    icon,
+    href,
+    isActive: pathname === href,
+  };
+
+  if (submenu) {
+    return {
+      ...baseItem,
+      submenu: submenu.map((item) => ({
+        ...item,
+        isActive: pathname === item.href,
+      })),
+    };
+  }
+
+  return baseItem;
+};
+
+// Configuración centralizada de menús por rol
+const ROLE_MENUS: Record<UserRole, (pathname: string) => MenuItemType[]> = {
+  // Menú para Cliente
+  Cliente: (pathname: string): MenuItemType[] => [
+    createMenuItem('Explorar', LayoutDashboard, '/cliente/explorar', pathname),
+    createMenuItem('Cotizaciones', ShoppingCart, '/cliente/cotizaciones', pathname),
+    createMenuItem('Reservas', Calendar, '/cliente/reservas', pathname),
+    createMenuItem('Mensajes', MessageCircle, '/cliente/mensajes', pathname),
+  ],
+
+  // Menú para Usuario (alias de Cliente)
+  Usuario: (pathname: string): MenuItemType[] => [
+    createMenuItem('Explorar', LayoutDashboard, '/cliente/explorar', pathname),
+    createMenuItem('Cotizaciones', ShoppingCart, '/cliente/cotizaciones', pathname),
+    createMenuItem('Reservas', Calendar, '/cliente/reservas', pathname),
+    createMenuItem('Mensajes', MessageCircle, '/cliente/mensajes', pathname),
+  ],
+
+  // Menú para Admin-Proveedor y SuperAdmin
+  'Admin-Proveedor': (pathname: string): MenuItemType[] => [
+    createMenuItem('Dashboard', LayoutDashboard, ROUTES.DASHBOARD, pathname),
+    createMenuItem('Chat', MessageCircle, ROUTES.CHAT, pathname),
+    createMenuItem(
+      'Catálogo',
+      Package,
+      '#',
+      pathname,
+      [
+        { label: 'Categorías', icon: Package, href: ROUTES.CATEGORIAS },
+        { label: 'Productos', icon: ShoppingCart, href: ROUTES.PRODUCTOS },
+      ]
+    ),
+    createMenuItem('Clientes', Users, ROUTES.CLIENTES, pathname),
+    createMenuItem('Reservas', Calendar, ROUTES.RESERVAS, pathname),
+    createMenuItem(
+      'Inventario',
+      Warehouse,
+      '#',
+      pathname,
+      [
+        { label: 'Activos', icon: Warehouse, href: ROUTES.ACTIVOS },
+        { label: 'Bodegas', icon: FileBox, href: ROUTES.BODEGAS },
+        { label: 'Lotes', icon: TrendingUp, href: ROUTES.LOTES },
+      ]
+    ),
+    createMenuItem('Mantenimientos', Wrench, ROUTES.MANTENIMIENTOS, pathname),
+    createMenuItem('Usuarios', UserCog, ROUTES.USUARIOS, pathname),
+    createMenuItem('Configuración', Settings, ROUTES.CONFIGURACION, pathname),
+  ],
+
+  // Menú para SuperAdmin (mismo que Admin-Proveedor)
+  SuperAdmin: (pathname: string): MenuItemType[] => [
+    createMenuItem('Dashboard', LayoutDashboard, ROUTES.DASHBOARD, pathname),
+    createMenuItem('Chat', MessageCircle, ROUTES.CHAT, pathname),
+    createMenuItem(
+      'Catálogo',
+      Package,
+      '#',
+      pathname,
+      [
+        { label: 'Categorías', icon: Package, href: ROUTES.CATEGORIAS },
+        { label: 'Productos', icon: ShoppingCart, href: ROUTES.PRODUCTOS },
+      ]
+    ),
+    createMenuItem('Clientes', Users, ROUTES.CLIENTES, pathname),
+    createMenuItem('Reservas', Calendar, ROUTES.RESERVAS, pathname),
+    createMenuItem(
+      'Inventario',
+      Warehouse,
+      '#',
+      pathname,
+      [
+        { label: 'Activos', icon: Warehouse, href: ROUTES.ACTIVOS },
+        { label: 'Bodegas', icon: FileBox, href: ROUTES.BODEGAS },
+        { label: 'Lotes', icon: TrendingUp, href: ROUTES.LOTES },
+      ]
+    ),
+    createMenuItem('Mantenimientos', Wrench, ROUTES.MANTENIMIENTOS, pathname),
+    createMenuItem('Usuarios', UserCog, ROUTES.USUARIOS, pathname),
+    createMenuItem('Configuración', Settings, ROUTES.CONFIGURACION, pathname),
+  ],
+
+  // Menú para Operario (NUEVO)
+  Operario: (pathname: string): MenuItemType[] => [
+    createMenuItem('Dashboard', LayoutDashboard, ROUTES.DASHBOARD, pathname),
+    createMenuItem('Tareas de Entrega', Truck, '/operario/entregas', pathname),
+    createMenuItem('Tareas de Recogida', RotateCcw, '/operario/recogidas', pathname),
+    createMenuItem('Escáner QR', QrCode, '/operario/escanner', pathname),
+    createMenuItem('Reportar Incidente', AlertTriangle, '/operario/incidentes', pathname),
+  ],
+};
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -35,10 +162,25 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [pendingUsersCount, setPendingUsersCount] = useState<number>(0);
   const { user } = useAppSelector((state) => state.auth);
 
+  // Obtener el rol del usuario de forma segura
+  const userRole: UserRole | null = useMemo(() => {
+    if (!user?.rol) return null;
+    return user.rol as UserRole;
+  }, [user?.rol]);
+
+  // Obtener menú según rol usando la configuración centralizada
+  const menuItems: MenuItemType[] = useMemo(() => {
+    if (!userRole || !ROLE_MENUS[userRole]) {
+      // Si el rol no está definido, retornar menú vacío o mínimo
+      return [];
+    }
+    return ROLE_MENUS[userRole](pathname);
+  }, [userRole, pathname]);
+
   // Cargar conteo de usuarios pendientes (solo para admins)
   useEffect(() => {
     const fetchPendingUsers = async () => {
-      if (user?.rol === 'SuperAdmin' || user?.rol === 'Admin-Proveedor') {
+      if (userRole === 'SuperAdmin' || userRole === 'Admin-Proveedor') {
         try {
           const token = localStorage.getItem('token');
           const response = await fetch(`${API_BASE_URL}/Usuario/pendientes/count`, {
@@ -59,66 +201,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
     fetchPendingUsers();
     
-    // Actualizar cada 30 segundos
-    const interval = setInterval(fetchPendingUsers, 30000);
+    // Actualizar cada 2 minutos (120000 ms) en lugar de 30 segundos
+    const interval = setInterval(fetchPendingUsers, 120000);
     return () => clearInterval(interval);
-  }, [user?.rol]);
-
-  // Menú para clientes
-  const clienteMenuItems: MenuItemType[] = [
-    { label: 'Explorar', icon: LayoutDashboard, href: '/cliente/explorar', isActive: pathname === '/cliente/explorar' },
-    { label: 'Cotizaciones', icon: ShoppingCart, href: '/cliente/cotizaciones', isActive: pathname === '/cliente/cotizaciones' },
-    { label: 'Reservas', icon: Calendar, href: '/cliente/reservas', isActive: pathname === '/cliente/reservas' },
-    { label: 'Mensajes', icon: MessageCircle, href: '/cliente/mensajes', isActive: pathname === '/cliente/mensajes' },
-  ];
-
-  // Menú para administradores
-  const adminMenuItems: MenuItemType[] = [
-    { label: 'Dashboard', icon: LayoutDashboard, href: ROUTES.DASHBOARD, isActive: pathname === ROUTES.DASHBOARD },
-    { label: 'Chat', icon: MessageCircle, href: ROUTES.CHAT, isActive: pathname === ROUTES.CHAT },
-    { 
-      label: 'Catálogo', 
-      icon: Package, 
-      submenu: [
-        { label: 'Categorías', icon: Package, href: ROUTES.CATEGORIAS, isActive: pathname === ROUTES.CATEGORIAS },
-        { label: 'Productos', icon: ShoppingCart, href: ROUTES.PRODUCTOS, isActive: pathname === ROUTES.PRODUCTOS },
-      ]
-    },
-    { label: 'Clientes', icon: Users, href: ROUTES.CLIENTES, isActive: pathname === ROUTES.CLIENTES },
-    { label: 'Reservas', icon: Calendar, href: ROUTES.RESERVAS, isActive: pathname === ROUTES.RESERVAS },
-    { 
-      label: 'Inventario', 
-      icon: Warehouse, 
-      submenu: [
-        { label: 'Activos', icon: Warehouse, href: ROUTES.ACTIVOS, isActive: pathname === ROUTES.ACTIVOS },
-        { label: 'Bodegas', icon: FileBox, href: ROUTES.BODEGAS, isActive: pathname === ROUTES.BODEGAS },
-        { label: 'Lotes', icon: TrendingUp, href: ROUTES.LOTES, isActive: pathname === ROUTES.LOTES },
-      ]
-    },
-    { label: 'Mantenimientos', icon: Wrench, href: ROUTES.MANTENIMIENTOS, isActive: pathname === ROUTES.MANTENIMIENTOS },
-  ];
-
-  if (user?.rol === 'SuperAdmin' || user?.rol === 'Admin-Proveedor') {
-    adminMenuItems.push(
-      {
-        label: 'Usuarios',
-        icon: UserCog,
-        href: ROUTES.USUARIOS,
-        isActive: pathname === ROUTES.USUARIOS,
-      },
-      {
-        label: 'Configuración',
-        icon: Settings,
-        href: ROUTES.CONFIGURACION,
-        isActive: pathname === ROUTES.CONFIGURACION,
-      }
-    );
-  }
-
-  // Seleccionar menú según rol
-  const menuItems = (user?.rol === 'Cliente' || user?.rol === 'Usuario') 
-    ? clienteMenuItems 
-    : adminMenuItems;
+  }, [userRole]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -161,7 +247,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         userAvatar={user?.avatar_URL}
         userRole={user?.rol}
         userEmail={user?.email}
-        pendingUsersCount={user?.rol === 'SuperAdmin' || user?.rol === 'Admin-Proveedor' ? pendingUsersCount : undefined}
+        pendingUsersCount={userRole === 'SuperAdmin' || userRole === 'Admin-Proveedor' ? pendingUsersCount : undefined}
         onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
         onProfileClick={() => setIsProfileModalOpen(true)}
         onNotificationClick={handleNotificationClick}
