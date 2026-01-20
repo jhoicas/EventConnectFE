@@ -18,6 +18,7 @@ export const ROUTES = {
   CHAT: '/chat',
   PERFIL: '/perfil',
   FACTURACION: '/facturacion',
+  CALENDARIO_RESERVAS: '/reservas/calendario',
 };
 
 export const API_ENDPOINTS = {

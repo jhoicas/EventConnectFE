@@ -83,7 +83,16 @@ const ROLE_MENUS: Record<UserRole, (pathname: string) => MenuItemType[]> = {
   // Menú para Admin-Proveedor (limpiado y enfocado en su empresa)
   'Admin-Proveedor': (pathname: string): MenuItemType[] => [
     createMenuItem('Dashboard', LayoutDashboard, ROUTES.DASHBOARD, pathname),
-    createMenuItem('Reservas', Calendar, ROUTES.RESERVAS, pathname),
+    createMenuItem(
+      'Reservas',
+      Calendar,
+      '#',
+      pathname,
+      [
+        { label: 'Lista', icon: Calendar, href: ROUTES.RESERVAS },
+        { label: 'Calendario', icon: Calendar, href: ROUTES.CALENDARIO_RESERVAS },
+      ]
+    ),
     createMenuItem(
       'Inventario',
       Warehouse,

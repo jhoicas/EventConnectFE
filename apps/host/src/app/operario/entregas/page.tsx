@@ -29,7 +29,10 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, VStack } from '@chakra-ui/react';
 import { API_BASE_URL } from '../../../config/env';
+import { FinalizarEntregaModal } from '@/components/FinalizarEntregaModal';
+import { EvidenceUploader } from '@/components/EvidenceUploader';
 
 interface TareaEntrega {
   id: number;
@@ -275,11 +278,14 @@ export default function EntregasPage() {
                             height="48px"
                             colorScheme="green"
                             leftIcon={<Icon as={CheckCircle} boxSize={4} />}
-                            onClick={() => handleIniciar(tarea)}
+                            onClick={() => {
+                              setTareaAFinalizar(tarea);
+                              onFinalizarOpen();
+                            }}
                             fontSize="sm"
                             fontWeight="bold"
                           >
-                            Completar
+                            Finalizar Entrega
                           </Button>
                         )}
                       </HStack>
@@ -291,6 +297,21 @@ export default function EntregasPage() {
           )}
         </VStack>
       </Container>
+
+      {/* Modal Finalizar Entrega */}
+      <FinalizarEntregaModal
+        isOpen={isFinalizarOpen}
+        onClose={onFinalizarClose}
+        tareaId={tareaAFinalizar?.id || 0}
+        cliente={tareaAFinalizar?.cliente || ''}
+        onConfirm={(data) => {
+          // TODO: Enviar datos al backend
+          console.log('Datos de finalización:', data);
+          handleIniciar(tareaAFinalizar!);
+          onFinalizarClose();
+          setTareaAFinalizar(null);
+        }}
+      />
     </Box>
   );
 }
