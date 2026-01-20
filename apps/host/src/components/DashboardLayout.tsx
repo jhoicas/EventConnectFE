@@ -252,6 +252,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     router.push(ROUTES.LOGIN);
   };
 
+  // Guardar el estado del sidebar en localStorage cuando cambie
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sidebarOpen', String(isSidebarOpen));
+    }
+  }, [isSidebarOpen]);
+
   const handleMenuItemClick = async (href: string) => {
     // Ignorar clics en items sin href válido (submenús padre)
     if (!href || href === '#') {
@@ -262,13 +269,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       // Navegar a la ruta usando Next.js router
       await router.push(href);
       // La navegación se completa, el componente se renderizará automáticamente
+      // NO cerrar el sidebar aquí - se maneja en el componente Sidebar según el breakpoint
     } catch (error) {
       console.error('Error al navegar:', error);
     }
-    
-    // Nota: El cierre del sidebar en móvil se maneja en el componente Sidebar
-    // usando useBreakpointValue, por lo que no necesitamos hacerlo aquí
-    // En escritorio, el sidebar permanece abierto
   };
 
   const handleNotificationClick = () => {

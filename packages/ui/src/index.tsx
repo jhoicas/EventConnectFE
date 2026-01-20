@@ -376,10 +376,16 @@ const SidebarMenuItem: React.FC<{
           onClick={(e: React.MouseEvent) => {
             // Prevenir propagación al Drawer para que no se cierre automáticamente
             e.stopPropagation();
-            // Ejecutar navegación programática también para asegurar consistencia
+            // NO llamar preventDefault - dejar que NextLink maneje la navegación
+            // Ejecutar navegación programática como respaldo
             onItemClick(item.href!);
-            // Cerrar solo en móvil
-            handleLinkClick();
+            // Cerrar solo en móvil después de un delay para permitir la navegación
+            if (isMobile && onClose) {
+              setTimeout(() => {
+                onClose();
+              }, 300);
+            }
+            // En desktop, NO cerrar el sidebar
           }}
         >
           <Box as={item.icon} mr={3} />
