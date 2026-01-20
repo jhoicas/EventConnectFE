@@ -344,6 +344,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         onItemClick={handleMenuItemClick}
       />
 
+<<<<<<< HEAD
       {/* Contenido principal con margen izquierdo dinámico - Push behavior en escritorio */}
       <Box
         as="main"
@@ -365,6 +366,35 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         <Container maxW="container.xl" py={6} px={{ base: 4, md: 6 }}>
           {children}
         </Container>
+=======
+      {/* Contenedor flex para sidebar y contenido */}
+      <Box display="flex" position="relative">
+        {/* Sidebar fijo a la izquierda */}
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          items={menuItems}
+          onItemClick={handleMenuItemClick}
+        />
+
+        {/* Contenido principal con margen izquierdo dinámico */}
+        <Box
+          flex="1"
+          minW="0"
+          ml={{
+            base: 0, // En móvil: sin margen (sidebar es overlay/drawer)
+            md: isSidebarOpen ? "250px" : 0, // En escritorio: margen igual al ancho del sidebar (250px)
+            lg: isSidebarOpen ? "250px" : 0,
+          }}
+          transition="margin-left 0.3s ease"
+          position="relative"
+          zIndex={1}
+        >
+          <Container maxW="container.xl" py={6} px={{ base: 4, md: 6 }}>
+            {children}
+          </Container>
+        </Box>
+>>>>>>> d11ec0c ( fix menu superposicion)
       </Box>
 
       <ProfileModal
