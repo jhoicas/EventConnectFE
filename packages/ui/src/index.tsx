@@ -217,9 +217,9 @@ const SidebarMenuItem: React.FC<{
   item: MenuItemType;
   isExpanded: boolean;
   onToggle: () => void;
-  onClick: () => void;
+  onItemClick: (href: string) => void;
   level?: number;
-}> = ({ item, isExpanded, onToggle, onClick, level = 0 }) => {
+}> = ({ item, isExpanded, onToggle, onItemClick, level = 0 }) => {
   const activeBg = useColorModeValue('blue.50', 'blue.900');
   const activeColor = useColorModeValue('blue.600', 'blue.200');
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
@@ -234,7 +234,7 @@ const SidebarMenuItem: React.FC<{
         justifyContent="flex-start"
         leftIcon={<item.icon />}
         rightIcon={hasSubmenu ? <Box transform={isExpanded ? 'rotate(180deg)' : 'rotate(0)'} transition="transform 0.2s">▼</Box> : undefined}
-        onClick={hasSubmenu ? onToggle : onClick}
+        onClick={hasSubmenu ? onToggle : () => item.href && onItemClick(item.href)}
         borderRadius="0"
         position="relative"
         bg={item.isActive ? activeBg : 'transparent'}
@@ -268,7 +268,7 @@ const SidebarMenuItem: React.FC<{
               w="100%"
               justifyContent="flex-start"
               leftIcon={<subitem.icon />}
-              onClick={() => onClick()}
+              onClick={() => subitem.href && onItemClick(subitem.href)}
               borderRadius="0"
               bg={subitem.isActive ? activeBg : 'transparent'}
               color={subitem.isActive ? activeColor : 'inherit'}
@@ -317,11 +317,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           item={item}
           isExpanded={expandedItems.includes(item.label)}
           onToggle={() => toggleItem(item.label)}
-          onClick={() => {
-            if (item.href) {
-              onItemClick(item.href);
-            }
-          }}
+          onItemClick={onItemClick}
         />
       ))}
     </VStack>
