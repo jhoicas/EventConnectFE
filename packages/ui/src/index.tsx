@@ -398,51 +398,6 @@ const SidebarMenuItem: React.FC<{
       {item.label}
     </Box>
   );
-      {hasSubmenu && isExpanded && (
-        <VStack align="stretch" spacing={0} pl={4} py={1}>
-          {item.submenu!.map((subitem) => (
-            <Box
-              key={subitem.href}
-              as={ChakraButton}
-              variant="ghost"
-              w="100%"
-              justifyContent="flex-start"
-              leftIcon={<subitem.icon />}
-              onClick={(e: React.MouseEvent) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (subitem.href && subitem.href !== '#') {
-                  onItemClick(subitem.href);
-                }
-              }}
-              borderRadius="0"
-              bg={subitem.isActive ? activeBg : 'transparent'}
-              color={subitem.isActive ? activeColor : 'inherit'}
-              _hover={{
-                bg: subitem.isActive ? activeBg : hoverBg,
-              }}
-              _before={subitem.isActive ? {
-                content: '""',
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: '3px',
-                bg: 'blue.400',
-              } : undefined}
-              position="relative"
-              pl={4}
-              fontSize="xs"
-              fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-              type="button"
-            >
-              {subitem.label}
-            </Box>
-          ))}
-        </VStack>
-      )}
-    </Box>
-  );
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItemClick }) => {
