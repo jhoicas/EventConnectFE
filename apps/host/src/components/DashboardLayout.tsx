@@ -245,7 +245,27 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   };
 
   const handleMenuItemClick = (href: string) => {
+    // Ignorar clics en items sin href válido (submenús padre)
+    if (!href || href === '#') {
+      return;
+    }
+
+    // Navegar a la ruta usando Next.js router
     router.push(href);
+
+    // Solo cerrar el sidebar en móvil después de la navegación
+    // En escritorio, el sidebar permanece abierto
+    // Usar matchMedia para detectar si estamos en móvil de forma más confiable
+    if (typeof window !== 'undefined') {
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      if (isMobile) {
+        // Pequeño delay para permitir que la navegación se complete antes de cerrar
+        setTimeout(() => {
+          setIsSidebarOpen(false);
+        }, 150);
+      }
+    }
+    // En escritorio, no hacer nada - el sidebar permanece abierto
   };
 
   const handleNotificationClick = () => {

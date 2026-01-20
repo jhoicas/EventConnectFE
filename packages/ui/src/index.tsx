@@ -225,6 +225,15 @@ const SidebarMenuItem: React.FC<{
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
   const hasSubmenu = item.submenu && item.submenu.length > 0;
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (hasSubmenu) {
+      onToggle();
+    } else if (item.href && item.href !== '#') {
+      e.preventDefault();
+      onItemClick(item.href);
+    }
+  };
+
   return (
     <Box>
       <Box
@@ -234,7 +243,7 @@ const SidebarMenuItem: React.FC<{
         justifyContent="flex-start"
         leftIcon={<item.icon />}
         rightIcon={hasSubmenu ? <Box transform={isExpanded ? 'rotate(180deg)' : 'rotate(0)'} transition="transform 0.2s">▼</Box> : undefined}
-        onClick={hasSubmenu ? onToggle : () => item.href && onItemClick(item.href)}
+        onClick={handleClick}
         borderRadius="0"
         position="relative"
         bg={item.isActive ? activeBg : 'transparent'}
@@ -268,7 +277,12 @@ const SidebarMenuItem: React.FC<{
               w="100%"
               justifyContent="flex-start"
               leftIcon={<subitem.icon />}
-              onClick={() => subitem.href && onItemClick(subitem.href)}
+              onClick={(e: React.MouseEvent) => {
+                if (subitem.href && subitem.href !== '#') {
+                  e.preventDefault();
+                  onItemClick(subitem.href);
+                }
+              }}
               borderRadius="0"
               bg={subitem.isActive ? activeBg : 'transparent'}
               color={subitem.isActive ? activeColor : 'inherit'}
@@ -325,7 +339,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
 
   return (
     <>
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="xs">
+      <Drawer 
+        isOpen={isOpen} 
+        placement="left" 
+        onClose={onClose} 
+        size="xs"
+        closeOnOverlayClick={true}
+        closeOnEsc={true}
+      >
         <DrawerOverlay display={{ md: 'none' }} />
         <DrawerContent display={{ md: 'none' }} bg={bg}>
           <DrawerCloseButton />
