@@ -159,7 +159,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const toast = useToast();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Estado del sidebar - persistir entre navegaciones usando localStorage
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    // Intentar recuperar el estado desde localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('sidebarOpen');
+      return saved !== null ? saved === 'true' : true;
+    }
+    return true;
+  });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [pendingUsersCount, setPendingUsersCount] = useState<number>(0);
   const { user } = useAppSelector((state) => state.auth);
@@ -315,9 +323,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar - Fixed position, controlado por el componente Sidebar */}
       <Sidebar
         isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
+        onClose={() => {
+          setIsSidebarOpen(false);
+          // Guardar en localStorage
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('sidebarOpen', 'false');
+          }
+        }}
         items={menuItems}
-        onItemClick={handleMenuItemClick} // Mantener para compatibilidad, pero Next.js Link maneja la navegación
+        onItemClick={handleMenuItemClick}
       />
 
       {/* Contenido principal con margen izquierdo dinámico - Push behavior en escritorio */}

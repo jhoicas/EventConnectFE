@@ -233,15 +233,7 @@ const SidebarMenuItem: React.FC<{
   const hasSubmenu = item.submenu && item.submenu.length > 0;
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const handleLinkClick = () => {
-    // Solo cerrar el sidebar en móvil después de un delay
-    if (isMobile && onClose) {
-      setTimeout(() => {
-        onClose();
-      }, 300);
-    }
-    // En escritorio, NO cerrar el sidebar - permanece abierto
-  };
+  // Esta función ya no se usa, la lógica está inline arriba
 
   // Si tiene submenú, solo toggle, no navegar
   if (hasSubmenu) {
@@ -322,10 +314,16 @@ const SidebarMenuItem: React.FC<{
                       onClick={(e: React.MouseEvent) => {
                         // Prevenir propagación al Drawer para que no se cierre automáticamente
                         e.stopPropagation();
-                        // Ejecutar navegación programática también para asegurar consistencia
+                        // NO llamar preventDefault - dejar que NextLink maneje la navegación
+                        // Ejecutar navegación programática como respaldo
                         onItemClick(subitem.href!);
-                        // Cerrar solo en móvil
-                        handleLinkClick();
+                        // Cerrar solo en móvil después de un delay para permitir la navegación
+                        if (isMobile && onClose) {
+                          setTimeout(() => {
+                            onClose();
+                          }, 300);
+                        }
+                        // En desktop, NO cerrar el sidebar
                       }}
                     >
                       <Box as={subitem.icon} mr={3} />
@@ -482,13 +480,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           <DrawerBody 
             p={0}
             onClick={(e) => {
-              // Prevenir que el Drawer se cierre cuando se hace clic en un enlace o botón del menú
+              // Prevenir que el Drawer se cierre automáticamente cuando se hace clic en un enlace
               const target = e.target as HTMLElement;
               const link = target.closest('a');
               const button = target.closest('button[type="button"]');
               if (link || button) {
+                // Detener la propagación para evitar que el Drawer se cierre
                 e.stopPropagation();
-                // NO llamar preventDefault para permitir que la navegación funcione
+                // NO llamar preventDefault - NextLink necesita el evento para navegar
+              }
+            }}
+            onClickCapture={(e) => {
+              // Capturar el evento en la fase de captura también para mayor seguridad
+              const target = e.target as HTMLElement;
+              const link = target.closest('a');
+              if (link) {
+                e.stopPropagation();
               }
             }}
           >
