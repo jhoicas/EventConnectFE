@@ -119,7 +119,7 @@ export const SignaturePad = ({
           position="relative"
           w="100%"
           h={{ base: '200px', md: `${height}px` }}
-          touchAction="none"
+          sx={{ touchAction: 'none' }}
         >
           <SignatureCanvas
             ref={signatureRef}
