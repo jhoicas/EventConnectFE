@@ -230,18 +230,12 @@ const SidebarMenuItem: React.FC<{
   const hasSubmenu = item.submenu && item.submenu.length > 0;
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const handleNavigation = (href: string) => {
-    if (!href || href === '#') return;
-    
-    // Navegar primero - esto ejecutará router.push
-    onItemClick(href);
-    
-    // Solo cerrar en móvil después de un delay para permitir que la navegación se complete
+  const handleLinkClick = () => {
+    // Solo cerrar el sidebar en móvil después de un delay
     if (isMobile && onClose) {
-      // Delay más largo para asegurar que la navegación se complete
       setTimeout(() => {
         onClose();
-      }, 500);
+      }, 300);
     }
     // En escritorio, NO cerrar el sidebar - permanece abierto
   };
@@ -289,46 +283,52 @@ const SidebarMenuItem: React.FC<{
         {isExpanded && (
           <VStack align="stretch" spacing={0} pl={4} py={1}>
             {item.submenu!.map((subitem) => {
-              // Si el subitem tiene href válido, usar botón con navegación programática
+              // Si el subitem tiene href válido, usar NextLink directamente
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <Box
-                    key={subitem.href}
-                    as={ChakraButton}
-                    variant="ghost"
-                    w="100%"
-                    justifyContent="flex-start"
-                    leftIcon={<subitem.icon />}
-                    borderRadius="0"
-                    bg={subitem.isActive ? activeBg : 'transparent'}
-                    color={subitem.isActive ? activeColor : 'inherit'}
-                    _hover={{
-                      bg: subitem.isActive ? activeBg : hoverBg,
-                    }}
-                    _before={subitem.isActive ? {
-                      content: '""',
-                      position: 'absolute',
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      width: '3px',
-                      bg: 'blue.400',
-                    } : undefined}
-                    position="relative"
-                    pl={4}
-                    fontSize="xs"
-                    fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-                    type="button"
-                    onClick={(e: React.MouseEvent) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // Navegar inmediatamente
-                      handleNavigation(subitem.href!);
-                    }}
-                    cursor="pointer"
-                  >
-                    {subitem.label}
-                  </Box>
+                  <NextLink key={subitem.href} href={subitem.href} passHref legacyBehavior>
+                    <Box
+                      as="a"
+                      display="flex"
+                      alignItems="center"
+                      w="100%"
+                      px={4}
+                      py={2}
+                      pl={8}
+                      borderRadius="0"
+                      position="relative"
+                      bg={subitem.isActive ? activeBg : 'transparent'}
+                      color={subitem.isActive ? activeColor : 'inherit'}
+                      _hover={{
+                        bg: subitem.isActive ? activeBg : hoverBg,
+                        textDecoration: 'none',
+                      }}
+                      _before={subitem.isActive ? {
+                        content: '""',
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: '3px',
+                        bg: 'blue.400',
+                      } : undefined}
+                      fontSize="xs"
+                      fontWeight={subitem.isActive ? 'semibold' : 'normal'}
+                      cursor="pointer"
+                      textDecoration="none"
+                      onClick={(e: React.MouseEvent) => {
+                        // Prevenir propagación al Drawer para que no se cierre automáticamente
+                        e.stopPropagation();
+                        // Ejecutar navegación programática también para asegurar consistencia
+                        onItemClick(subitem.href!);
+                        // Cerrar solo en móvil
+                        handleLinkClick();
+                      }}
+                    >
+                      <Box as={subitem.icon} mr={3} />
+                      {subitem.label}
+                    </Box>
+                  </NextLink>
                 );
               }
               return null;
@@ -460,12 +460,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           <DrawerBody 
             p={0}
             onClick={(e) => {
-              // Prevenir que el Drawer se cierre cuando se hace clic en un botón del menú
+              // Prevenir que el Drawer se cierre cuando se hace clic en un enlace o botón del menú
               const target = e.target as HTMLElement;
+              const link = target.closest('a');
               const button = target.closest('button[type="button"]');
-              if (button) {
+              if (link || button) {
                 e.stopPropagation();
-                // NO llamar preventDefault para permitir que el onClick del botón funcione
+                // NO llamar preventDefault para permitir que la navegación funcione
               }
             }}
           >
