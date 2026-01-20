@@ -17,6 +17,7 @@ import {
   useToast,
   Spinner,
   Center,
+  useDisclosure,
 } from '@chakra-ui/react';
 import {
   Truck,
@@ -29,10 +30,8 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, VStack } from '@chakra-ui/react';
 import { API_BASE_URL } from '../../../config/env';
 import { FinalizarEntregaModal } from '@/components/FinalizarEntregaModal';
-import { EvidenceUploader } from '@/components/EvidenceUploader';
 
 interface TareaEntrega {
   id: number;
@@ -52,6 +51,8 @@ export default function EntregasPage() {
   const [localColorMode, setLocalColorMode] = useState<'light' | 'dark' | 'blue'>('light');
   const [tareas, setTareas] = useState<TareaEntrega[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { isOpen: isFinalizarOpen, onOpen: onFinalizarOpen, onClose: onFinalizarClose } = useDisclosure();
+  const [tareaAFinalizar, setTareaAFinalizar] = useState<TareaEntrega | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('chakra-ui-color-mode');
