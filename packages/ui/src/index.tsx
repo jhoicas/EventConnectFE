@@ -16,6 +16,7 @@ import {
   Spinner,
   Flex,
   useColorModeValue,
+  useBreakpointValue,
   Table,
   Thead,
   Tbody,
@@ -226,10 +227,12 @@ const SidebarMenuItem: React.FC<{
   const hasSubmenu = item.submenu && item.submenu.length > 0;
 
   const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (hasSubmenu) {
       onToggle();
     } else if (item.href && item.href !== '#') {
-      e.preventDefault();
       onItemClick(item.href);
     }
   };
@@ -264,6 +267,7 @@ const SidebarMenuItem: React.FC<{
         pl={4}
         fontWeight={item.isActive ? 'semibold' : 'normal'}
         fontSize="sm"
+        type="button"
       >
         {item.label}
       </Box>
@@ -278,8 +282,9 @@ const SidebarMenuItem: React.FC<{
               justifyContent="flex-start"
               leftIcon={<subitem.icon />}
               onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                e.stopPropagation();
                 if (subitem.href && subitem.href !== '#') {
-                  e.preventDefault();
                   onItemClick(subitem.href);
                 }
               }}
@@ -302,6 +307,7 @@ const SidebarMenuItem: React.FC<{
               pl={4}
               fontSize="xs"
               fontWeight={subitem.isActive ? 'semibold' : 'normal'}
+              type="button"
             >
               {subitem.label}
             </Box>
@@ -316,11 +322,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
   const bg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const toggleItem = (label: string) => {
     setExpandedItems((prev) =>
       prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]
     );
+  };
+
+  // Handler para items navegables que cierra el drawer solo en móvil
+  const handleItemNavigation = (href: string) => {
+    if (href && href !== '#') {
+      onItemClick(href);
+      // Solo cerrar el drawer en móvil después de la navegación
+      if (isMobile) {
+        setTimeout(() => {
+          onClose();
+        }, 100);
+      }
+    }
   };
 
   const SidebarContent = (
@@ -331,7 +351,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           item={item}
           isExpanded={expandedItems.includes(item.label)}
           onToggle={() => toggleItem(item.label)}
-          onItemClick={onItemClick}
+          onItemClick={handleItemNavigation}
         />
       ))}
     </VStack>
@@ -346,6 +366,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         size="xs"
         closeOnOverlayClick={true}
         closeOnEsc={true}
+        blockScrollOnMount={false}
       >
         <DrawerOverlay display={{ md: 'none' }} />
         <DrawerContent display={{ md: 'none' }} bg={bg}>
