@@ -40,6 +40,7 @@ import {
   VStack,
   HStack,
   Badge,
+  Link as ChakraLink,
 } from '@chakra-ui/react';
 import { HamburgerIcon, BellIcon } from '@chakra-ui/icons';
 import { FiUser, FiLogOut } from 'react-icons/fi';
@@ -275,22 +276,13 @@ const SidebarMenuItem: React.FC<{
               // Si el subitem tiene href válido, usar Link
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <NextLink key={subitem.href} href={subitem.href} passHref legacyBehavior>
+                  <NextLink key={subitem.href} href={subitem.href} style={{ textDecoration: 'none', width: '100%' }}>
                     <Box
                       as={ChakraButton}
                       variant="ghost"
                       w="100%"
                       justifyContent="flex-start"
                       leftIcon={<subitem.icon />}
-              onClick={(e: React.MouseEvent) => {
-                // Solo cerrar en móvil
-                if (isMobile && onClose) {
-                  setTimeout(() => {
-                    onClose();
-                  }, 100);
-                }
-                // No llamar a onItemClick aquí porque Next.js Link maneja la navegación
-              }}
                       borderRadius="0"
                       bg={subitem.isActive ? activeBg : 'transparent'}
                       color={subitem.isActive ? activeColor : 'inherit'}
@@ -311,7 +303,16 @@ const SidebarMenuItem: React.FC<{
                       fontSize="xs"
                       fontWeight={subitem.isActive ? 'semibold' : 'normal'}
                       type="button"
-                      style={{ textDecoration: 'none' }}
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation(); // Prevenir que el evento se propague al Drawer
+                        // Solo cerrar en móvil después de permitir que la navegación ocurra
+                        if (isMobile && onClose) {
+                          // Delay para permitir que Next.js procese la navegación
+                          setTimeout(() => {
+                            onClose();
+                          }, 300);
+                        }
+                      }}
                     >
                       {subitem.label}
                     </Box>
@@ -329,22 +330,13 @@ const SidebarMenuItem: React.FC<{
   // Si no tiene submenú y tiene href válido, usar Link
   if (item.href && item.href !== '#') {
     return (
-      <NextLink href={item.href} passHref legacyBehavior>
+      <NextLink href={item.href} style={{ textDecoration: 'none', width: '100%' }}>
         <Box
           as={ChakraButton}
           variant="ghost"
           w="100%"
           justifyContent="flex-start"
           leftIcon={<item.icon />}
-          onClick={(e: React.MouseEvent) => {
-            // Solo cerrar en móvil
-            if (isMobile && onClose) {
-              setTimeout(() => {
-                onClose();
-              }, 100);
-            }
-            // No llamar a onItemClick aquí porque Next.js Link maneja la navegación
-          }}
           borderRadius="0"
           position="relative"
           bg={item.isActive ? activeBg : 'transparent'}
@@ -366,7 +358,16 @@ const SidebarMenuItem: React.FC<{
           fontWeight={item.isActive ? 'semibold' : 'normal'}
           fontSize="sm"
           type="button"
-          style={{ textDecoration: 'none' }}
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation(); // Prevenir que el evento se propague al Drawer
+            // Solo cerrar en móvil después de permitir que la navegación ocurra
+            if (isMobile && onClose) {
+              // Delay para permitir que Next.js procese la navegación
+              setTimeout(() => {
+                onClose();
+              }, 300);
+            }
+          }}
         >
           {item.label}
         </Box>
@@ -450,7 +451,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         <DrawerContent display={{ md: 'none' }} bg={bg}>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader>
-          <DrawerBody p={0}>{SidebarContent}</DrawerBody>
+          <DrawerBody p={0}>
+            {SidebarContent}
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
       <Box
