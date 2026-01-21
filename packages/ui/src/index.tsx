@@ -283,6 +283,7 @@ const SidebarMenuItem: React.FC<{
                 return (
                   <Box
                     key={subitem.href}
+                    as="button"
                     display="flex"
                     alignItems="center"
                     w="100%"
@@ -293,6 +294,9 @@ const SidebarMenuItem: React.FC<{
                     position="relative"
                     bg={subitem.isActive ? activeBg : 'transparent'}
                     color={subitem.isActive ? activeColor : 'inherit'}
+                    border="none"
+                    font="inherit"
+                    textAlign="left"
                     _hover={{
                       bg: subitem.isActive ? activeBg : hoverBg,
                     }}
@@ -337,6 +341,7 @@ const SidebarMenuItem: React.FC<{
   if (item.href && item.href !== '#') {
     return (
       <Box
+        as="button"
         display="flex"
         alignItems="center"
         w="100%"
@@ -346,6 +351,9 @@ const SidebarMenuItem: React.FC<{
         position="relative"
         bg={item.isActive ? activeBg : 'transparent'}
         color={item.isActive ? activeColor : 'inherit'}
+        border="none"
+        font="inherit"
+        textAlign="left"
         _hover={{
           bg: item.isActive ? activeBg : hoverBg,
         }}
