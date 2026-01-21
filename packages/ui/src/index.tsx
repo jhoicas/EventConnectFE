@@ -278,58 +278,52 @@ const SidebarMenuItem: React.FC<{
         {isExpanded && (
           <VStack align="stretch" spacing={0} pl={4} py={1}>
             {item.submenu!.map((subitem) => {
-              // Si el subitem tiene href válido, usar NextLink directamente
+              // Si el subitem tiene href válido, usar navegación directa
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <NextLink key={subitem.href} href={subitem.href} passHref legacyBehavior>
-                    <Box
-                      as="a"
-                      display="flex"
-                      alignItems="center"
-                      w="100%"
-                      px={4}
-                      py={2}
-                      pl={8}
-                      borderRadius="0"
-                      position="relative"
-                      bg={subitem.isActive ? activeBg : 'transparent'}
-                      color={subitem.isActive ? activeColor : 'inherit'}
-                      _hover={{
-                        bg: subitem.isActive ? activeBg : hoverBg,
-                        textDecoration: 'none',
-                      }}
-                      _before={subitem.isActive ? {
-                        content: '""',
-                        position: 'absolute',
-                        left: 0,
-                        top: 0,
-                        bottom: 0,
-                        width: '3px',
-                        bg: 'blue.400',
-                      } : undefined}
-                      fontSize="xs"
-                      fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-                      cursor="pointer"
-                      textDecoration="none"
-                      onClick={(e: React.MouseEvent) => {
-                        // Prevenir propagación al Drawer para que no se cierre automáticamente
-                        e.stopPropagation();
-                        // NO llamar preventDefault - dejar que NextLink maneje la navegación
-                        // Ejecutar navegación programática como respaldo
-                        onItemClick(subitem.href!);
-                        // Cerrar solo en móvil después de un delay para permitir la navegación
-                        if (isMobile && onClose) {
-                          setTimeout(() => {
-                            onClose();
-                          }, 300);
-                        }
-                        // En desktop, NO cerrar el sidebar
-                      }}
-                    >
-                      <Box as={subitem.icon} mr={3} />
-                      {subitem.label}
-                    </Box>
-                  </NextLink>
+                  <Box
+                    key={subitem.href}
+                    display="flex"
+                    alignItems="center"
+                    w="100%"
+                    px={4}
+                    py={2}
+                    pl={8}
+                    borderRadius="0"
+                    position="relative"
+                    bg={subitem.isActive ? activeBg : 'transparent'}
+                    color={subitem.isActive ? activeColor : 'inherit'}
+                    _hover={{
+                      bg: subitem.isActive ? activeBg : hoverBg,
+                    }}
+                    _before={subitem.isActive ? {
+                      content: '""',
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: '3px',
+                      bg: 'blue.400',
+                    } : undefined}
+                    fontSize="xs"
+                    fontWeight={subitem.isActive ? 'semibold' : 'normal'}
+                    cursor="pointer"
+                    onClick={(e: React.MouseEvent) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      // Navegación directa
+                      onItemClick(subitem.href!);
+                      // Cerrar el menú solo en mobile después de navegar
+                      if (isMobile && onClose) {
+                        setTimeout(() => {
+                          onClose();
+                        }, 100);
+                      }
+                    }}
+                  >
+                    <Box as={subitem.icon} mr={3} />
+                    {subitem.label}
+                  </Box>
                 );
               }
               return null;
@@ -340,50 +334,53 @@ const SidebarMenuItem: React.FC<{
     );
   }
 
-  // Si no tiene submenú y tiene href válido, usar NextLink directamente
+  // Si no tiene submenú y tiene href válido, usar navegación directa
   if (item.href && item.href !== '#') {
     return (
-      <NextLink href={item.href} passHref legacyBehavior>
-        <Box
-          as="a"
-          display="flex"
-          alignItems="center"
-          w="100%"
-          px={4}
-          py={3}
-          borderRadius="0"
-          position="relative"
-          bg={item.isActive ? activeBg : 'transparent'}
-          color={item.isActive ? activeColor : 'inherit'}
-          _hover={{
-            bg: item.isActive ? activeBg : hoverBg,
-            textDecoration: 'none',
-          }}
-          _before={item.isActive ? {
-            content: '""',
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: '4px',
-            bg: 'blue.500',
-            borderRadius: '0 4px 4px 0',
-          } : undefined}
-          fontWeight={item.isActive ? 'semibold' : 'normal'}
-          fontSize="sm"
-          cursor="pointer"
-          textDecoration="none"
-          onClick={(e: React.MouseEvent) => {
-            // Prevenir propagación al Drawer para que no se cierre automáticamente
-            e.stopPropagation();
-            // NO llamar preventDefault - dejar que NextLink maneje la navegación
-            // Ejecutar navegación programática como respaldo
-            onItemClick(item.href!);
-            // Cerrar solo en móvil después de un delay para permitir la navegación
-            if (isMobile && onClose) {
-              setTimeout(() => {
-                onClose();
-              }, 300);
+      <Box
+        display="flex"
+        alignItems="center"
+        w="100%"
+        px={4}
+        py={3}
+        borderRadius="0"
+        position="relative"
+        bg={item.isActive ? activeBg : 'transparent'}
+        color={item.isActive ? activeColor : 'inherit'}
+        _hover={{
+          bg: item.isActive ? activeBg : hoverBg,
+        }}
+        _before={item.isActive ? {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: '4px',
+          bg: 'blue.500',
+          borderRadius: '0 4px 4px 0',
+        } : undefined}
+        fontWeight={item.isActive ? 'semibold' : 'normal'}
+        fontSize="sm"
+        cursor="pointer"
+        onClick={(e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          // Navegación directa
+          onItemClick(item.href!);
+          // Cerrar solo en móvil después de navegar
+          if (isMobile && onClose) {
+            setTimeout(() => {
+              onClose();
+            }, 100);
+          }
+        }}
+      >
+        <Box as={item.icon} mr={3} />
+        {item.label}
+      </Box>
+    );
+  }
             }
             // En desktop, NO cerrar el sidebar
           }}
