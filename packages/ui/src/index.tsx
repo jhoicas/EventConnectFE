@@ -310,6 +310,7 @@ const SidebarMenuItem: React.FC<{
                     fontSize="xs"
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      console.log('Click en subitem:', subitem.href);
                       e.preventDefault();
                       e.stopPropagation();
                       // Navegación directa - usar router.push inmediatamente
@@ -318,7 +319,6 @@ const SidebarMenuItem: React.FC<{
                         // Prioridad: router directo > onItemClick
                         if (router) {
                           router.push(subitem.href);
-                          router.refresh();
                         }
                         if (onItemClick) {
                           onItemClick(subitem.href);
@@ -331,8 +331,9 @@ const SidebarMenuItem: React.FC<{
                         }
                       }
                     }}
-        type="button"
-        cursor="pointer"
+                    type="button"
+                    cursor="pointer"
+                    pointerEvents="auto"
                   >
                     {subitem.label}
                   </ChakraButton>
@@ -375,6 +376,7 @@ const SidebarMenuItem: React.FC<{
         fontWeight={item.isActive ? 'semibold' : 'normal'}
         fontSize="sm"
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          console.log('Click en item:', item.href);
           e.preventDefault();
           e.stopPropagation();
           // Navegación directa - usar router.push inmediatamente
@@ -383,7 +385,6 @@ const SidebarMenuItem: React.FC<{
             // Prioridad: router directo > onItemClick
             if (router) {
               router.push(item.href);
-              router.refresh();
             }
             if (onItemClick) {
               onItemClick(item.href);
@@ -397,6 +398,8 @@ const SidebarMenuItem: React.FC<{
           }
         }}
         type="button"
+        cursor="pointer"
+        pointerEvents="auto"
       >
         {item.label}
       </ChakraButton>
@@ -447,8 +450,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
     if (href && href !== '#') {
       // Ejecutar navegación directamente con router.push
       router.push(href);
-      // Forzar actualización del router
-      router.refresh();
       // También notificar al padre por si acaso
       if (onItemClick) {
         onItemClick(href);
@@ -510,7 +511,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         borderRightWidth="1px"
         borderColor={borderColor}
         overflowY="auto"
-        zIndex={900}
+        zIndex={1000}
         transition="transform 0.3s ease-in-out"
         transform={{ base: 'none', md: isOpen ? 'translateX(0)' : 'translateX(-100%)' }}
         pointerEvents="auto"

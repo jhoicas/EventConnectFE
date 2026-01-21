@@ -266,10 +266,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     }
 
     // Navegar inmediatamente usando router.push
-    // Forzar navegación incluso si estamos en la misma ruta
     router.push(href);
-    // Forzar actualización del router
-    router.refresh();
     
     // La navegación se iniciará, Next.js manejará el renderizado automáticamente
     // NO cerrar el sidebar aquí - se maneja en el componente Sidebar según el breakpoint
@@ -354,6 +351,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         transition="margin-left 0.3s ease-in-out, width 0.3s ease-in-out"
         position="relative"
         zIndex={1}
+        pointerEvents="auto"
       >
         <Container maxW="container.xl" py={6} px={{ base: 4, md: 6 }}>
           {children}
