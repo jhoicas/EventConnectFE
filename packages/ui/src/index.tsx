@@ -381,16 +381,6 @@ const SidebarMenuItem: React.FC<{
       </Box>
     );
   }
-            }
-            // En desktop, NO cerrar el sidebar
-          }}
-        >
-          <Box as={item.icon} mr={3} />
-          {item.label}
-        </Box>
-      </NextLink>
-    );
-  }
 
   // Fallback para items sin href
   return (
