@@ -286,7 +286,8 @@ const SidebarMenuItem: React.FC<{
                 return (
                   <Box
                     key={subitem.href}
-                    as="button"
+                    as={ChakraButton}
+                    variant="ghost"
                     display="flex"
                     alignItems="center"
                     w="100%"
@@ -297,6 +298,7 @@ const SidebarMenuItem: React.FC<{
                     position="relative"
                     bg={subitem.isActive ? activeBg : 'transparent'}
                     color={subitem.isActive ? activeColor : 'inherit'}
+                    justifyContent="flex-start"
                     _hover={{
                       bg: subitem.isActive ? activeBg : hoverBg,
                     }}
@@ -311,25 +313,18 @@ const SidebarMenuItem: React.FC<{
                     } : undefined}
                     fontSize="xs"
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-                    cursor="pointer"
                     onClick={(e: React.MouseEvent) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      // Navegar inmediatamente
-                      if (router && subitem.href) {
-                        router.push(subitem.href);
-                      }
-                      if (onItemClick && subitem.href) {
-                        onItemClick(subitem.href);
-                      }
+                      // Navegar usando el callback onItemClick
+                      onItemClick(subitem.href!);
                       // Cerrar solo en móvil después de navegar
-                      if (isMobileValue && onClose) {
+                      if (isMobile && onClose) {
                         setTimeout(() => {
                           onClose();
-                        }, 300);
+                        }, 150);
                       }
                     }}
-                    type="button"
                   >
                     <Box as={subitem.icon} mr={3} />
                     {subitem.label}
@@ -348,7 +343,8 @@ const SidebarMenuItem: React.FC<{
   if (item.href && item.href !== '#') {
     return (
       <Box
-        as="button"
+        as={ChakraButton}
+        variant="ghost"
         display="flex"
         alignItems="center"
         w="100%"
@@ -358,6 +354,7 @@ const SidebarMenuItem: React.FC<{
         position="relative"
         bg={item.isActive ? activeBg : 'transparent'}
         color={item.isActive ? activeColor : 'inherit'}
+        justifyContent="flex-start"
         _hover={{
           bg: item.isActive ? activeBg : hoverBg,
         }}
@@ -373,25 +370,18 @@ const SidebarMenuItem: React.FC<{
         } : undefined}
         fontWeight={item.isActive ? 'semibold' : 'normal'}
         fontSize="sm"
-        cursor="pointer"
         onClick={(e: React.MouseEvent) => {
           e.preventDefault();
           e.stopPropagation();
-          // Navegar inmediatamente
-          if (router && item.href) {
-            router.push(item.href);
-          }
-          if (onItemClick && item.href) {
-            onItemClick(item.href);
-          }
+          // Navegar usando el callback onItemClick
+          onItemClick(item.href!);
           // Cerrar solo en móvil después de navegar
-          if (isMobileValue && onClose) {
+          if (isMobile && onClose) {
             setTimeout(() => {
               onClose();
-            }, 300);
+            }, 150);
           }
         }}
-        type="button"
       >
         <Box as={item.icon} mr={3} />
         {item.label}
