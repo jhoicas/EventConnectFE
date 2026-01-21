@@ -306,18 +306,19 @@ const SidebarMenuItem: React.FC<{
                     pl={8}
                     fontSize="xs"
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-                    onClick={(e: React.MouseEvent) => {
-                      // NO prevenir el comportamiento por defecto - permitir que la navegación funcione
-                      e.stopPropagation(); // Solo prevenir propagación al Drawer
-                      // Navegación directa
-                      onItemClick(subitem.href!);
-                      // Cerrar el menú solo en mobile después de navegar
-                      if (isMobile && onClose) {
-                        setTimeout(() => {
-                          onClose();
-                        }, 150);
-                      }
-                    }}
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation(); // Prevenir propagación al Drawer
+          // Navegación directa - ejecutar inmediatamente
+          if (onItemClick) {
+            onItemClick(subitem.href!);
+          }
+          // Cerrar el menú solo en mobile después de navegar
+          if (isMobile && onClose) {
+            setTimeout(() => {
+              onClose();
+            }, 200);
+          }
+        }}
                     type="button"
                   >
                     {subitem.label}
@@ -360,16 +361,17 @@ const SidebarMenuItem: React.FC<{
         pl={4}
         fontWeight={item.isActive ? 'semibold' : 'normal'}
         fontSize="sm"
-        onClick={(e: React.MouseEvent) => {
-          // NO prevenir el comportamiento por defecto - permitir que la navegación funcione
-          e.stopPropagation(); // Solo prevenir propagación al Drawer
-          // Navegación directa
-          onItemClick(item.href!);
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation(); // Prevenir propagación al Drawer
+          // Navegación directa - ejecutar inmediatamente
+          if (onItemClick) {
+            onItemClick(item.href!);
+          }
           // Cerrar solo en móvil después de navegar
           if (isMobile && onClose) {
             setTimeout(() => {
               onClose();
-            }, 150);
+            }, 200);
           }
         }}
         type="button"
@@ -472,7 +474,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
             onClick={(e) => {
               // Prevenir que el Drawer se cierre cuando se hace clic en un botón
               const target = e.target as HTMLElement;
-              const button = target.closest('button');
+              const button = target.closest('button[type="button"]');
+              if (button) {
+                e.stopPropagation();
+              }
+            }}
+            onClickCapture={(e) => {
+              // Capturar en fase de captura para mayor seguridad
+              const target = e.target as HTMLElement;
+              const button = target.closest('button[type="button"]');
               if (button) {
                 e.stopPropagation();
               }

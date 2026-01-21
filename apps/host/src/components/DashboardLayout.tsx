@@ -259,20 +259,16 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     }
   }, [isSidebarOpen]);
 
-  const handleMenuItemClick = async (href: string) => {
+  const handleMenuItemClick = (href: string) => {
     // Ignorar clics en items sin href válido (submenús padre)
     if (!href || href === '#') {
       return;
     }
 
-    try {
-      // Navegar a la ruta usando Next.js router
-      await router.push(href);
-      // La navegación se completa, el componente se renderizará automáticamente
-      // NO cerrar el sidebar aquí - se maneja en el componente Sidebar según el breakpoint
-    } catch (error) {
-      console.error('Error al navegar:', error);
-    }
+    // Navegar inmediatamente - no esperar async
+    router.push(href);
+    // La navegación se iniciará, Next.js manejará el renderizado
+    // NO cerrar el sidebar aquí - se maneja en el componente Sidebar según el breakpoint
   };
 
   const handleNotificationClick = () => {
