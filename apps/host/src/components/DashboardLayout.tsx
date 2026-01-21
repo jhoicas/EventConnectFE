@@ -266,7 +266,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     }
 
     // Navegar inmediatamente usando router.push
-    router.push(href);
+    // Solo navegar si no estamos ya en esa ruta
+    if (pathname !== href) {
+      router.push(href);
+    }
     
     // La navegación se iniciará, Next.js manejará el renderizado automáticamente
     // NO cerrar el sidebar aquí - se maneja en el componente Sidebar según el breakpoint
