@@ -313,16 +313,35 @@ const SidebarMenuItem: React.FC<{
                     } : undefined}
                     fontSize="xs"
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-                    onClick={(e: React.MouseEvent) => {
-                      e.preventDefault();
+                    onClick={async (e: React.MouseEvent) => {
+                      // Detener propagación para evitar que el Drawer se cierre inmediatamente
                       e.stopPropagation();
-                      // Navegar usando el callback onItemClick
-                      onItemClick(subitem.href!);
-                      // Cerrar solo en móvil después de navegar
-                      if (isMobile && onClose) {
+                      e.preventDefault();
+                      
+                      const href = subitem.href;
+                      if (!href || href === '#') return;
+                      
+                      // Navegar PRIMERO antes de cerrar el drawer
+                      try {
+                        // Ejecutar navegación inmediatamente
+                        if (router) {
+                          await router.push(href);
+                        }
+                        // También llamar al callback
+                        if (onItemClick) {
+                          onItemClick(href);
+                        }
+                      } catch (error) {
+                        console.error('Error navegando:', error);
+                        // Fallback a window.location
+                        window.location.href = href;
+                      }
+                      
+                      // Cerrar solo en móvil DESPUÉS de navegar
+                      if (isMobileValue && onClose) {
                         setTimeout(() => {
                           onClose();
-                        }, 150);
+                        }, 400);
                       }
                     }}
                   >
@@ -370,16 +389,35 @@ const SidebarMenuItem: React.FC<{
         } : undefined}
         fontWeight={item.isActive ? 'semibold' : 'normal'}
         fontSize="sm"
-        onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
+        onClick={async (e: React.MouseEvent) => {
+          // Detener propagación para evitar que el Drawer se cierre inmediatamente
           e.stopPropagation();
-          // Navegar usando el callback onItemClick
-          onItemClick(item.href!);
-          // Cerrar solo en móvil después de navegar
-          if (isMobile && onClose) {
+          e.preventDefault();
+          
+          const href = item.href;
+          if (!href || href === '#') return;
+          
+          // Navegar PRIMERO antes de cerrar el drawer
+          try {
+            // Ejecutar navegación inmediatamente
+            if (router) {
+              await router.push(href);
+            }
+            // También llamar al callback
+            if (onItemClick) {
+              onItemClick(href);
+            }
+          } catch (error) {
+            console.error('Error navegando:', error);
+            // Fallback a window.location
+            window.location.href = href;
+          }
+          
+          // Cerrar solo en móvil DESPUÉS de navegar
+          if (isMobileValue && onClose) {
             setTimeout(() => {
               onClose();
-            }, 150);
+            }, 400);
           }
         }}
       >
@@ -432,7 +470,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
   const handleItemNavigation = (href: string) => {
     if (href && href !== '#') {
       // Ejecutar navegación directamente con router.push
-      router.push(href);
+      // Usar window.location como último recurso si router.push falla
+      try {
+        router.push(href);
+      } catch (error) {
+        console.error('Error en router.push, usando window.location:', error);
+        window.location.href = href;
+      }
       // También notificar al padre por si acaso
       if (onItemClick) {
         onItemClick(href);
@@ -441,7 +485,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
       if (isMobile && onClose) {
         setTimeout(() => {
           onClose();
-        }, 200);
+        }, 300);
       }
     }
   };
@@ -483,9 +527,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
             onClick={(e) => {
               // Prevenir que el Drawer se cierre cuando se hace clic en un botón
               const target = e.target as HTMLElement;
-              const button = target.closest('button[type="button"]');
+              const button = target.closest('button');
               if (button) {
                 e.stopPropagation();
+                e.preventDefault();
               }
             }}
           >

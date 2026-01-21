@@ -259,7 +259,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     }
   }, [isSidebarOpen]);
 
-  const handleMenuItemClick = (href: string) => {
+  const handleMenuItemClick = async (href: string) => {
     // Ignorar clics en items sin href válido (submenús padre)
     if (!href || href === '#') {
       return;
@@ -268,7 +268,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     // Navegar inmediatamente usando router.push
     // Solo navegar si no estamos ya en esa ruta
     if (pathname !== href) {
-      router.push(href);
+      try {
+        await router.push(href);
+      } catch (error) {
+        console.error('Error en router.push, usando window.location:', error);
+        // Fallback a window.location si router.push falla
+        window.location.href = href;
+      }
     }
     
     // La navegación se iniciará, Next.js manejará el renderizado automáticamente
