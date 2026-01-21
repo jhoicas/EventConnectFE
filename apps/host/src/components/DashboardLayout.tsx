@@ -265,9 +265,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Navegar inmediatamente - no esperar async
+    // Navegar inmediatamente usando router.push
+    // En Next.js App Router, router.push es síncrono y maneja la navegación internamente
     router.push(href);
-    // La navegación se iniciará, Next.js manejará el renderizado
+    
+    // La navegación se iniciará, Next.js manejará el renderizado automáticamente
     // NO cerrar el sidebar aquí - se maneja en el componente Sidebar según el breakpoint
   };
 

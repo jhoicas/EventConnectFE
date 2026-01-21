@@ -307,10 +307,10 @@ const SidebarMenuItem: React.FC<{
                     fontSize="xs"
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          e.stopPropagation(); // Prevenir propagación al Drawer
+          e.preventDefault(); // Prevenir comportamiento por defecto del botón
           // Navegación directa - ejecutar inmediatamente
-          if (onItemClick) {
-            onItemClick(subitem.href!);
+          if (onItemClick && subitem.href) {
+            onItemClick(subitem.href);
           }
           // Cerrar el menú solo en mobile después de navegar
           if (isMobile && onClose) {
@@ -319,7 +319,8 @@ const SidebarMenuItem: React.FC<{
             }, 200);
           }
         }}
-                    type="button"
+        type="button"
+        cursor="pointer"
                   >
                     {subitem.label}
                   </ChakraButton>
@@ -362,12 +363,12 @@ const SidebarMenuItem: React.FC<{
         fontWeight={item.isActive ? 'semibold' : 'normal'}
         fontSize="sm"
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          e.stopPropagation(); // Prevenir propagación al Drawer
+          e.preventDefault(); // Prevenir comportamiento por defecto del botón
           // Navegación directa - ejecutar inmediatamente
-          if (onItemClick) {
-            onItemClick(item.href!);
+          if (onItemClick && item.href) {
+            onItemClick(item.href);
           }
-          // Cerrar solo en móvil después de navegar
+          // Cerrar el menú solo en mobile después de navegar
           if (isMobile && onClose) {
             setTimeout(() => {
               onClose();
@@ -461,7 +462,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         placement="left" 
         onClose={onClose}
         size="xs"
-        closeOnOverlayClick={false}
+        closeOnOverlayClick={true}
         closeOnEsc={true}
         blockScrollOnMount={false}
       >
@@ -469,25 +470,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         <DrawerContent display={{ md: 'none' }} bg={bg}>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader>
-          <DrawerBody 
-            p={0}
-            onClick={(e) => {
-              // Prevenir que el Drawer se cierre cuando se hace clic en un botón
-              const target = e.target as HTMLElement;
-              const button = target.closest('button[type="button"]');
-              if (button) {
-                e.stopPropagation();
-              }
-            }}
-            onClickCapture={(e) => {
-              // Capturar en fase de captura para mayor seguridad
-              const target = e.target as HTMLElement;
-              const button = target.closest('button[type="button"]');
-              if (button) {
-                e.stopPropagation();
-              }
-            }}
-          >
+          <DrawerBody p={0}>
             {SidebarContent}
           </DrawerBody>
         </DrawerContent>
@@ -506,6 +489,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         zIndex={900}
         transition="transform 0.3s ease-in-out"
         transform={{ base: 'none', md: isOpen ? 'translateX(0)' : 'translateX(-100%)' }}
+        pointerEvents="auto"
       >
         {SidebarContent}
       </Box>
