@@ -295,8 +295,9 @@ const SidebarMenuItem: React.FC<{
                     bg={subitem.isActive ? activeBg : 'transparent'}
                     color={subitem.isActive ? activeColor : 'inherit'}
                     border="none"
-                    font="inherit"
                     textAlign="left"
+                    fontFamily="inherit"
+                    fontSize="inherit"
                     _hover={{
                       bg: subitem.isActive ? activeBg : hoverBg,
                     }}
@@ -352,7 +353,8 @@ const SidebarMenuItem: React.FC<{
         bg={item.isActive ? activeBg : 'transparent'}
         color={item.isActive ? activeColor : 'inherit'}
         border="none"
-        font="inherit"
+        fontFamily="inherit"
+        fontSize="inherit"
         textAlign="left"
         _hover={{
           bg: item.isActive ? activeBg : hoverBg,
