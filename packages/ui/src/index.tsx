@@ -284,7 +284,15 @@ const SidebarMenuItem: React.FC<{
               // Si el subitem tiene href válido, usar navegación directa
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <NextLink key={subitem.href} href={subitem.href} style={{ textDecoration: 'none', display: 'block' }}>
+                  <NextLink 
+                    key={subitem.href} 
+                    href={subitem.href}
+                    style={{ 
+                      textDecoration: 'none', 
+                      display: 'block',
+                      width: '100%'
+                    }}
+                  >
                     <Box
                       display="flex"
                       alignItems="center"
@@ -320,6 +328,10 @@ const SidebarMenuItem: React.FC<{
                             onClose();
                           }, 200);
                         }
+                        // También ejecutar navegación programática como respaldo
+                        if (router && subitem.href) {
+                          router.push(subitem.href);
+                        }
                       }}
                     >
                       <Box as={subitem.icon} mr={3} />
@@ -339,7 +351,14 @@ const SidebarMenuItem: React.FC<{
   // Si no tiene submenú y tiene href válido, usar navegación directa
   if (item.href && item.href !== '#') {
     return (
-      <NextLink href={item.href} style={{ textDecoration: 'none', display: 'block' }}>
+      <NextLink 
+        href={item.href}
+        style={{ 
+          textDecoration: 'none', 
+          display: 'block',
+          width: '100%'
+        }}
+      >
         <Box
           display="flex"
           alignItems="center"
@@ -374,6 +393,10 @@ const SidebarMenuItem: React.FC<{
               setTimeout(() => {
                 onClose();
               }, 200);
+            }
+            // También ejecutar navegación programática como respaldo
+            if (router && item.href) {
+              router.push(item.href);
             }
           }}
         >
@@ -442,7 +465,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
   };
 
   const SidebarContent = (
-    <VStack align="stretch" spacing={0} h="100%" py={4}>
+    <VStack align="stretch" spacing={0} h="100%" py={4} pointerEvents="auto">
       {items.map((item) => (
         <SidebarMenuItem
           key={item.label}
@@ -470,10 +493,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         blockScrollOnMount={false}
       >
         <DrawerOverlay display={{ md: 'none' }} />
-        <DrawerContent display={{ md: 'none' }} bg={bg} pointerEvents="auto">
+        <DrawerContent display={{ md: 'none' }} bg={bg}>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader>
-          <DrawerBody p={0} pointerEvents="auto">
+          <DrawerBody p={0}>
             {SidebarContent}
           </DrawerBody>
         </DrawerContent>
