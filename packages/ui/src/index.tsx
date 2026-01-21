@@ -281,21 +281,16 @@ const SidebarMenuItem: React.FC<{
               // Si el subitem tiene href válido, usar navegación directa
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <Box
+                  <ChakraButton
                     key={subitem.href}
-                    as={ChakraButton}
                     variant="ghost"
-                    display="flex"
-                    alignItems="center"
                     w="100%"
-                    px={4}
-                    py={2}
-                    pl={8}
+                    justifyContent="flex-start"
+                    leftIcon={<subitem.icon />}
                     borderRadius="0"
                     position="relative"
                     bg={subitem.isActive ? activeBg : 'transparent'}
                     color={subitem.isActive ? activeColor : 'inherit'}
-                    justifyContent="flex-start"
                     _hover={{
                       bg: subitem.isActive ? activeBg : hoverBg,
                     }}
@@ -308,12 +303,12 @@ const SidebarMenuItem: React.FC<{
                       width: '3px',
                       bg: 'blue.400',
                     } : undefined}
+                    pl={8}
                     fontSize="xs"
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-                    cursor="pointer"
                     onClick={(e: React.MouseEvent) => {
-                      e.preventDefault();
-                      e.stopPropagation();
+                      // NO prevenir el comportamiento por defecto - permitir que la navegación funcione
+                      e.stopPropagation(); // Solo prevenir propagación al Drawer
                       // Navegación directa
                       onItemClick(subitem.href!);
                       // Cerrar el menú solo en mobile después de navegar
@@ -323,10 +318,10 @@ const SidebarMenuItem: React.FC<{
                         }, 150);
                       }
                     }}
+                    type="button"
                   >
-                    <Box as={subitem.icon} mr={3} />
                     {subitem.label}
-                  </Box>
+                  </ChakraButton>
                 );
               }
               return null;
@@ -340,19 +335,15 @@ const SidebarMenuItem: React.FC<{
   // Si no tiene submenú y tiene href válido, usar navegación directa
   if (item.href && item.href !== '#') {
     return (
-      <Box
-        as={ChakraButton}
+      <ChakraButton
         variant="ghost"
-        display="flex"
-        alignItems="center"
         w="100%"
-        px={4}
-        py={3}
+        justifyContent="flex-start"
+        leftIcon={<item.icon />}
         borderRadius="0"
         position="relative"
         bg={item.isActive ? activeBg : 'transparent'}
         color={item.isActive ? activeColor : 'inherit'}
-        justifyContent="flex-start"
         _hover={{
           bg: item.isActive ? activeBg : hoverBg,
         }}
@@ -366,12 +357,12 @@ const SidebarMenuItem: React.FC<{
           bg: 'blue.500',
           borderRadius: '0 4px 4px 0',
         } : undefined}
+        pl={4}
         fontWeight={item.isActive ? 'semibold' : 'normal'}
         fontSize="sm"
-        cursor="pointer"
         onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
-          e.stopPropagation();
+          // NO prevenir el comportamiento por defecto - permitir que la navegación funcione
+          e.stopPropagation(); // Solo prevenir propagación al Drawer
           // Navegación directa
           onItemClick(item.href!);
           // Cerrar solo en móvil después de navegar
@@ -381,10 +372,10 @@ const SidebarMenuItem: React.FC<{
             }, 150);
           }
         }}
+        type="button"
       >
-        <Box as={item.icon} mr={3} />
         {item.label}
-      </Box>
+      </ChakraButton>
     );
   }
 
@@ -476,7 +467,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         <DrawerContent display={{ md: 'none' }} bg={bg}>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader>
-          <DrawerBody p={0}>
+          <DrawerBody 
+            p={0}
+            onClick={(e) => {
+              // Prevenir que el Drawer se cierre cuando se hace clic en un botón
+              const target = e.target as HTMLElement;
+              const button = target.closest('button');
+              if (button) {
+                e.stopPropagation();
+              }
+            }}
+          >
             {SidebarContent}
           </DrawerBody>
         </DrawerContent>
