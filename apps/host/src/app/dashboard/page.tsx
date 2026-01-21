@@ -94,7 +94,14 @@ export default function DashboardPage() {
       description: 'En proceso',
       icon: ShoppingBag,
       color: 'blue',
-      action: () => router.push('/cliente/cotizaciones'),
+      action: () => {
+        try {
+          router.push('/cliente/cotizaciones');
+        } catch (error) {
+          console.error('Error navegando:', error);
+          window.location.href = '/cliente/cotizaciones';
+        }
+      },
     },
     {
       label: 'Reservas Confirmadas',
@@ -102,7 +109,14 @@ export default function DashboardPage() {
       description: 'Próximos eventos',
       icon: Calendar,
       color: 'green',
-      action: () => router.push('/cliente/reservas'),
+      action: () => {
+        try {
+          router.push('/cliente/reservas');
+        } catch (error) {
+          console.error('Error navegando:', error);
+          window.location.href = '/cliente/reservas';
+        }
+      },
     },
     {
       label: 'Mensajes sin leer',
@@ -110,7 +124,14 @@ export default function DashboardPage() {
       description: 'Nuevos mensajes',
       icon: MessageCircle,
       color: 'purple',
-      action: () => router.push('/cliente/mensajes'),
+      action: () => {
+        try {
+          router.push('/cliente/mensajes');
+        } catch (error) {
+          console.error('Error navegando:', error);
+          window.location.href = '/cliente/mensajes';
+        }
+      },
     },
     {
       label: 'Gastos Totales',
@@ -172,7 +193,16 @@ export default function DashboardPage() {
             cursor="pointer"
             transition="all 0.2s"
             _hover={{ transform: 'translateY(-4px)', boxShadow: 'lg' }}
-            onClick={stat.action}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (stat.action) {
+                try {
+                  stat.action();
+                } catch (error) {
+                  console.error('Error en navegación:', error);
+                }
+              }
+            }}
           >
             <HStack justify="space-between" mb={3}>
               <Box
@@ -219,7 +249,14 @@ export default function DashboardPage() {
               <Button
                 colorScheme="blue"
                 size={{ base: "sm", md: "md" }}
-                onClick={() => router.push('/cliente/explorar')}
+                onClick={() => {
+                  try {
+                    router.push('/cliente/explorar');
+                  } catch (error) {
+                    console.error('Error navegando:', error);
+                    window.location.href = '/cliente/explorar';
+                  }
+                }}
               >
                 Explorar Catálogo
               </Button>
@@ -266,7 +303,14 @@ export default function DashboardPage() {
                 leftIcon={<Icon as={MessageCircle} />}
                 variant="outline"
                 size={{ base: "sm", md: "md" }}
-                onClick={() => router.push('/cliente/mensajes')}
+                onClick={() => {
+                  try {
+                    router.push('/cliente/mensajes');
+                  } catch (error) {
+                    console.error('Error navegando:', error);
+                    window.location.href = '/cliente/mensajes';
+                  }
+                }}
               >
                 Mensajes
               </Button>

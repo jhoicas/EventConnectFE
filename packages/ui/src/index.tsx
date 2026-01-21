@@ -284,70 +284,58 @@ const SidebarMenuItem: React.FC<{
               // Si el subitem tiene href válido, usar navegación directa
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <Box
-                    key={subitem.href}
-                    as={ChakraButton}
-                    variant="ghost"
-                    display="flex"
-                    alignItems="center"
-                    w="100%"
-                    px={4}
-                    py={2}
-                    pl={8}
-                    borderRadius="0"
-                    position="relative"
-                    bg={subitem.isActive ? activeBg : 'transparent'}
-                    color={subitem.isActive ? activeColor : 'inherit'}
-                    justifyContent="flex-start"
-                    _hover={{
-                      bg: subitem.isActive ? activeBg : hoverBg,
-                    }}
-                    _before={subitem.isActive ? {
-                      content: '""',
-                      position: 'absolute',
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      width: '3px',
-                      bg: 'blue.400',
-                    } : undefined}
-                    fontSize="xs"
-                    fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-                    onClick={async (e: React.MouseEvent) => {
-                      // Detener propagación para evitar que el Drawer se cierre inmediatamente
-                      e.stopPropagation();
-                      e.preventDefault();
-                      
-                      const href = subitem.href;
-                      if (!href || href === '#') return;
-                      
-                      // Navegar PRIMERO antes de cerrar el drawer
-                      try {
-                        // Ejecutar navegación inmediatamente
-                        if (router) {
-                          await router.push(href);
+                  <NextLink href={subitem.href!} passHref legacyBehavior>
+                    <Box
+                      key={subitem.href}
+                      as="a"
+                      display="flex"
+                      alignItems="center"
+                      w="100%"
+                      px={4}
+                      py={2}
+                      pl={8}
+                      borderRadius="0"
+                      position="relative"
+                      bg={subitem.isActive ? activeBg : 'transparent'}
+                      color={subitem.isActive ? activeColor : 'inherit'}
+                      justifyContent="flex-start"
+                      textDecoration="none"
+                      _hover={{
+                        bg: subitem.isActive ? activeBg : hoverBg,
+                        textDecoration: 'none',
+                      }}
+                      _before={subitem.isActive ? {
+                        content: '""',
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: '3px',
+                        bg: 'blue.400',
+                      } : undefined}
+                      fontSize="xs"
+                      fontWeight={subitem.isActive ? 'semibold' : 'normal'}
+                      onClick={(e: React.MouseEvent) => {
+                        // Solo detener propagación, NO prevenir el comportamiento por defecto
+                        e.stopPropagation();
+                        
+                        // Llamar al callback para notificar al padre
+                        if (onItemClick && subitem.href) {
+                          onItemClick(subitem.href);
                         }
-                        // También llamar al callback
-                        if (onItemClick) {
-                          onItemClick(href);
+                        
+                        // Cerrar solo en móvil DESPUÉS de navegar
+                        if (isMobileValue && onClose) {
+                          setTimeout(() => {
+                            onClose();
+                          }, 300);
                         }
-                      } catch (error) {
-                        console.error('Error navegando:', error);
-                        // Fallback a window.location
-                        window.location.href = href;
-                      }
-                      
-                      // Cerrar solo en móvil DESPUÉS de navegar
-                      if (isMobileValue && onClose) {
-                        setTimeout(() => {
-                          onClose();
-                        }, 400);
-                      }
-                    }}
-                  >
-                    <Box as={subitem.icon} mr={3} />
-                    {subitem.label}
-                  </Box>
+                      }}
+                    >
+                      <Box as={subitem.icon} mr={3} />
+                      {subitem.label}
+                    </Box>
+                  </NextLink>
                 );
               }
               return null;
@@ -361,69 +349,57 @@ const SidebarMenuItem: React.FC<{
   // Si no tiene submenú y tiene href válido, usar navegación directa
   if (item.href && item.href !== '#') {
     return (
-      <Box
-        as={ChakraButton}
-        variant="ghost"
-        display="flex"
-        alignItems="center"
-        w="100%"
-        px={4}
-        py={3}
-        borderRadius="0"
-        position="relative"
-        bg={item.isActive ? activeBg : 'transparent'}
-        color={item.isActive ? activeColor : 'inherit'}
-        justifyContent="flex-start"
-        _hover={{
-          bg: item.isActive ? activeBg : hoverBg,
-        }}
-        _before={item.isActive ? {
-          content: '""',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: '4px',
-          bg: 'blue.500',
-          borderRadius: '0 4px 4px 0',
-        } : undefined}
-        fontWeight={item.isActive ? 'semibold' : 'normal'}
-        fontSize="sm"
-        onClick={async (e: React.MouseEvent) => {
-          // Detener propagación para evitar que el Drawer se cierre inmediatamente
-          e.stopPropagation();
-          e.preventDefault();
-          
-          const href = item.href;
-          if (!href || href === '#') return;
-          
-          // Navegar PRIMERO antes de cerrar el drawer
-          try {
-            // Ejecutar navegación inmediatamente
-            if (router) {
-              await router.push(href);
+      <NextLink href={item.href!} passHref legacyBehavior>
+        <Box
+          as="a"
+          display="flex"
+          alignItems="center"
+          w="100%"
+          px={4}
+          py={3}
+          borderRadius="0"
+          position="relative"
+          bg={item.isActive ? activeBg : 'transparent'}
+          color={item.isActive ? activeColor : 'inherit'}
+          justifyContent="flex-start"
+          textDecoration="none"
+          _hover={{
+            bg: item.isActive ? activeBg : hoverBg,
+            textDecoration: 'none',
+          }}
+          _before={item.isActive ? {
+            content: '""',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '4px',
+            bg: 'blue.500',
+            borderRadius: '0 4px 4px 0',
+          } : undefined}
+          fontWeight={item.isActive ? 'semibold' : 'normal'}
+          fontSize="sm"
+          onClick={(e: React.MouseEvent) => {
+            // Solo detener propagación, NO prevenir el comportamiento por defecto
+            e.stopPropagation();
+            
+            // Llamar al callback para notificar al padre
+            if (onItemClick && item.href) {
+              onItemClick(item.href);
             }
-            // También llamar al callback
-            if (onItemClick) {
-              onItemClick(href);
+            
+            // Cerrar solo en móvil DESPUÉS de navegar
+            if (isMobileValue && onClose) {
+              setTimeout(() => {
+                onClose();
+              }, 300);
             }
-          } catch (error) {
-            console.error('Error navegando:', error);
-            // Fallback a window.location
-            window.location.href = href;
-          }
-          
-          // Cerrar solo en móvil DESPUÉS de navegar
-          if (isMobileValue && onClose) {
-            setTimeout(() => {
-              onClose();
-            }, 400);
-          }
-        }}
-      >
-        <Box as={item.icon} mr={3} />
-        {item.label}
-      </Box>
+          }}
+        >
+          <Box as={item.icon} mr={3} />
+          {item.label}
+        </Box>
+      </NextLink>
     );
   }
 
@@ -525,12 +501,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           <DrawerBody 
             p={0}
             onClick={(e) => {
-              // Prevenir que el Drawer se cierre cuando se hace clic en un botón
+              // Prevenir que el Drawer se cierre cuando se hace clic en un enlace
               const target = e.target as HTMLElement;
-              const button = target.closest('button');
-              if (button) {
+              const link = target.closest('a');
+              if (link) {
                 e.stopPropagation();
-                e.preventDefault();
+                // NO prevenir el comportamiento por defecto - dejar que NextLink navegue
               }
             }}
           >
