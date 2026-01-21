@@ -468,28 +468,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         <DrawerContent display={{ md: 'none' }} bg={bg}>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader>
-          <DrawerBody 
-            p={0}
-            onClick={(e) => {
-              // Prevenir que el Drawer se cierre automáticamente cuando se hace clic en un enlace
-              const target = e.target as HTMLElement;
-              const link = target.closest('a');
-              const button = target.closest('button[type="button"]');
-              if (link || button) {
-                // Detener la propagación para evitar que el Drawer se cierre
-                e.stopPropagation();
-                // NO llamar preventDefault - NextLink necesita el evento para navegar
-              }
-            }}
-            onClickCapture={(e) => {
-              // Capturar el evento en la fase de captura también para mayor seguridad
-              const target = e.target as HTMLElement;
-              const link = target.closest('a');
-              if (link) {
-                e.stopPropagation();
-              }
-            }}
-          >
+          <DrawerBody p={0}>
             {SidebarContent}
           </DrawerBody>
         </DrawerContent>
