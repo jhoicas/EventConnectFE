@@ -237,25 +237,34 @@ const SidebarMenuItem: React.FC<{
   const handleNavigation = async (href: string) => {
     if (!href || href === '#') return;
     
-    // Notificar al componente padre (DashboardLayout)
-    if (onItemClick) {
-      onItemClick(href);
-    }
-    
-    // Navegar usando router.push si está disponible
+    // Navegar PRIMERO usando router.push si está disponible
     if (router) {
       try {
+        // Ejecutar navegación inmediatamente
         await router.push(href);
         
+        // Notificar al componente padre (DashboardLayout) después de navegar
+        if (onItemClick) {
+          onItemClick(href);
+        }
+        
         // Cerrar sidebar SOLO en móvil después de navegar exitosamente
-        if (isMobile && onClose) {
+        // Verificar isMobile explícitamente (puede ser boolean o undefined)
+        const shouldClose = isMobile === true;
+        if (shouldClose && onClose) {
           setTimeout(() => {
             onClose();
-          }, 100);
+          }, 200);
         }
+        // En escritorio (isMobile === false), NO cerrar el sidebar
       } catch (error) {
         console.error('Error al navegar:', error);
+        // Fallback a window.location si router.push falla
+        window.location.href = href;
       }
+    } else {
+      // Fallback si no hay router disponible
+      window.location.href = href;
     }
   };
 
@@ -487,13 +496,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           <DrawerBody 
             p={0}
             onClick={(e) => {
-              // Prevenir que el Drawer se cierre cuando se hace clic en un enlace o botón del menú
+              // Prevenir que el Drawer se cierre cuando se hace clic en un botón del menú
               const target = e.target as HTMLElement;
-              const link = target.closest('a');
               const button = target.closest('button[type="button"]');
-              if (link || button) {
+              if (button) {
                 e.stopPropagation();
-                // NO llamar preventDefault para permitir que la navegación funcione
+                // NO llamar preventDefault - la navegación se maneja en el onClick del botón
               }
             }}
           >
