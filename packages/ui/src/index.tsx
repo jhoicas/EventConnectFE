@@ -1,8 +1,5 @@
-'use client';
-
 import React from 'react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   Box,
   Button as ChakraButton,
@@ -225,18 +222,23 @@ const SidebarMenuItem: React.FC<{
   onToggle: () => void;
   onItemClick: (href: string) => void;
   onClose?: () => void;
-  router?: any;
-  isMobile?: boolean;
   level?: number;
-}> = ({ item, isExpanded, onToggle, onItemClick, onClose, router, isMobile, level = 0 }) => {
+}> = ({ item, isExpanded, onToggle, onItemClick, onClose, level = 0 }) => {
   const activeBg = useColorModeValue('blue.50', 'blue.900');
   const activeColor = useColorModeValue('blue.600', 'blue.200');
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
   const hasSubmenu = item.submenu && item.submenu.length > 0;
-  // Usar isMobile del prop si está disponible, sino usar hook
-  const isMobileValue = isMobile !== undefined ? isMobile : useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
-  // Esta función ya no se usa, la lógica está inline arriba
+  const handleLinkClick = () => {
+    // Solo cerrar el sidebar en móvil después de un delay
+    if (isMobile && onClose) {
+      setTimeout(() => {
+        onClose();
+      }, 300);
+    }
+    // En escritorio, NO cerrar el sidebar - permanece abierto
+  };
 
   // Si tiene submenú, solo toggle, no navegar
   if (hasSubmenu) {
@@ -281,12 +283,11 @@ const SidebarMenuItem: React.FC<{
         {isExpanded && (
           <VStack align="stretch" spacing={0} pl={4} py={1}>
             {item.submenu!.map((subitem) => {
-              // Si el subitem tiene href válido, usar navegación directa
+              // Si el subitem tiene href válido, usar NextLink directamente
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <NextLink href={subitem.href!} passHref legacyBehavior>
+                  <NextLink key={subitem.href} href={subitem.href} passHref legacyBehavior>
                     <Box
-                      key={subitem.href}
                       as="a"
                       display="flex"
                       alignItems="center"
@@ -298,8 +299,6 @@ const SidebarMenuItem: React.FC<{
                       position="relative"
                       bg={subitem.isActive ? activeBg : 'transparent'}
                       color={subitem.isActive ? activeColor : 'inherit'}
-                      justifyContent="flex-start"
-                      textDecoration="none"
                       _hover={{
                         bg: subitem.isActive ? activeBg : hoverBg,
                         textDecoration: 'none',
@@ -315,21 +314,15 @@ const SidebarMenuItem: React.FC<{
                       } : undefined}
                       fontSize="xs"
                       fontWeight={subitem.isActive ? 'semibold' : 'normal'}
+                      cursor="pointer"
+                      textDecoration="none"
                       onClick={(e: React.MouseEvent) => {
-                        // Solo detener propagación, NO prevenir el comportamiento por defecto
+                        // Prevenir propagación al Drawer para que no se cierre automáticamente
                         e.stopPropagation();
-                        
-                        // Llamar al callback para notificar al padre
-                        if (onItemClick && subitem.href) {
-                          onItemClick(subitem.href);
-                        }
-                        
-                        // Cerrar solo en móvil DESPUÉS de navegar
-                        if (isMobileValue && onClose) {
-                          setTimeout(() => {
-                            onClose();
-                          }, 300);
-                        }
+                        // Ejecutar navegación programática también para asegurar consistencia
+                        onItemClick(subitem.href!);
+                        // Cerrar solo en móvil
+                        handleLinkClick();
                       }}
                     >
                       <Box as={subitem.icon} mr={3} />
@@ -346,10 +339,10 @@ const SidebarMenuItem: React.FC<{
     );
   }
 
-  // Si no tiene submenú y tiene href válido, usar navegación directa
+  // Si no tiene submenú y tiene href válido, usar NextLink directamente
   if (item.href && item.href !== '#') {
     return (
-      <NextLink href={item.href!} passHref legacyBehavior>
+      <NextLink href={item.href} passHref legacyBehavior>
         <Box
           as="a"
           display="flex"
@@ -361,8 +354,6 @@ const SidebarMenuItem: React.FC<{
           position="relative"
           bg={item.isActive ? activeBg : 'transparent'}
           color={item.isActive ? activeColor : 'inherit'}
-          justifyContent="flex-start"
-          textDecoration="none"
           _hover={{
             bg: item.isActive ? activeBg : hoverBg,
             textDecoration: 'none',
@@ -379,21 +370,15 @@ const SidebarMenuItem: React.FC<{
           } : undefined}
           fontWeight={item.isActive ? 'semibold' : 'normal'}
           fontSize="sm"
+          cursor="pointer"
+          textDecoration="none"
           onClick={(e: React.MouseEvent) => {
-            // Solo detener propagación, NO prevenir el comportamiento por defecto
+            // Prevenir propagación al Drawer para que no se cierre automáticamente
             e.stopPropagation();
-            
-            // Llamar al callback para notificar al padre
-            if (onItemClick && item.href) {
-              onItemClick(item.href);
-            }
-            
-            // Cerrar solo en móvil DESPUÉS de navegar
-            if (isMobileValue && onClose) {
-              setTimeout(() => {
-                onClose();
-              }, 300);
-            }
+            // Ejecutar navegación programática también para asegurar consistencia
+            onItemClick(item.href!);
+            // Cerrar solo en móvil
+            handleLinkClick();
           }}
         >
           <Box as={item.icon} mr={3} />
@@ -430,7 +415,6 @@ const SidebarMenuItem: React.FC<{
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItemClick }) => {
-  const router = useRouter();
   const bg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
@@ -442,32 +426,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
     );
   };
 
-  // Handler para items navegables - ejecuta navegación directamente
+  // Handler para items navegables - solo notifica al padre
   const handleItemNavigation = (href: string) => {
     if (href && href !== '#') {
-      // Ejecutar navegación directamente con router.push
-      // Usar window.location como último recurso si router.push falla
-      try {
-        router.push(href);
-      } catch (error) {
-        console.error('Error en router.push, usando window.location:', error);
-        window.location.href = href;
-      }
-      // También notificar al padre por si acaso
-      if (onItemClick) {
-        onItemClick(href);
-      }
-      // Cerrar solo en móvil
-      if (isMobile && onClose) {
-        setTimeout(() => {
-          onClose();
-        }, 300);
-      }
+      onItemClick(href);
     }
   };
 
   const SidebarContent = (
-    <VStack align="stretch" spacing={0} h="100%" py={4} pointerEvents="auto">
+    <VStack align="stretch" spacing={0} h="100%" py={4}>
       {items.map((item) => (
         <SidebarMenuItem
           key={item.label}
@@ -476,8 +443,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           onToggle={() => toggleItem(item.label)}
           onItemClick={handleItemNavigation}
           onClose={onClose}
-          router={router}
-          isMobile={isMobile}
         />
       ))}
     </VStack>
@@ -501,12 +466,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           <DrawerBody 
             p={0}
             onClick={(e) => {
-              // Prevenir que el Drawer se cierre cuando se hace clic en un enlace
+              // Prevenir que el Drawer se cierre cuando se hace clic en un enlace o botón del menú
               const target = e.target as HTMLElement;
               const link = target.closest('a');
-              if (link) {
+              const button = target.closest('button[type="button"]');
+              if (link || button) {
                 e.stopPropagation();
-                // NO prevenir el comportamiento por defecto - dejar que NextLink navegue
+                // NO llamar preventDefault para permitir que la navegación funcione
               }
             }}
           >
@@ -525,10 +491,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         borderRightWidth="1px"
         borderColor={borderColor}
         overflowY="auto"
-        zIndex={1000}
+        zIndex={900}
         transition="transform 0.3s ease-in-out"
         transform={{ base: 'none', md: isOpen ? 'translateX(0)' : 'translateX(-100%)' }}
-        pointerEvents="auto"
       >
         {SidebarContent}
       </Box>
