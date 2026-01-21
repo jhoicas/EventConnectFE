@@ -283,7 +283,8 @@ const SidebarMenuItem: React.FC<{
                 return (
                   <Box
                     key={subitem.href}
-                    as="button"
+                    as={ChakraButton}
+                    variant="ghost"
                     display="flex"
                     alignItems="center"
                     w="100%"
@@ -294,9 +295,7 @@ const SidebarMenuItem: React.FC<{
                     position="relative"
                     bg={subitem.isActive ? activeBg : 'transparent'}
                     color={subitem.isActive ? activeColor : 'inherit'}
-                    border="none"
-                    textAlign="left"
-                    fontFamily="inherit"
+                    justifyContent="flex-start"
                     _hover={{
                       bg: subitem.isActive ? activeBg : hoverBg,
                     }}
@@ -313,8 +312,9 @@ const SidebarMenuItem: React.FC<{
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
                     cursor="pointer"
                     onClick={(e: React.MouseEvent) => {
+                      e.preventDefault();
                       e.stopPropagation();
-                      // Navegación directa sin preventDefault para permitir eventos naturales
+                      // Navegación directa
                       onItemClick(subitem.href!);
                       // Cerrar el menú solo en mobile después de navegar
                       if (isMobile && onClose) {
@@ -341,7 +341,8 @@ const SidebarMenuItem: React.FC<{
   if (item.href && item.href !== '#') {
     return (
       <Box
-        as="button"
+        as={ChakraButton}
+        variant="ghost"
         display="flex"
         alignItems="center"
         w="100%"
@@ -351,9 +352,7 @@ const SidebarMenuItem: React.FC<{
         position="relative"
         bg={item.isActive ? activeBg : 'transparent'}
         color={item.isActive ? activeColor : 'inherit'}
-        border="none"
-        fontFamily="inherit"
-        textAlign="left"
+        justifyContent="flex-start"
         _hover={{
           bg: item.isActive ? activeBg : hoverBg,
         }}
@@ -371,8 +370,9 @@ const SidebarMenuItem: React.FC<{
         fontSize="sm"
         cursor="pointer"
         onClick={(e: React.MouseEvent) => {
+          e.preventDefault();
           e.stopPropagation();
-          // Navegación directa sin preventDefault para permitir eventos naturales
+          // Navegación directa
           onItemClick(item.href!);
           // Cerrar solo en móvil después de navegar
           if (isMobile && onClose) {
