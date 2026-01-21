@@ -225,13 +225,16 @@ const SidebarMenuItem: React.FC<{
   onToggle: () => void;
   onItemClick: (href: string) => void;
   onClose?: () => void;
+  router?: any;
+  isMobile?: boolean;
   level?: number;
-}> = ({ item, isExpanded, onToggle, onItemClick, onClose, level = 0 }) => {
+}> = ({ item, isExpanded, onToggle, onItemClick, onClose, router, isMobile, level = 0 }) => {
   const activeBg = useColorModeValue('blue.50', 'blue.900');
   const activeColor = useColorModeValue('blue.600', 'blue.200');
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
   const hasSubmenu = item.submenu && item.submenu.length > 0;
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  // Usar isMobile del prop si está disponible, sino usar hook
+  const isMobileValue = isMobile !== undefined ? isMobile : useBreakpointValue({ base: true, md: false });
 
   // Esta función ya no se usa, la lógica está inline arriba
 
@@ -306,19 +309,25 @@ const SidebarMenuItem: React.FC<{
                     pl={8}
                     fontSize="xs"
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          e.preventDefault(); // Prevenir comportamiento por defecto del botón
-          // Navegación directa - ejecutar inmediatamente
-          if (onItemClick && subitem.href) {
-            onItemClick(subitem.href);
-          }
-          // Cerrar el menú solo en mobile después de navegar
-          if (isMobile && onClose) {
-            setTimeout(() => {
-              onClose();
-            }, 200);
-          }
-        }}
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      // Navegación directa
+                      if (subitem.href && subitem.href !== '#') {
+                        // Usar router directamente si está disponible, sino usar onItemClick
+                        if (router) {
+                          router.push(subitem.href);
+                        } else if (onItemClick) {
+                          onItemClick(subitem.href);
+                        }
+                        // Cerrar solo en móvil
+                        if (isMobileValue && onClose) {
+                          setTimeout(() => {
+                            onClose();
+                          }, 200);
+                        }
+                      }
+                    }}
         type="button"
         cursor="pointer"
                   >
@@ -363,16 +372,22 @@ const SidebarMenuItem: React.FC<{
         fontWeight={item.isActive ? 'semibold' : 'normal'}
         fontSize="sm"
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          e.preventDefault(); // Prevenir comportamiento por defecto del botón
-          // Navegación directa - ejecutar inmediatamente
-          if (onItemClick && item.href) {
-            onItemClick(item.href);
-          }
-          // Cerrar el menú solo en mobile después de navegar
-          if (isMobile && onClose) {
-            setTimeout(() => {
-              onClose();
-            }, 200);
+          e.preventDefault();
+          e.stopPropagation();
+          // Navegación directa
+          if (item.href && item.href !== '#') {
+            // Usar router directamente si está disponible, sino usar onItemClick
+            if (router) {
+              router.push(item.href);
+            } else if (onItemClick) {
+              onItemClick(item.href);
+            }
+            // Cerrar solo en móvil
+            if (isMobileValue && onClose) {
+              setTimeout(() => {
+                onClose();
+              }, 200);
+            }
           }
         }}
         type="button"
@@ -421,22 +436,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
     );
   };
 
-  // Handler para items navegables - solo notifica al padre
+  // Handler para items navegables - ejecuta navegación directamente
   const handleItemNavigation = (href: string) => {
     if (href && href !== '#') {
-      onItemClick(href);
-    }
-  };
-
-  // Función de navegación como respaldo (aunque NextLink maneja la navegación)
-  const handleNavigation = (href: string) => {
-    if (!href || href === '#') return;
-    router.push(href);
-    // Cerrar solo en móvil
-    if (isMobile && onClose) {
-      setTimeout(() => {
-        onClose();
-      }, 300);
+      // Ejecutar navegación directamente con router.push
+      router.push(href);
+      // También notificar al padre por si acaso
+      if (onItemClick) {
+        onItemClick(href);
+      }
+      // Cerrar solo en móvil
+      if (isMobile && onClose) {
+        setTimeout(() => {
+          onClose();
+        }, 200);
+      }
     }
   };
 
@@ -450,6 +464,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
           onToggle={() => toggleItem(item.label)}
           onItemClick={handleItemNavigation}
           onClose={onClose}
+          router={router}
+          isMobile={isMobile}
         />
       ))}
     </VStack>
