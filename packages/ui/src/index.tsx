@@ -309,15 +309,14 @@ const SidebarMenuItem: React.FC<{
                     fontWeight={subitem.isActive ? 'semibold' : 'normal'}
                     cursor="pointer"
                     onClick={(e: React.MouseEvent) => {
-                      e.preventDefault();
                       e.stopPropagation();
-                      // Navegación directa
+                      // Navegación directa sin preventDefault para permitir eventos naturales
                       onItemClick(subitem.href!);
                       // Cerrar el menú solo en mobile después de navegar
                       if (isMobile && onClose) {
                         setTimeout(() => {
                           onClose();
-                        }, 100);
+                        }, 150);
                       }
                     }}
                   >
@@ -364,15 +363,14 @@ const SidebarMenuItem: React.FC<{
         fontSize="sm"
         cursor="pointer"
         onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
           e.stopPropagation();
-          // Navegación directa
+          // Navegación directa sin preventDefault para permitir eventos naturales
           onItemClick(item.href!);
           // Cerrar solo en móvil después de navegar
           if (isMobile && onClose) {
             setTimeout(() => {
               onClose();
-            }, 100);
+            }, 150);
           }
         }}
       >
@@ -462,7 +460,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         placement="left" 
         onClose={onClose}
         size="xs"
-        closeOnOverlayClick={true}
+        closeOnOverlayClick={false}
         closeOnEsc={true}
         blockScrollOnMount={false}
       >
