@@ -284,59 +284,49 @@ const SidebarMenuItem: React.FC<{
               // Si el subitem tiene href válido, usar navegación directa
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <ChakraButton
-                    key={subitem.href}
-                    variant="ghost"
-                    w="100%"
-                    justifyContent="flex-start"
-                    leftIcon={<subitem.icon />}
-                    borderRadius="0"
-                    position="relative"
-                    bg={subitem.isActive ? activeBg : 'transparent'}
-                    color={subitem.isActive ? activeColor : 'inherit'}
-                    _hover={{
-                      bg: subitem.isActive ? activeBg : hoverBg,
-                    }}
-                    _before={subitem.isActive ? {
-                      content: '""',
-                      position: 'absolute',
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      width: '3px',
-                      bg: 'blue.400',
-                    } : undefined}
-                    pl={8}
-                    fontSize="xs"
-                    fontWeight={subitem.isActive ? 'semibold' : 'normal'}
-                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                      console.log('Click en subitem:', subitem.href);
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // Navegación directa - usar router.push inmediatamente
-                      if (subitem.href && subitem.href !== '#') {
-                        console.log('Navegando a:', subitem.href);
-                        // Prioridad: router directo > onItemClick
-                        if (router) {
-                          router.push(subitem.href);
-                        }
-                        if (onItemClick) {
-                          onItemClick(subitem.href);
-                        }
-                        // Cerrar solo en móvil
+                  <NextLink key={subitem.href} href={subitem.href} passHref legacyBehavior>
+                    <Box
+                      as="a"
+                      display="flex"
+                      alignItems="center"
+                      w="100%"
+                      px={4}
+                      py={2}
+                      pl={8}
+                      borderRadius="0"
+                      position="relative"
+                      bg={subitem.isActive ? activeBg : 'transparent'}
+                      color={subitem.isActive ? activeColor : 'inherit'}
+                      _hover={{
+                        bg: subitem.isActive ? activeBg : hoverBg,
+                        textDecoration: 'none',
+                      }}
+                      _before={subitem.isActive ? {
+                        content: '""',
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: '3px',
+                        bg: 'blue.400',
+                      } : undefined}
+                      fontSize="xs"
+                      fontWeight={subitem.isActive ? 'semibold' : 'normal'}
+                      cursor="pointer"
+                      textDecoration="none"
+                      onClick={(e: React.MouseEvent) => {
+                        // Cerrar solo en móvil después de navegar
                         if (isMobileValue && onClose) {
                           setTimeout(() => {
                             onClose();
                           }, 200);
                         }
-                      }
-                    }}
-                    type="button"
-                    cursor="pointer"
-                    pointerEvents="auto"
-                  >
-                    {subitem.label}
-                  </ChakraButton>
+                      }}
+                    >
+                      <Box as={subitem.icon} mr={3} />
+                      {subitem.label}
+                    </Box>
+                  </NextLink>
                 );
               }
               return null;
@@ -350,59 +340,49 @@ const SidebarMenuItem: React.FC<{
   // Si no tiene submenú y tiene href válido, usar navegación directa
   if (item.href && item.href !== '#') {
     return (
-      <ChakraButton
-        variant="ghost"
-        w="100%"
-        justifyContent="flex-start"
-        leftIcon={<item.icon />}
-        borderRadius="0"
-        position="relative"
-        bg={item.isActive ? activeBg : 'transparent'}
-        color={item.isActive ? activeColor : 'inherit'}
-        _hover={{
-          bg: item.isActive ? activeBg : hoverBg,
-        }}
-        _before={item.isActive ? {
-          content: '""',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: '4px',
-          bg: 'blue.500',
-          borderRadius: '0 4px 4px 0',
-        } : undefined}
-        pl={4}
-        fontWeight={item.isActive ? 'semibold' : 'normal'}
-        fontSize="sm"
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-          console.log('Click en item:', item.href);
-          e.preventDefault();
-          e.stopPropagation();
-          // Navegación directa - usar router.push inmediatamente
-          if (item.href && item.href !== '#') {
-            console.log('Navegando a:', item.href);
-            // Prioridad: router directo > onItemClick
-            if (router) {
-              router.push(item.href);
-            }
-            if (onItemClick) {
-              onItemClick(item.href);
-            }
-            // Cerrar solo en móvil
+      <NextLink href={item.href} passHref legacyBehavior>
+        <Box
+          as="a"
+          display="flex"
+          alignItems="center"
+          w="100%"
+          px={4}
+          py={3}
+          borderRadius="0"
+          position="relative"
+          bg={item.isActive ? activeBg : 'transparent'}
+          color={item.isActive ? activeColor : 'inherit'}
+          _hover={{
+            bg: item.isActive ? activeBg : hoverBg,
+            textDecoration: 'none',
+          }}
+          _before={item.isActive ? {
+            content: '""',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '4px',
+            bg: 'blue.500',
+            borderRadius: '0 4px 4px 0',
+          } : undefined}
+          fontWeight={item.isActive ? 'semibold' : 'normal'}
+          fontSize="sm"
+          cursor="pointer"
+          textDecoration="none"
+          onClick={(e: React.MouseEvent) => {
+            // Cerrar solo en móvil después de navegar
             if (isMobileValue && onClose) {
               setTimeout(() => {
                 onClose();
               }, 200);
             }
-          }
-        }}
-        type="button"
-        cursor="pointer"
-        pointerEvents="auto"
-      >
-        {item.label}
-      </ChakraButton>
+          }}
+        >
+          <Box as={item.icon} mr={3} />
+          {item.label}
+        </Box>
+      </NextLink>
     );
   }
 
@@ -492,10 +472,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
         blockScrollOnMount={false}
       >
         <DrawerOverlay display={{ md: 'none' }} />
-        <DrawerContent display={{ md: 'none' }} bg={bg}>
+        <DrawerContent display={{ md: 'none' }} bg={bg} pointerEvents="auto">
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">Menú</DrawerHeader>
-          <DrawerBody p={0}>
+          <DrawerBody p={0} pointerEvents="auto">
             {SidebarContent}
           </DrawerBody>
         </DrawerContent>
