@@ -312,12 +312,15 @@ const SidebarMenuItem: React.FC<{
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      // Navegación directa
+                      // Navegación directa - usar router.push inmediatamente
                       if (subitem.href && subitem.href !== '#') {
-                        // Usar router directamente si está disponible, sino usar onItemClick
+                        console.log('Navegando a:', subitem.href);
+                        // Prioridad: router directo > onItemClick
                         if (router) {
                           router.push(subitem.href);
-                        } else if (onItemClick) {
+                          router.refresh();
+                        }
+                        if (onItemClick) {
                           onItemClick(subitem.href);
                         }
                         // Cerrar solo en móvil
@@ -374,12 +377,15 @@ const SidebarMenuItem: React.FC<{
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
           e.preventDefault();
           e.stopPropagation();
-          // Navegación directa
+          // Navegación directa - usar router.push inmediatamente
           if (item.href && item.href !== '#') {
-            // Usar router directamente si está disponible, sino usar onItemClick
+            console.log('Navegando a:', item.href);
+            // Prioridad: router directo > onItemClick
             if (router) {
               router.push(item.href);
-            } else if (onItemClick) {
+              router.refresh();
+            }
+            if (onItemClick) {
               onItemClick(item.href);
             }
             // Cerrar solo en móvil
@@ -441,6 +447,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, items, onItem
     if (href && href !== '#') {
       // Ejecutar navegación directamente con router.push
       router.push(href);
+      // Forzar actualización del router
+      router.refresh();
       // También notificar al padre por si acaso
       if (onItemClick) {
         onItemClick(href);
