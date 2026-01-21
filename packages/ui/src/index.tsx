@@ -284,9 +284,8 @@ const SidebarMenuItem: React.FC<{
               // Si el subitem tiene href válido, usar navegación directa
               if (subitem.href && subitem.href !== '#') {
                 return (
-                  <NextLink key={subitem.href} href={subitem.href} passHref legacyBehavior>
+                  <NextLink key={subitem.href} href={subitem.href} style={{ textDecoration: 'none', display: 'block' }}>
                     <Box
-                      as="a"
                       display="flex"
                       alignItems="center"
                       w="100%"
@@ -340,9 +339,8 @@ const SidebarMenuItem: React.FC<{
   // Si no tiene submenú y tiene href válido, usar navegación directa
   if (item.href && item.href !== '#') {
     return (
-      <NextLink href={item.href} passHref legacyBehavior>
+      <NextLink href={item.href} style={{ textDecoration: 'none', display: 'block' }}>
         <Box
-          as="a"
           display="flex"
           alignItems="center"
           w="100%"
