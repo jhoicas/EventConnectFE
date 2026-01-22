@@ -260,15 +260,6 @@ const SidebarMenuItem: React.FC<{
     }
     // En desktop NO cerrar - el sidebar permanece abierto
   };
-        console.error('Error al navegar:', error);
-        // Fallback a window.location si router.push falla
-        window.location.href = href;
-      }
-    } else {
-      // Fallback si no hay router disponible
-      window.location.href = href;
-    }
-  };
 
   // Si tiene submenú, solo toggle, no navegar
   if (hasSubmenu) {
