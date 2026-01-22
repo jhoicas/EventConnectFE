@@ -237,27 +237,29 @@ const SidebarMenuItem: React.FC<{
   const handleNavigation = async (href: string) => {
     if (!href || href === '#') return;
     
-    // Navegar PRIMERO usando router.push si está disponible
+    // Notificar PRIMERO al componente padre (DashboardLayout)
+    // Esto asegura que el padre actualice su estado antes de la navegación
+    if (onItemClick) {
+      onItemClick(href);
+    }
+    
+    // Luego navegar usando router.push
     if (router) {
       try {
-        // Ejecutar navegación inmediatamente
         await router.push(href);
-        
-        // Notificar al componente padre (DashboardLayout) después de navegar
-        if (onItemClick) {
-          onItemClick(href);
-        }
-        
-        // Cerrar sidebar SOLO en móvil después de navegar exitosamente
-        // Verificar isMobile explícitamente (puede ser boolean o undefined)
-        const shouldClose = isMobile === true;
-        if (shouldClose && onClose) {
-          setTimeout(() => {
-            onClose();
-          }, 200);
-        }
-        // En escritorio (isMobile === false), NO cerrar el sidebar
       } catch (error) {
+        console.error('Error al navegar:', error);
+      }
+    }
+    
+    // Cerrar sidebar SOLO en móvil
+    if (isMobile && onClose) {
+      setTimeout(() => {
+        onClose();
+      }, 150);
+    }
+    // En desktop NO cerrar - el sidebar permanece abierto
+  };
         console.error('Error al navegar:', error);
         // Fallback a window.location si router.push falla
         window.location.href = href;

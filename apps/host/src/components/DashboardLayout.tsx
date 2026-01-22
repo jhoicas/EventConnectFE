@@ -265,19 +265,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Navegar inmediatamente usando router.push
     // Solo navegar si no estamos ya en esa ruta
     if (pathname !== href) {
       try {
         await router.push(href);
       } catch (error) {
-        console.error('Error en router.push, usando window.location:', error);
-        // Fallback a window.location si router.push falla
-        window.location.href = href;
+        console.error('Error al navegar:', error);
       }
     }
     
-    // La navegación se iniciará, Next.js manejará el renderizado automáticamente
     // NO cerrar el sidebar aquí - se maneja en el componente Sidebar según el breakpoint
   };
 

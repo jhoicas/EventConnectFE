@@ -19,7 +19,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // Si está autenticado, redirigir según rol
+      // Si está autenticado, validar acceso según rol SOLO en la primera carga
+      // No redirigir en navegaciones posteriores dentro del área permitida
       if (isAuthenticated && user) {
         const isAdminRoute = pathname.startsWith('/dashboard') || 
                            pathname.startsWith('/categorias') || 
@@ -32,25 +33,27 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                            pathname.startsWith('/mantenimientos') ||
                            pathname.startsWith('/configuracion') ||
                            pathname.startsWith('/chat') ||
+                           pathname.startsWith('/usuarios') ||
                            pathname.startsWith('/gestion-landing');
 
-        // Ruta para usuarios normales (singular)
         const isClienteRoute = pathname.startsWith('/cliente/');
 
-        // Si es SuperAdmin o Admin y está en ruta de cliente (singular), redirigir a dashboard
-        if ((user.rol === 'SuperAdmin' || user.rol === 'Admin') && isClienteRoute) {
+        // Solo redirigir si el usuario está en una ruta completamente incorrecta
+        // Si es SuperAdmin o Admin-Proveedor intentando acceder a rutas de cliente
+        if ((user.rol === 'SuperAdmin' || user.rol === 'Admin-Proveedor') && isClienteRoute) {
           router.push(ROUTES.DASHBOARD);
           return;
         }
 
-        // Si es Usuario/Cliente y está en ruta admin, redirigir a vista cliente
-        if (user.rol === 'Usuario' && isAdminRoute) {
+        // Si es Usuario/Cliente intentando acceder a rutas de admin
+        if ((user.rol === 'Usuario' || user.rol === 'Cliente') && isAdminRoute) {
           router.push('/cliente/explorar');
           return;
         }
       }
     }
-  }, [isAuthenticated, isLoading, pathname, router, user]);
+  }, [isAuthenticated, isLoading, user?.rol, pathname, router]);
+  // Cambiado: Solo escuchar cambios en rol, no en user completo para evitar loops
 
   if (isLoading) {
     return <Loading text="Verificando sesión..." />;
