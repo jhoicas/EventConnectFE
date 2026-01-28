@@ -102,9 +102,18 @@ export const useConversacionesDelUsuario = () => {
     }
   );
 
+  // Manejar tanto respuestas con estructura {conversaciones, total} como arrays directos
+  const conversaciones = Array.isArray(data) 
+    ? data 
+    : (data?.conversaciones ?? []);
+  
+  const total = Array.isArray(data) 
+    ? data.length 
+    : (data?.total ?? 0);
+
   return {
-    conversaciones: data?.conversaciones ?? [],
-    total: data?.total ?? 0,
+    conversaciones,
+    total,
     isLoading,
     isError,
     error,

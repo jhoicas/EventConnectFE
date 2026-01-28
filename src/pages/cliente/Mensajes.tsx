@@ -14,6 +14,17 @@ const ClienteMensajesPage = () => {
   const [conversacionSeleccionada, setConversacionSeleccionada] = useState<number | undefined>();
   const [isMobileListVisible, setIsMobileListVisible] = useState(true);
 
+  // Debug logging
+  if (import.meta.env.DEV) {
+    console.log('Mensajes.tsx - Estado:', {
+      isLoading,
+      isError,
+      error,
+      conversacionesLength: conversaciones.length,
+      conversaciones,
+    });
+  }
+
   // Encontrar la conversación seleccionada para obtener datos
   const conversacionActual = conversaciones.find((c) => c.id === conversacionSeleccionada);
 
