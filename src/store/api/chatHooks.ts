@@ -116,7 +116,7 @@ export const useConversacionesDelUsuario = () => {
  * Hook personalizado para obtener mensajes de una conversación
  * con manejo automático de limpieza
  */
-export const useMensajesDeConversacion = (conversacionId: number | null) => {
+export const useMensajesDeConversacion = (conversacionId: number | null | undefined) => {
   const { data, isLoading, isError, error, refetch } = useGetMensajesQuery(
     conversacionId!,
     {
