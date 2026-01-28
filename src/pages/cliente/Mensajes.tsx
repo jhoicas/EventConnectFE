@@ -14,14 +14,19 @@ const ClienteMensajesPage = () => {
   const [conversacionSeleccionada, setConversacionSeleccionada] = useState<number | undefined>();
   const [isMobileListVisible, setIsMobileListVisible] = useState(true);
 
+  const esCliente = user?.rol === 'Cliente';
+  const esEmpresa = user?.rol === 'Admin-Proveedor' || user?.rol === 'Operario';
+
   // Debug logging
   if (import.meta.env.DEV) {
-    console.log('Mensajes.tsx - Estado:', {
+    console.log('🔍 Mensajes.tsx - Estado:', {
+      userRol: user?.rol,
+      esCliente,
+      esEmpresa,
       isLoading,
       isError,
       error,
       conversacionesLength: conversaciones.length,
-      conversaciones,
     });
   }
 
@@ -39,9 +44,6 @@ const ClienteMensajesPage = () => {
     setIsMobileListVisible(true);
     setConversacionSeleccionada(undefined);
   };
-
-  const esCliente = user?.rol === 'Cliente';
-  const esEmpresa = user?.rol === 'Admin-Proveedor' || user?.rol === 'Operario';
 
   // Estado de error
   if (isError) {
@@ -110,7 +112,19 @@ const ClienteMensajesPage = () => {
               Tus conversaciones aparecerán aquí cuando un cliente te contacte.
             </p>
           </>
-        ) : null}
+        ) : (
+          <>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              No tienes mensajes
+            </h2>
+            <p className="text-center text-muted-foreground mb-6 max-w-md">
+              Aquí aparecerán tus conversaciones cuando comiences a chatear con otros usuarios.
+            </p>
+            <Button variant="outline" onClick={() => navigate('/cliente/explorar')}>
+              Explorar
+            </Button>
+          </>
+        )}
       </div>
     );
   }
