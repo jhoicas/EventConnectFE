@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Container, useToast } from '@chakra-ui/react';
+import { Box, Container, useToast, useBreakpointValue } from '@chakra-ui/react';
 import { Navbar, Sidebar } from '@eventconnect/ui';
 import type { MenuItemType } from '@eventconnect/ui';
 import {
@@ -168,6 +168,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     }
     return true;
   });
+  const isDesktop = useBreakpointValue({ base: false, md: true });
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [pendingUsersCount, setPendingUsersCount] = useState<number>(0);
   const { user } = useAppSelector((state) => state.auth);
@@ -258,6 +259,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       localStorage.setItem('sidebarOpen', String(isSidebarOpen));
     }
   }, [isSidebarOpen]);
+
+  // REMOVED: This effect was preventing the hamburger menu from closing the sidebar on desktop
+  // The sidebar should be toggleable on all screen sizes via the hamburger menu
+  // Original code forced sidebar to always open on desktop, breaking toggle functionality:
+  // useEffect(() => {
+  //   if (isDesktop) {
+  //     setIsSidebarOpen(true);
+  //     if (typeof window !== 'undefined') {
+  //       localStorage.setItem('sidebarOpen', 'true');
+  //     }
+  //   }
+  // }, [isDesktop]);
 
   const handleMenuItemClick = async (href: string) => {
     // Ignorar clics en items sin href válido (submenús padre)
