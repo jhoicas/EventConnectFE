@@ -416,3 +416,61 @@ export interface UpdateMantenimientoDto {
   estado: string;
   observaciones?: string;
 }
+
+// ============ Chat ============
+export interface Mensaje {
+  id: number;
+  conversacion_Id: number;
+  remitente_Id: number;
+  contenido: string;
+  tipo_Contenido: 'texto' | 'imagen' | 'archivo';
+  archivo_URL?: string;
+  leido: boolean;
+  fecha_Lectura?: string;
+  fecha_Creacion: string;
+  fecha_Actualizacion: string;
+}
+
+export interface Conversacion {
+  id: number;
+  usuario_Iniciador_Id: number;
+  usuario_Receptor_Id: number;
+  nombre_Contraparte: string;
+  avatar_URL?: string;
+  ultimo_Mensaje?: string;
+  fecha_Ultimo_Mensaje?: string;
+  no_Leidos: number;
+  activo: boolean;
+  fecha_Creacion: string;
+  fecha_Actualizacion: string;
+}
+
+export interface CreateConversacionDto {
+  usuario_Receptor_Id: number;
+  nombre_Contraparte: string;
+  avatar_URL?: string;
+}
+
+export interface EnviarMensajeDto {
+  conversacion_Id: number;
+  contenido: string;
+  tipo_Contenido?: 'texto' | 'imagen' | 'archivo';
+  archivo_URL?: string;
+}
+
+export interface MensajeResponse {
+  id: number;
+  conversacion_Id: number;
+  remitente_Id: number;
+  contenido: string;
+  tipo_Contenido: 'texto' | 'imagen' | 'archivo';
+  archivo_URL?: string;
+  leido: boolean;
+  fecha_Lectura?: string;
+  fecha_Creacion: string;
+}
+
+export interface ConversacionesListResponse {
+  conversaciones: Conversacion[];
+  total: number;
+}
