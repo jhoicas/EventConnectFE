@@ -14,8 +14,10 @@ const httpsAgent = TARGET_API_URL.includes('localhost')
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  props: { params: Promise<{ path: string[] }> }
 ) {
+  // Next.js 15: params is now a Promise and must be awaited
+  const params = await props.params;
   const path = params.path.join('/');
   const url = `${TARGET_API_URL}/${path}${request.nextUrl.search}`;
 
@@ -31,8 +33,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  props: { params: Promise<{ path: string[] }> }
 ) {
+  // Next.js 15: params is now a Promise and must be awaited
+  const params = await props.params;
   const path = params.path.join('/');
   const url = `${TARGET_API_URL}/${path}`;
   const body = await request.json();
@@ -50,8 +54,10 @@ export async function POST(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  props: { params: Promise<{ path: string[] }> }
 ) {
+  // Next.js 15: params is now a Promise and must be awaited
+  const params = await props.params;
   const path = params.path.join('/');
   const url = `${TARGET_API_URL}/${path}`;
   const body = await request.json();
@@ -69,8 +75,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  props: { params: Promise<{ path: string[] }> }
 ) {
+  // Next.js 15: params is now a Promise and must be awaited
+  const params = await props.params;
   const path = params.path.join('/');
   const url = `${TARGET_API_URL}/${path}`;
 
