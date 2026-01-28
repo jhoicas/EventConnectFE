@@ -5,12 +5,12 @@ import { ChatWindow } from './components/ChatWindow';
 import { ConversacionesList } from './components/ConversacionesList';
 import { NuevaConversacionDialog } from './components/NuevaConversacionDialog';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, ArrowLeft } from 'lucide-react';
+import { MessageSquare, ArrowLeft, AlertCircle } from 'lucide-react';
 
 const ClienteMensajesPage = () => {
   const navigate = useNavigate();
   const { user } = useUsuarioActual();
-  const { conversaciones, isLoading } = useConversacionesDelUsuario();
+  const { conversaciones, isLoading, isError, error } = useConversacionesDelUsuario();
   const [conversacionSeleccionada, setConversacionSeleccionada] = useState<number | undefined>();
   const [isMobileListVisible, setIsMobileListVisible] = useState(true);
 
@@ -32,8 +32,45 @@ const ClienteMensajesPage = () => {
   const esCliente = user?.rol === 'Cliente';
   const esEmpresa = user?.rol === 'Admin-Proveedor' || user?.rol === 'Operario';
 
+  // Estado de error
+  if (isError) {
+    const errorMessage = typeof error === 'object' && error !== null 
+      ? (error as any).data?.message || (error as any).message || 'Error al cargar conversaciones'
+      : 'Error al cargar conversaciones';
+
+    return (
+      <div className="h-full flex flex-col items-center justify-center p-4 md:p-8">
+        <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          Error al cargar conversaciones
+        </h2>
+        <p className="text-center text-muted-foreground mb-6 max-w-md">
+          {errorMessage}
+        </p>
+        <Button onClick={() => window.location.reload()}>
+          Reintentar
+        </Button>
+      </div>
+    );
+  }
+
+  // Estado de carga
+  if (isLoading) {
+    return (
+      <div className="h-full flex flex-col items-center justify-center p-4 md:p-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+          Cargando mensajes...
+        </h2>
+        <p className="text-muted-foreground">
+          Por favor espera
+        </p>
+      </div>
+    );
+  }
+
   // Estado vacío - Sin conversaciones
-  if (!isLoading && conversaciones.length === 0) {
+  if (conversaciones.length === 0) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-4 md:p-8">
         <MessageSquare className="w-16 h-16 text-muted-foreground mb-4" />
@@ -90,19 +127,10 @@ const ClienteMensajesPage = () => {
             isMobileListVisible ? 'block' : 'hidden md:block'
           }`}
         >
-          {isLoading ? (
-            <div className="flex items-center justify-center h-full">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-                <p className="text-sm text-muted-foreground">Cargando conversaciones...</p>
-              </div>
-            </div>
-          ) : (
-            <ConversacionesList
-              conversacionSeleccionada={conversacionSeleccionada}
-              onSelect={handleSelectConversacion}
-            />
-          )}
+          <ConversacionesList
+            conversacionSeleccionada={conversacionSeleccionada}
+            onSelect={handleSelectConversacion}
+          />
         </div>
 
         {/* Right Column - Chat Window */}
