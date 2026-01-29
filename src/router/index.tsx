@@ -47,9 +47,21 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const AppRouter = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   return (
     <BrowserRouter>
       <Routes>
+        {/* Root redirect - based on auth status */}
+        <Route 
+          path="/" 
+          element={
+            isAuthenticated 
+              ? <Navigate to={APP_ROUTES.DASHBOARD} replace /> 
+              : <Navigate to={APP_ROUTES.LOGIN} replace />
+          } 
+        />
+
         {/* Public Routes */}
         <Route element={<AuthLayout />}>
           <Route
@@ -71,7 +83,6 @@ export const AppRouter = () => {
           }
         >
           <Route path={APP_ROUTES.DASHBOARD} element={<DashboardPage />} />
-          <Route path="/" element={<Navigate to={APP_ROUTES.DASHBOARD} replace />} />
           
           {/* Productos y Categorías */}
           <Route path={APP_ROUTES.PRODUCTOS} element={<ProductosPage />} />
