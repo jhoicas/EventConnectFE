@@ -29,12 +29,14 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copiar archivos de configuración necesarios para el build
 COPY tsconfig.json ./
 COPY tsconfig.app.json ./
+COPY tsconfig.node.json ./
 COPY vite.config.ts ./
+COPY postcss.config.js ./
+COPY tailwind.config.js ./
 COPY index.html ./
 
 # Copiar código fuente
 COPY src ./src
-COPY public ./public
 
 # Build de producción (output en dist/)
 RUN pnpm build
