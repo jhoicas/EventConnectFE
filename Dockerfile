@@ -26,6 +26,10 @@ WORKDIR /app
 # Copiar dependencias instaladas desde el stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 
+# Copiar package.json para que pnpm funcione
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+
 # Copiar archivos de configuración necesarios para el build
 COPY tsconfig.json ./
 COPY tsconfig.app.json ./
