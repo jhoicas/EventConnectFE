@@ -1,35 +1,26 @@
 name: eventconnect-frontend
 region: nyc
 services:
-  - name: web
+  - name: eventconnectfe
+    dockerfile_path: Dockerfile
+    source_dir: /
     github:
-      repo: tu-usuario/EventConnect
+      repo: yoinercastillo/EventConnect
       branch: main
       deploy_on_push: true
-    source_dir: /
-    build_command: pnpm install && pnpm build --filter @eventconnect/host
-    run_command: pnpm --filter @eventconnect/host start
-    environment_slug: node-js
     instance_count: 1
-    instance_size_slug: basic-xs
-    http_port: 3000
+    instance_size_slug: basic-xxs
+    http_port: 80
     routes:
       - path: /
     envs:
-      - key: NODE_ENV
-        value: production
-        scope: RUN_TIME
-      - key: NEXT_PUBLIC_API_BASE_URL
-        value: ${NEXT_PUBLIC_API_BASE_URL}
-        scope: RUN_TIME
-        type: SECRET
-      - key: NEXT_PUBLIC_ENV
-        value: production
-        scope: RUN_TIME
+      - key: VITE_API_BASE_URL
+        value: https://eventconnect-api-8oih6.ondigitalocean.app/api
+        scope: BUILD_TIME
     health_check:
       http_path: /
-      initial_delay_seconds: 30
+      initial_delay_seconds: 10
       period_seconds: 10
-      timeout_seconds: 5
+      timeout_seconds: 3
       success_threshold: 1
       failure_threshold: 3
