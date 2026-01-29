@@ -132,12 +132,9 @@ const ClienteMensajesPage = () => {
             <p className="text-center text-muted-foreground mb-6 max-w-md">
               Comienza una nueva conversación o explora nuestros proveedores disponibles.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <NuevaConversacionDialog />
-              <Button variant="outline" onClick={() => navigate('/cliente/explorar')}>
-                Explorar proveedores
-              </Button>
-            </div>
+            <Button variant="outline" onClick={() => navigate('/cliente/explorar')}>
+              Explorar proveedores
+            </Button>
           </>
         ) : esEmpresa ? (
           <>
