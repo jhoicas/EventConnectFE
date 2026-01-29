@@ -26,8 +26,15 @@ WORKDIR /app
 # Copiar dependencias instaladas desde el stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 
-# Copiar código fuente completo
-COPY . .
+# Copiar archivos de configuración necesarios para el build
+COPY tsconfig.json ./
+COPY tsconfig.app.json ./
+COPY vite.config.ts ./
+COPY index.html ./
+
+# Copiar código fuente
+COPY src ./src
+COPY public ./public
 
 # Build de producción (output en dist/)
 RUN pnpm build
