@@ -1,7 +1,7 @@
 import axios from '@/lib/axios';
 import type { Producto, CreateProductoDto, UpdateProductoDto } from '@/types';
 
-const BASE_URL = '/productos';
+const BASE_URL = '/Producto';
 
 export const productoService = {
   getAll: async (): Promise<Producto[]> => {
