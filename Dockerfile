@@ -56,10 +56,10 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copiar archivos estáticos compilados desde builder
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 3000
 
-# Health check para verificar que Nginx está respondiendo en puerto 80
+# Health check para verificar que Nginx está respondiendo en puerto 3000
 HEALTHCHECK --interval=10s --timeout=3s --start-period=15s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
