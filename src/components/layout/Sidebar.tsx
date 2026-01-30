@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { MenuItem } from '@/lib/menuConfig';
 import { useState } from 'react';
+import { Logo } from '@/components/Logo';
 
 interface SidebarProps {
   menuItems: MenuItem[];
@@ -89,7 +90,9 @@ export const Sidebar = ({ menuItems, onItemClick }: SidebarProps) => {
   return (
     <aside className="w-64 border-r bg-background h-full overflow-y-auto">
       <div className="p-4">
-        <h2 className="mb-4 text-lg font-semibold text-foreground">EventConnect</h2>
+        <div className="mb-6">
+          <Logo />
+        </div>
         <nav className="space-y-1">
           {menuItems.map((item) => (
             <SidebarItem key={item.label} item={item} onItemClick={onItemClick} />
