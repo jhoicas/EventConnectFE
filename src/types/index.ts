@@ -474,3 +474,25 @@ export interface ConversacionesListResponse {
   conversaciones: Conversacion[];
   total: number;
 }
+
+// ============ Cotizacion ============
+export interface Cotizacion {
+  id: number;
+  cliente_Id: number;
+  producto_Id: number;
+  fecha_Solicitud: string;
+  cantidad_Solicitada: number;
+  monto_Cotizacion: number;
+  estado: 'Solicitada' | 'Respondida' | 'Aceptada' | 'Rechazada';
+  observaciones?: string;
+  fecha_Respuesta?: string;
+  fecha_Creacion: string;
+  fecha_Actualizacion: string;
+}
+
+export interface CreateCotizacionDto {
+  cliente_Id: number;
+  producto_Id: number;
+  cantidad_Solicitada: number;
+  observaciones?: string;
+}
