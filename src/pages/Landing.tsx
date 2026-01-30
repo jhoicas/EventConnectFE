@@ -1,33 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Package, Users, TrendingUp, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { Logo } from '@/components/Logo';
+import { ServiciosGrid } from '@/components/ServiciosGrid';
 
 const LandingPage = () => {
   const navigate = useNavigate();
-
-  // TODO: Este contenido debe venir de una API administrada por el usuario admin
-  const services = [
-    {
-      icon: Calendar,
-      title: 'Gestión de Reservas',
-      description: 'Administra todas tus reservas en un solo lugar. Sistema intuitivo y fácil de usar.',
-    },
-    {
-      icon: Package,
-      title: 'Inventario de Productos',
-      description: 'Control completo de tu inventario de productos para eventos y alquiler.',
-    },
-    {
-      icon: Users,
-      title: 'Gestión de Clientes',
-      description: 'Base de datos completa de clientes con historial de reservas y preferencias.',
-    },
-    {
-      icon: TrendingUp,
-      title: 'Reportes y Análisis',
-      description: 'Visualiza el rendimiento de tu negocio con reportes detallados y métricas.',
-    },
-  ];
 
   const features = [
     'Control total de inventario',
@@ -94,38 +71,8 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Todo lo que necesitas para gestionar tu negocio
-            </h2>
-            <p className="text-lg text-gray-600">
-              Servicios diseñados para simplificar la operación de tu empresa
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className="p-6 bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow"
-              >
-                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                  <service.icon className="w-6 h-6 text-indigo-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {service.title}
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  {service.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Services Section - Dinámico desde BD */}
+      <ServiciosGrid />
 
       {/* Features Section */}
       <section className="py-20 bg-gray-50">

@@ -5,6 +5,7 @@
 
 // ============ RTK Query API ============
 export { chatApi } from './chatApi';
+export { serviciosApi } from './serviciosApi';
 
 // ============ Hooks Automáticos (RTK Query) ============
 export {
@@ -18,6 +19,14 @@ export {
   useLazyGetConversacionesQuery,
   useLazyGetMensajesQuery,
 } from './chatApi';
+
+export {
+  useGetServiciosPublicosQuery,
+  useGetServiciosAdminQuery,
+  useCreateServicioMutation,
+  useUpdateServicioMutation,
+  useDeleteServicioMutation,
+} from './serviciosApi';
 
 // ============ Hooks Personalizados (con validación) ============
 export {
