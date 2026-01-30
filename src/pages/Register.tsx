@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AlertCircle, Loader2 } from 'lucide-react';
+import { Logo } from '@/components/Logo';
 
 interface RegisterFormData {
   nombre_Completo: string;
@@ -118,7 +119,12 @@ const RegisterPage = () => {
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">EventConnect</h1>
+          <div className="flex justify-center mb-2">
+            <Logo 
+              textClassName="text-gray-900"
+              iconClassName="text-indigo-600"
+            />
+          </div>
           <p className="text-gray-600 mt-2">Crear Cuenta</p>
         </div>
 

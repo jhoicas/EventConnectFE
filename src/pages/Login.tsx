@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useLogin } from '@/features/auth/hooks/useAuth';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Logo } from '@/components/Logo';
 
 const LoginPage = () => {
   const [searchParams] = useSearchParams();
@@ -23,7 +24,12 @@ const LoginPage = () => {
       <div className="w-full max-w-md">
         {/* Logo y Título */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">EventConnect</h1>
+          <div className="flex justify-center mb-2">
+            <Logo 
+              textClassName="text-gray-900"
+              iconClassName="text-indigo-600"
+            />
+          </div>
           <p className="text-gray-600 mt-2">Inicia sesión en tu cuenta</p>
         </div>
 
