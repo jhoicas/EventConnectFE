@@ -7,7 +7,9 @@ import DashboardLayout from '@/layouts/DashboardLayout';
 import AuthLayout from '@/layouts/AuthLayout';
 
 // Pages
+import LandingPage from '@/pages/Landing';
 import LoginPage from '@/pages/Login';
+import RegisterPage from '@/pages/Register';
 import DashboardPage from '@/pages/Dashboard';
 import NotFoundPage from '@/pages/NotFound';
 import ActivosPage from '@/pages/Activos';
@@ -52,13 +54,23 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Root redirect - based on auth status */}
+        {/* Root redirect - to landing or dashboard */}
         <Route 
           path="/" 
           element={
             isAuthenticated 
               ? <Navigate to={APP_ROUTES.DASHBOARD} replace /> 
-              : <Navigate to={APP_ROUTES.LOGIN} replace />
+              : <Navigate to="/inicio" replace />
+          } 
+        />
+
+        {/* Landing Page */}
+        <Route 
+          path="/inicio" 
+          element={
+            isAuthenticated 
+              ? <Navigate to={APP_ROUTES.DASHBOARD} replace /> 
+              : <LandingPage />
           } 
         />
 
@@ -69,6 +81,14 @@ export const AppRouter = () => {
             element={
               <PublicRoute>
                 <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path={APP_ROUTES.REGISTER}
+            element={
+              <PublicRoute>
+                <RegisterPage />
               </PublicRoute>
             }
           />
