@@ -1,7 +1,7 @@
 name: eventconnect-frontend
 region: nyc
 services:
-  - name: eventconnectfe
+  - name: eventconnectfe-app
     dockerfile_path: Dockerfile
     source_dir: /
     github:
@@ -19,8 +19,8 @@ services:
         scope: BUILD_TIME
     health_check:
       http_path: /
-      initial_delay_seconds: 10
+      initial_delay_seconds: 15
       period_seconds: 10
       timeout_seconds: 3
       success_threshold: 1
-      failure_threshold: 3
+      failure_threshold: 5
