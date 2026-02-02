@@ -19,6 +19,27 @@ export interface LoginRequest {
   Password: string;
 }
 
+// Usuario (API)
+export interface UsuarioApi {
+  id: number;
+  empresa_id: number | null;
+  rol_id: number;
+  usuario1: string;
+  email: string;
+  nombre_completo: string;
+  telefono: string | null;
+  avatar_url: string | null;
+  estado: string;
+  intentos_fallidos: number;
+  ultimo_acceso: string | null;
+  fecha_creacion: string;
+  fecha_actualizacion: string;
+  requiere_cambio_password: boolean;
+  twofa_activo: boolean;
+  rol: string;
+  empresa_nombre: string | null;
+}
+
 export type UserRole = 'SuperAdmin' | 'Admin-Proveedor' | 'Operario' | 'Cliente' | 'Usuario';
 
 // Producto
