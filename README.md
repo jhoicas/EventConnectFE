@@ -1,264 +1,133 @@
-# EventConnect Frontend - Micro-Frontends Architecture
+# EventConnect Frontend
 
-<div align="center">
-
-![Next.js](https://img.shields.io/badge/Next.js-15.x-black?logo=next.js)
-![React](https://img.shields.io/badge/React-19.0-blue?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?logo=typescript)
-![Turborepo](https://img.shields.io/badge/Turborepo-2.3-red?logo=turborepo)
-![Chakra UI](https://img.shields.io/badge/Chakra_UI-2.x-teal?logo=chakraui)
-
-**Arquitectura de Micro-Frontends para EventConnect**  
-*Sistema escalable, modular y de alto rendimiento*
-
-</div>
+Frontend en Vite + React para la plataforma EventConnect.
 
 ---
 
-## 🏗️ Arquitectura
+## 🧰 Tecnologías
 
-### Monorepo con Turborepo
-
-```
-frontend/
-├── apps/
-│   ├── host/              # 🏠 Shell Application (Next.js 15)
-│   ├── mfe-inventario/    # 📦 MFE - SIGI (Sistema de Inventarios)
-│   ├── mfe-reservas/      # 📅 MFE - Gestión de Reservas
-│   └── mfe-admin/         # ⚙️ MFE - Administración
-├── packages/
-│   ├── ui/                # 🎨 Sistema de Diseño (Chakra UI + Atoms)
-│   └── shared/            # 🔧 Tipos, Validaciones y Utilidades
-├── package.json           # Workspace raíz
-├── turbo.json             # Pipeline de Turborepo
-└── pnpm-workspace.yaml    # Configuración de pnpm
-```
-
-### Principios de Diseño
-
-#### 1. **Separation of Concerns**
-- **Host (Shell)**: Navegación, autenticación, carga de MFEs
-- **MFEs**: Capacidades de negocio independientes
-- **UI Package**: Sistema de diseño compartido
-- **Shared Package**: Lógica reutilizable
-
-#### 2. **Clean Architecture por MFE**
-```
-mfe-example/src/
-├── /api              # 📡 Capa de Datos (RTK Query)
-├── /store            # 🗃️ Redux Slices
-├── /hooks            # 🪝 Custom Hooks (useOptimistic, useActionState)
-├── /components       # 🧩 Atomic Design
-│   ├── /pages        # Container Components (Smart)
-│   ├── /molecules    # Composed Components
-│   └── /atoms        # Base Components (Dumb)
-└── /utils            # 🛠️ Helpers
-```
-
-#### 3. **Atomic Design Pattern**
-- **Atoms**: `<Button>`, `<Input>`, `<Card>`
-- **Molecules**: `<FormContainer>`, `<DataTable>`, `<Navbar>`
-- **Pages**: Containers con lógica de negocio
+- **Vite** (build/dev server)
+- **React 19**
+- **TypeScript 5.9**
+- **Tailwind CSS 4**
+- **React Router 7**
+- **TanStack Query**
+- **Zustand**
+- **Axios**
 
 ---
 
-## 🚀 Tecnologías Clave
-
-### Core
-- **Next.js 15** (App Router)
-- **React 19** con nuevos hooks (`useOptimistic`, `useActionState`, `useFormStatus`)
-- **TypeScript 5.7**
-- **Turborepo 2.3** (Monorepo)
-- **pnpm 8** (Gestor de paquetes)
-
-### Estado y Datos
-- **Redux Toolkit 2.5** (Estado global)
-- **RTK Query** (Data fetching, caching, sincronización)
-- **Zod** (Validación de schemas)
-
-### UI/UX
-- **Chakra UI 2.x** (Sistema de diseño)
-- **Emotion** (CSS-in-JS)
-- **Lucide React** (Iconos)
-- **Framer Motion** (Animaciones)
-
----
-
-## 📦 Instalación
-
-### Requisitos Previos
-- **Node.js**: >= 20.0.0
-- **pnpm**: >= 8.0.0
+## ▶️ Scripts
 
 ```bash
-# Instalar pnpm (si no lo tienes)
-npm install -g pnpm@8.15.0
-```
-
-### Instalación del Monorepo
-
-```bash
-# Clonar el repositorio
-cd C:\Users\yoiner.castillo\source\repos\EventConnect\frontend
-
-# Instalar todas las dependencias
-pnpm install
-
-# Verificar la instalación
-pnpm --version
-```
-
----
-
-## 🛠️ Scripts Disponibles
-
-### Desarrollo
-
-```bash
-# Ejecutar todos los apps en modo desarrollo
 pnpm dev
-
-# Solo el Host
-pnpm --filter @eventconnect/host dev
-
-# MFE específico
-pnpm --filter @eventconnect/mfe-inventario dev
-```
-
-### Build
-
-```bash
-# Build completo del monorepo
 pnpm build
-
-# Build del Host
-pnpm --filter @eventconnect/host build
-
-# Build de producción
-pnpm build --force
-```
-
-### Linting
-
-```bash
-# Lint todo el código
+pnpm preview
 pnpm lint
-
-# Fix automático
-pnpm lint --fix
+pnpm type-check
 ```
 
-### Clean
+---
+
+## ⚙️ Variables de entorno
 
 ```bash
-# Limpiar builds y cache
-pnpm clean
-
-# Limpiar node_modules completo
-rm -rf node_modules
-rm -rf apps/*/node_modules
-rm -rf packages/*/node_modules
-pnpm install
+VITE_API_BASE_URL=https://eventconnect-api-8oih6.ondigitalocean.app/api
+VITE_ROLE_ID_ADMIN_PROVEEDOR=2
 ```
 
 ---
 
-## 🎯 Estructura de Paquetes
+## 🗂️ Estructura actual del proyecto
 
-### `@eventconnect/ui`
-
-Sistema de diseño compartido con tema oscuro personalizado.
-
-**Atoms:**
-- `Button` - Botón reutilizable
-- `Input` - Input con validación
-- `Card` - Contenedor de contenido
-- `Loading` - Indicador de carga
-- `ErrorMessage` - Mensajes de error
-
-**Molecules:**
-- `FormContainer` - Wrapper de formularios
-- `DataTable` - Tabla de datos genérica
-- `Navbar` - Barra de navegación
-- `Sidebar` - Menú lateral
-
-**Tema:**
-```typescript
-import { theme } from '@eventconnect/ui';
-
-// Colores principales
---bg: #0b1020       // Fondo oscuro
---card: #111833     // Tarjetas
---accent: #5b8cff   // Azul primario
---text: #e6e6f0     // Texto principal
---muted: #9aa3b2    // Texto secundario
 ```
-
-### `@eventconnect/shared`
-
-Tipos, validaciones y utilidades compartidas.
-
-**Exports:**
-```typescript
-// Tipos
-import { User, Producto, Activo } from '@eventconnect/shared';
-
-// Validaciones Zod
-import { loginSchema, productoSchema } from '@eventconnect/shared';
-
-// Constantes
-import { API_BASE_URL, ROUTES } from '@eventconnect/shared';
-
-// Hooks
-import { useDebounce } from '@eventconnect/shared';
-
-// Formatters
-import { formatCurrency, formatDate } from '@eventconnect/shared';
+EventConnect/
+├── app.yaml
+├── docker-compose.yml
+├── Dockerfile
+├── index.html
+├── nginx.conf
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── public/
+├── src/
+│   ├── App.css
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   ├── assets/
+│   ├── components/
+│   │   ├── common/
+│   │   ├── layout/
+│   │   ├── ui/
+│   │   ├── Logo.tsx
+│   │   ├── NotificationBell.tsx
+│   │   ├── ResponsiveTable.tsx
+│   │   ├── ServiciosGrid.tsx
+│   │   └── SidebarMenuItemWithBadge.tsx
+│   ├── features/
+│   │   ├── activos/
+│   │   ├── auth/
+│   │   ├── bodegas/
+│   │   ├── categorias/
+│   │   ├── clientes/
+│   │   ├── configuracion/
+│   │   ├── cotizaciones/
+│   │   ├── dashboard/
+│   │   ├── factura/
+│   │   ├── lotes/
+│   │   ├── mantenimientos/
+│   │   ├── notificaciones/
+│   │   ├── productos/
+│   │   ├── reservas/
+│   │   └── usuarios/
+│   ├── hooks/
+│   ├── layouts/
+│   │   ├── AuthLayout.tsx
+│   │   └── DashboardLayout.tsx
+│   ├── lib/
+│   │   ├── axios.ts
+│   │   ├── menuConfig.ts
+│   │   ├── queryClient.ts
+│   │   ├── routes.ts
+│   │   ├── utils.ts
+│   │   └── validations/
+│   ├── pages/
+│   │   ├── cliente/
+│   │   ├── Activos.tsx
+│   │   ├── Bodegas.tsx
+│   │   ├── Categorias.tsx
+│   │   ├── Chat.tsx
+│   │   ├── Clientes.tsx
+│   │   ├── Configuracion.tsx
+│   │   ├── Dashboard.tsx
+│   │   ├── Facturacion.tsx
+│   │   ├── Landing.tsx
+│   │   ├── Login.tsx
+│   │   ├── Lotes.tsx
+│   │   ├── Mantenimientos.tsx
+│   │   ├── NotFound.tsx
+│   │   ├── Productos.tsx
+│   │   ├── Register.tsx
+│   │   ├── Reservas.tsx
+│   │   └── Usuarios.tsx
+│   ├── router/
+│   │   └── index.tsx
+│   ├── services/
+│   ├── store/
+│   │   ├── api/
+│   │   ├── authStore.ts
+│   │   ├── reduxStore.ts
+│   │   └── uiStore.ts
+│   └── types/
+│       └── index.ts
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
 ```
-
----
-
-## 🔐 Autenticación y Estado Global
-
-### Redux Store (Host)
-
-```typescript
-// apps/host/src/store/store.ts
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    [baseApi.reducerPath]: baseApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware),
-});
-```
-
-### RTK Query - API Services
-
-```typescript
-// Ejemplo: apps/host/src/store/api/authApi.ts
-export const authApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
-      query: (credentials) => ({
-        url: '/Auth/login',
-        method: 'POST',
-        body: credentials,
-      }),
-    }),
-  }),
-});
-
-export const { useLoginMutation } = authApi;
-```
-
-### Uso en Componentes
-
-```typescript
-import { useLoginMutation } from '@/store/api/authApi';
-
-function LoginForm() {
   const [login, { isLoading }] = useLoginMutation();
 
   const handleSubmit = async (data) => {
