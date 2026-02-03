@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://eventconnect-api-8oih6.ondigitalocean.app/api';
+const RAW_API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'https://eventconnect-api-8oih6.ondigitalocean.app/api';
+
+const API_BASE_URL = RAW_API_BASE_URL.endsWith('/api')
+  ? RAW_API_BASE_URL
+  : `${RAW_API_BASE_URL.replace(/\/$/, '')}/api`;
 
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

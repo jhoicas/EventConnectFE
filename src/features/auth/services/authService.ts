@@ -3,16 +3,16 @@ import type { LoginRequest, LoginResponse, RegisterRequest, RegisterClienteReque
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const response = await axiosInstance.post<LoginResponse>('/Auth/login', credentials);
+    const response = await axiosInstance.post<LoginResponse>('/auth/login', credentials);
     return response.data;
   },
 
   register: async (payload: RegisterRequest): Promise<void> => {
-    await axiosInstance.post('/Auth/register', payload);
+    await axiosInstance.post('/auth/register', payload);
   },
 
   registerCliente: async (payload: RegisterClienteRequest): Promise<void> => {
-    await axiosInstance.post('/Auth/register-cliente', payload);
+    await axiosInstance.post('/auth/register-cliente', payload);
   },
 
   logout: async (): Promise<void> => {
@@ -22,7 +22,7 @@ export const authService = {
   },
 
   getCurrentUser: async () => {
-    const response = await axiosInstance.get('/Auth/me');
+    const response = await axiosInstance.get('/auth/me');
     return response.data;
   },
 };
