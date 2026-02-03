@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
+import { authService } from '@/features/auth/services/authService';
+
+const ROLE_IDS = {
+  persona: Number(import.meta.env.VITE_ROLE_ID_CLIENTE ?? 4),
+  empresa: Number(import.meta.env.VITE_ROLE_ID_ADMIN_PROVEEDOR ?? 2),
+} as const;
 
 interface RegisterFormData {
   nombre_Completo: string;
@@ -68,26 +74,22 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
-      // TODO: Implementar llamada API de registro
-      // const response = await registerUser({
-      //   nombre_Completo: formData.nombre_Completo,
-      //   email: formData.email,
-      //   password: formData.password,
-      //   rol: formData.tipoRegistro === 'empresa' ? 'Admin-Proveedor' : 'Cliente',
-      // });
-
-      // Por ahora simulamos el registro
-      console.log('Registro:', {
-        ...formData,
-        rol: formData.tipoRegistro === 'empresa' ? 'Admin-Proveedor' : 'Cliente',
+      await authService.register({
+        usuario: formData.email,
+        email: formData.email,
+        password: formData.password,
+        nombre_Completo: formData.nombre_Completo,
+        rol_Id: ROLE_IDS[formData.tipoRegistro],
       });
 
-      // Redirigir al login
-      setTimeout(() => {
-        navigate('/login?registered=true');
-      }, 500);
+      navigate('/login?registered=true');
     } catch (error: any) {
-      setApiError(error?.message || 'Error al registrarse. Por favor intenta de nuevo.');
+      const message = error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        error?.message ||
+        'Error al registrarse. Por favor intenta de nuevo.';
+      setApiError(message);
+    } finally {
       setIsLoading(false);
     }
   };

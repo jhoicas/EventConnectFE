@@ -19,6 +19,16 @@ export interface LoginRequest {
   Password: string;
 }
 
+export interface RegisterRequest {
+  usuario?: string;
+  email: string;
+  password: string;
+  nombre_Completo: string;
+  telefono?: string | null;
+  empresa_Id?: number | null;
+  rol_Id: number;
+}
+
 // Usuario (API)
 export interface UsuarioApi {
   id: number;
