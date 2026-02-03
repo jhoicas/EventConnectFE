@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { APP_ROUTES } from '@/lib/routes';
+import type { UserRole } from '@/types';
 
 // Layouts
 import DashboardLayout from '@/layouts/DashboardLayout';
@@ -46,6 +47,18 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   return !isAuthenticated ? <>{children}</> : <Navigate to={APP_ROUTES.DASHBOARD} replace />;
+};
+
+const RoleProtectedRoute = ({
+  children,
+  roles,
+}: {
+  children: React.ReactNode;
+  roles: UserRole[];
+}) => {
+  const user = useAuthStore((state) => state.user);
+  const hasAccess = !!user?.rol && roles.includes(user.rol as UserRole);
+  return hasAccess ? <>{children}</> : <Navigate to={APP_ROUTES.DASHBOARD} replace />;
 };
 
 export const AppRouter = () => {
@@ -128,7 +141,14 @@ export const AppRouter = () => {
           
           {/* Rutas de Administración */}
           <Route path={APP_ROUTES.MANTENIMIENTOS} element={<MantenimientosPage />} />
-          <Route path={APP_ROUTES.USUARIOS} element={<UsuariosPage />} />
+          <Route
+            path={APP_ROUTES.USUARIOS}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin']}>
+                <UsuariosPage />
+              </RoleProtectedRoute>
+            }
+          />
           <Route path={APP_ROUTES.CONFIGURACION} element={<ConfiguracionPage />} />
           <Route path={APP_ROUTES.FACTURACION} element={<FacturacionPage />} />
           <Route path={APP_ROUTES.CHAT} element={<ChatPage />} />
