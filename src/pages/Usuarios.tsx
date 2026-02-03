@@ -41,6 +41,9 @@ const UsuariosPage = () => {
     return `https://api.dicebear.com/7.x/bottts/svg?seed=${safeSeed}&backgroundColor=ffd5dc`;
   };
 
+  const normalizeEstado = (estado?: string | null) =>
+    estado?.toLowerCase() === 'activo' ? 'Activo' : 'Inactivo';
+
   const handleEstadoChange = async (usuarioId: number, nuevoEst: string) => {
     if (usuarioId && nuevoEst) {
       try {
@@ -128,7 +131,10 @@ const UsuariosPage = () => {
                     <TableCell className="hidden lg:table-cell text-sm">{usuario.rol}</TableCell>
                     <TableCell className="hidden xl:table-cell text-sm">{usuario.empresa_nombre || '-'}</TableCell>
                     <TableCell>
-                      <Select value={usuario.estado || ''} onValueChange={(value) => handleEstadoChange(usuario.id, value)}>
+                      <Select
+                        value={normalizeEstado(usuario.estado)}
+                        onValueChange={(value) => handleEstadoChange(usuario.id, value)}
+                      >
                         <SelectTrigger className="w-full md:w-[140px]">
                           <SelectValue placeholder="Seleccionar estado" />
                         </SelectTrigger>
