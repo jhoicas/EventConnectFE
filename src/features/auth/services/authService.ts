@@ -1,5 +1,5 @@
 import axiosInstance from '@/lib/axios';
-import type { LoginRequest, LoginResponse, RegisterRequest } from '@/types';
+import type { LoginRequest, LoginResponse, RegisterRequest, RegisterClienteRequest } from '@/types';
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
@@ -9,6 +9,10 @@ export const authService = {
 
   register: async (payload: RegisterRequest): Promise<void> => {
     await axiosInstance.post('/Auth/register', payload);
+  },
+
+  registerCliente: async (payload: RegisterClienteRequest): Promise<void> => {
+    await axiosInstance.post('/Auth/register-cliente', payload);
   },
 
   logout: async (): Promise<void> => {

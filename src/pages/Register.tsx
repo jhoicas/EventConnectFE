@@ -5,7 +5,6 @@ import { Logo } from '@/components/Logo';
 import { authService } from '@/features/auth/services/authService';
 
 const ROLE_IDS = {
-  persona: Number(import.meta.env.VITE_ROLE_ID_CLIENTE ?? 4),
   empresa: Number(import.meta.env.VITE_ROLE_ID_ADMIN_PROVEEDOR ?? 2),
 } as const;
 
@@ -74,13 +73,30 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
-      await authService.register({
-        usuario: formData.email,
-        email: formData.email,
-        password: formData.password,
-        nombre_Completo: formData.nombre_Completo,
-        rol_Id: ROLE_IDS[formData.tipoRegistro],
-      });
+      if (formData.tipoRegistro === 'persona') {
+        await authService.registerCliente({
+          email: formData.email,
+          password: formData.password,
+          nombre_Completo: formData.nombre_Completo,
+          telefono: null,
+          empresa_Id: null,
+          tipo_Cliente: 'Persona',
+          documento: null,
+          tipo_Documento: null,
+          direccion: null,
+          ciudad: null,
+        });
+      } else {
+        await authService.register({
+          usuario: formData.email,
+          email: formData.email,
+          password: formData.password,
+          nombre_Completo: formData.nombre_Completo,
+          telefono: null,
+          empresa_Id: null,
+          rol_Id: ROLE_IDS.empresa,
+        });
+      }
 
       navigate('/login?registered=true');
     } catch (error: any) {
