@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { Check, X, AlertCircle } from 'lucide-react';
+import { useMemo } from 'react';
+import { AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   Table,
@@ -11,23 +11,19 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useUsuarios, useUpdateUsuarioEstado } from '@/features/usuarios/hooks/useUsuarios';
 import { APP_ROUTES } from '@/lib/routes';
-import type { UsuarioApi } from '@/types';
 
 const UsuariosPage = () => {
   const navigate = useNavigate();
   const { data: usuarios = [], isLoading, isError } = useUsuarios();
   const updateEstado = useUpdateUsuarioEstado();
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<UsuarioApi | null>(null);
-  const [nuevoEstado, setNuevoEstado] = useState<string>('');
 
   const usuariosOrdenados = useMemo(
     () =>
@@ -39,23 +35,23 @@ const UsuariosPage = () => {
     [usuarios]
   );
 
-  const getEstadoBadgeColor = (estado?: string) => {
-    switch (estado) {
-      case 'Activo':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'Inactivo':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
-      case 'Bloqueado':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      default:
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-    }
-  };
-
   const getAvatarUrl = (seed?: string, avatarUrl?: string | null) => {
     if (avatarUrl) return avatarUrl;
     const safeSeed = seed ? encodeURIComponent(seed) : 'user';
     return `https://api.dicebear.com/7.x/bottts/svg?seed=${safeSeed}&backgroundColor=ffd5dc`;
+  };
+
+  const handleEstadoChange = async (usuarioId: number, nuevoEst: string) => {
+    if (usuarioId && nuevoEst) {
+      try {
+        await updateEstado.mutateAsync({
+          id: usuarioId,
+          estado: nuevoEst,
+        });
+      } catch (error) {
+        console.error('Error actualizando estado:', error);
+      }
+    }
   };
 
   return (
@@ -103,8 +99,7 @@ const UsuariosPage = () => {
                   <TableHead className="hidden md:table-cell">Email</TableHead>
                   <TableHead className="hidden lg:table-cell">Rol</TableHead>
                   <TableHead className="hidden xl:table-cell">Empresa</TableHead>
-                  <TableHead className="w-[15%] md:w-auto">Estado</TableHead>
-                  <TableHead className="w-[25%] md:w-auto text-right">Acciones</TableHead>
+                  <TableHead className="w-[20%] md:w-auto">Estado</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -133,44 +128,25 @@ const UsuariosPage = () => {
                     <TableCell className="hidden lg:table-cell text-sm">{usuario.rol}</TableCell>
                     <TableCell className="hidden xl:table-cell text-sm">{usuario.empresa_nombre || '-'}</TableCell>
                     <TableCell>
-                      <span
-                        className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap ${getEstadoBadgeColor(
-                          usuario.estado
-                        )}`}
-                      >
-                        {usuario.estado}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1 md:gap-2">
-                        {usuario.estado === 'Activo' ? (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs md:text-sm"
-                            onClick={() => {
-                              setUsuarioSeleccionado(usuario);
-                              setNuevoEstado('Inactivo');
-                            }}
-                          >
-                            <X className="h-3 w-3 md:h-4 md:w-4 md:mr-1" />
-                            <span className="hidden md:inline">Desactivar</span>
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-green-600 hover:text-green-700 hover:bg-green-50 text-xs md:text-sm"
-                            onClick={() => {
-                              setUsuarioSeleccionado(usuario);
-                              setNuevoEstado('Activo');
-                            }}
-                          >
-                            <Check className="h-3 w-3 md:h-4 md:w-4 md:mr-1" />
-                            <span className="hidden md:inline">Activar</span>
-                          </Button>
-                        )}
-                      </div>
+                      <Select value={usuario.estado || ''} onValueChange={(value) => handleEstadoChange(usuario.id, value)}>
+                        <SelectTrigger className="w-full md:w-[140px]">
+                          <SelectValue placeholder="Seleccionar estado" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Activo">
+                            <span className="flex items-center gap-2">
+                              <span className="h-2 w-2 rounded-full bg-green-600"></span>
+                              Activo
+                            </span>
+                          </SelectItem>
+                          <SelectItem value="Inactivo">
+                            <span className="flex items-center gap-2">
+                              <span className="h-2 w-2 rounded-full bg-gray-600"></span>
+                              Inactivo
+                            </span>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -180,51 +156,7 @@ const UsuariosPage = () => {
         )}
       </div>
 
-      {/* Dialog de confirmación */}
-      <Dialog open={!!usuarioSeleccionado} onOpenChange={() => setUsuarioSeleccionado(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {nuevoEstado === 'Activo' ? 'Activar usuario' : 'Desactivar usuario'}
-            </DialogTitle>
-            <DialogDescription>
-              ¿Estás seguro de que deseas {nuevoEstado === 'Activo' ? 'activar' : 'desactivar'} a{' '}
-              <strong>{usuarioSeleccionado?.nombre_completo}</strong>?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setUsuarioSeleccionado(null)}
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={async () => {
-                if (usuarioSeleccionado) {
-                  await updateEstado.mutateAsync({
-                    id: usuarioSeleccionado.id,
-                    estado: nuevoEstado,
-                  });
-                  setUsuarioSeleccionado(null);
-                }
-              }}
-              disabled={updateEstado.isPending}
-              className={
-                nuevoEstado === 'Inactivo'
-                  ? 'bg-red-600 hover:bg-red-700'
-                  : 'bg-green-600 hover:bg-green-700'
-              }
-            >
-              {updateEstado.isPending
-                ? 'Procesando...'
-                : nuevoEstado === 'Activo'
-                  ? 'Activar'
-                  : 'Desactivar'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Dialog de confirmación - Removido, ya no necesario con el select directo */}
     </div>
   );
 };
