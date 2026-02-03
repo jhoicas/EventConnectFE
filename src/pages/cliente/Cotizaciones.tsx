@@ -90,24 +90,24 @@ const ClienteCotizacionesPage = () => {
           </div>
         </div>
       ) : (
-        <div className="rounded-lg border overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
+        <div className="w-full overflow-x-auto rounded-lg border bg-card">
+          <div className="inline-block w-full min-w-full">
+            <table className="w-full text-sm">
               <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
+                <tr className="border-b bg-muted/50 hover:bg-muted/75">
+                  <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-semibold">
                     Producto
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
+                  <th className="hidden md:table-cell px-3 md:px-6 py-3 text-left text-xs md:text-sm font-semibold">
                     Cantidad
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
-                    Monto Cotización
+                  <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-semibold">
+                    Monto
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
-                    Fecha Solicitud
+                  <th className="hidden lg:table-cell px-3 md:px-6 py-3 text-left text-xs md:text-sm font-semibold">
+                    Fecha
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">
+                  <th className="px-3 md:px-6 py-3 text-left text-xs md:text-sm font-semibold">
                     Estado
                   </th>
                 </tr>
@@ -118,23 +118,23 @@ const ClienteCotizacionesPage = () => {
                   return (
                     <tr
                       key={cotizacion.id}
-                      className="border-b hover:bg-muted/50 transition-colors"
+                      className="border-b hover:bg-muted/30 transition-colors"
                     >
-                      <td className="px-6 py-4 text-sm font-medium">
+                      <td className="px-3 md:px-6 py-3 text-xs md:text-sm font-medium">
                         {producto?.nombre || 'Producto eliminado'}
                       </td>
-                      <td className="px-6 py-4 text-sm">
+                      <td className="hidden md:table-cell px-3 md:px-6 py-3 text-xs md:text-sm">
                         {cotizacion.cantidad_Solicitada}
                       </td>
-                      <td className="px-6 py-4 text-sm font-semibold">
+                      <td className="px-3 md:px-6 py-3 text-xs md:text-sm font-semibold">
                         {formatCurrency(cotizacion.monto_Cotizacion)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
+                      <td className="hidden lg:table-cell px-3 md:px-6 py-3 text-xs md:text-sm text-muted-foreground">
                         {formatDate(cotizacion.fecha_Solicitud)}
                       </td>
-                      <td className="px-6 py-4 text-sm">
+                      <td className="px-3 md:px-6 py-3 text-xs md:text-sm">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getEstadoBadgeColor(
+                          className={`inline-flex rounded-full px-2 md:px-3 py-1 text-xs font-semibold whitespace-nowrap ${getEstadoBadgeColor(
                             cotizacion.estado
                           )}`}
                         >

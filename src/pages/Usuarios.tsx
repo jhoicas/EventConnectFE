@@ -67,7 +67,7 @@ const UsuariosPage = () => {
         </p>
       </div>
 
-      <div className="rounded-lg border bg-card">
+      <div className="w-full overflow-x-auto rounded-lg border bg-card">
         {isLoading ? (
           <div className="flex h-64 items-center justify-center">
             <p className="text-muted-foreground">Cargando usuarios...</p>
@@ -95,96 +95,88 @@ const UsuariosPage = () => {
             <p className="text-muted-foreground">No hay usuarios registrados</p>
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Usuario</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Rol</TableHead>
-                <TableHead>Empresa</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {usuariosOrdenados.map((usuario) => (
-                <TableRow key={usuario.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={getAvatarUrl(usuario.usuario1, usuario.avatar_url)}
-                        alt={usuario.nombre_completo}
-                        className="h-9 w-9 rounded-full border object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = getAvatarUrl(usuario.email, null);
-                        }}
-                      />
-                      <div>
-                        <p className="font-medium">{usuario.nombre_completo}</p>
-                        <p className="text-xs text-muted-foreground">{usuario.usuario1}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{usuario.email}</TableCell>
-                  <TableCell>{usuario.rol}</TableCell>
-                  <TableCell>{usuario.empresa_nombre || '-'}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getEstadoBadgeColor(
-                        usuario.estado
-                      )}`}
-                    >
-                      {usuario.estado}
-                    </span>
-                  </TableCell>
-                  <TableCell>{usuario.email}</TableCell>
-                  <TableCell>{usuario.rol}</TableCell>
-                  <TableCell>{usuario.empresa_nombre || '-'}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getEstadoBadgeColor(
-                        usuario.estado
-                      )}`}
-                    >
-                      {usuario.estado}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      {usuario.estado === 'Activo' ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => {
-                            setUsuarioSeleccionado(usuario);
-                            setNuevoEstado('Inactivo');
-                          }}
-                        >
-                          <X className="h-4 w-4 mr-1" />
-                          Desactivar
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                          onClick={() => {
-                            setUsuarioSeleccionado(usuario);
-                            setNuevoEstado('Activo');
-                          }}
-                        >
-                          <Check className="h-4 w-4 mr-1" />
-                          Activar
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
+          <div className="inline-block w-full min-w-full">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[30%] md:w-auto">Usuario</TableHead>
+                  <TableHead className="hidden md:table-cell">Email</TableHead>
+                  <TableHead className="hidden lg:table-cell">Rol</TableHead>
+                  <TableHead className="hidden xl:table-cell">Empresa</TableHead>
+                  <TableHead className="w-[15%] md:w-auto">Estado</TableHead>
+                  <TableHead className="w-[25%] md:w-auto text-right">Acciones</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {usuariosOrdenados.map((usuario) => (
+                  <TableRow key={usuario.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <img
+                          src={getAvatarUrl(usuario.usuario1, usuario.avatar_url)}
+                          alt={usuario.nombre_completo}
+                          className="h-8 w-8 md:h-9 md:w-9 rounded-full border object-cover flex-shrink-0"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = getAvatarUrl(usuario.email, null);
+                          }}
+                        />
+                        <div className="min-w-0">
+                          <p className="font-medium text-sm md:text-base truncate">{usuario.nombre_completo}</p>
+                          <p className="text-xs text-muted-foreground truncate md:hidden">{usuario.email}</p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell text-sm">
+                      <span className="truncate block">{usuario.email}</span>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell text-sm">{usuario.rol}</TableCell>
+                    <TableCell className="hidden xl:table-cell text-sm">{usuario.empresa_nombre || '-'}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap ${getEstadoBadgeColor(
+                          usuario.estado
+                        )}`}
+                      >
+                        {usuario.estado}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1 md:gap-2">
+                        {usuario.estado === 'Activo' ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs md:text-sm"
+                            onClick={() => {
+                              setUsuarioSeleccionado(usuario);
+                              setNuevoEstado('Inactivo');
+                            }}
+                          >
+                            <X className="h-3 w-3 md:h-4 md:w-4 md:mr-1" />
+                            <span className="hidden md:inline">Desactivar</span>
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-green-600 hover:text-green-700 hover:bg-green-50 text-xs md:text-sm"
+                            onClick={() => {
+                              setUsuarioSeleccionado(usuario);
+                              setNuevoEstado('Activo');
+                            }}
+                          >
+                            <Check className="h-3 w-3 md:h-4 md:w-4 md:mr-1" />
+                            <span className="hidden md:inline">Activar</span>
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
 

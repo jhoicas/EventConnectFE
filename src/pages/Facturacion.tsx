@@ -90,52 +90,48 @@ const FacturacionPage = () => {
             </div>
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Factura</TableHead>
-                <TableHead>Cliente</TableHead>
-                <TableHead>Fecha Emisión</TableHead>
-                <TableHead>Subtotal</TableHead>
-                <TableHead>Impuestos</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {facturasOrdenadas.map((factura) => (
-                <TableRow key={factura.id}>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-muted-foreground" />
-                      <span>{factura.prefijo}-{factura.consecutivo}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="max-w-xs truncate">
-                      Cliente #{factura.cliente_Id}
-                    </div>
-                  </TableCell>
-                  <TableCell>{formatDate(factura.fecha_Emision)}</TableCell>
-                  <TableCell>{formatCurrency(factura.subtotal)}</TableCell>
-                  <TableCell>{formatCurrency(factura.impuestos)}</TableCell>
-                  <TableCell className="font-semibold">{formatCurrency(factura.total)}</TableCell>
-                  <TableCell>{getEstadoBadge(factura.estado)}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="sm" title="Ver factura">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" title="Descargar PDF">
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          <div className="inline-block w-full min-w-full">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[20%] md:w-auto">Factura</TableHead>
+                  <TableHead className="hidden md:table-cell">Cliente</TableHead>
+                  <TableHead className="hidden lg:table-cell">Fecha</TableHead>
+                  <TableHead className="text-right md:text-left">Total</TableHead>
+                  <TableHead className="hidden lg:table-cell">Estado</TableHead>
+                  <TableHead className="w-[15%] text-right">Acciones</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {facturasOrdenadas.map((factura) => (
+                  <TableRow key={factura.id}>
+                    <TableCell className="font-medium text-xs md:text-sm">
+                      <div className="flex items-center gap-1 md:gap-2">
+                        <FileText className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground flex-shrink-0" />
+                        <span className="truncate">{factura.prefijo}-{factura.consecutivo}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell text-xs md:text-sm">
+                      <span className="truncate">Cliente #{factura.cliente_Id}</span>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell text-xs md:text-sm">{formatDate(factura.fecha_Emision)}</TableCell>
+                    <TableCell className="font-semibold text-xs md:text-sm text-right md:text-left">{formatCurrency(factura.total)}</TableCell>
+                    <TableCell className="hidden lg:table-cell">{getEstadoBadge(factura.estado)}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button variant="ghost" size="sm" title="Ver factura" className="p-1 md:p-2">
+                          <Eye className="h-3 w-3 md:h-4 md:w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm" title="Descargar PDF" className="p-1 md:p-2">
+                          <Download className="h-3 w-3 md:h-4 md:w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
     </div>

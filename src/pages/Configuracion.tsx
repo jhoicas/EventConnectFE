@@ -146,59 +146,61 @@ const ConfiguracionPage = () => {
             <p className="text-muted-foreground">No hay configuraciones registradas</p>
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Clave</TableHead>
-                <TableHead>Valor</TableHead>
-                <TableHead>Descripción</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Ámbito</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {configuraciones.map((config) => (
-                <TableRow key={config.id}>
-                  <TableCell className="font-mono text-sm">{config.clave}</TableCell>
-                  <TableCell className="max-w-xs truncate">{config.valor}</TableCell>
-                  <TableCell className="max-w-md truncate">{config.descripcion}</TableCell>
-                  <TableCell>
-                    <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
-                      {getTipoDatoLabel(config.tipo_Dato)}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <span className={`rounded-full px-2 py-1 text-xs font-medium ${
-                      config.es_Global 
-                        ? 'bg-purple-100 text-purple-700'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}>
-                      {config.es_Global ? 'Global' : 'Empresa'}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(config)}
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(config)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          <div className="inline-block w-full min-w-full">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[20%] md:w-auto">Clave</TableHead>
+                  <TableHead className="hidden md:table-cell">Valor</TableHead>
+                  <TableHead className="hidden lg:table-cell">Descripción</TableHead>
+                  <TableHead className="hidden xl:table-cell">Tipo</TableHead>
+                  <TableHead className="hidden xl:table-cell">Ámbito</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {configuraciones.map((config) => (
+                  <TableRow key={config.id}>
+                    <TableCell className="font-mono text-xs md:text-sm">{config.clave}</TableCell>
+                    <TableCell className="hidden md:table-cell max-w-xs truncate text-xs md:text-sm">{config.valor}</TableCell>
+                    <TableCell className="hidden lg:table-cell max-w-md truncate text-xs md:text-sm">{config.descripcion}</TableCell>
+                    <TableCell className="hidden xl:table-cell">
+                      <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
+                        {getTipoDatoLabel(config.tipo_Dato)}
+                      </span>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-cell">
+                      <span className={`rounded-full px-2 py-1 text-xs font-medium ${
+                        config.es_Global 
+                          ? 'bg-purple-100 text-purple-700'
+                          : 'bg-gray-100 text-gray-700'
+                      }`}>
+                        {config.es_Global ? 'Global' : 'Empresa'}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1 md:gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEdit(config)}
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(config)}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
 
