@@ -8,6 +8,8 @@ export const useUsuarios = () => {
     queryKey: [QUERY_KEY],
     queryFn: usuarioService.getAll,
     staleTime: 5 * 60 * 1000,
+    retry: 1,
+    retryDelay: 1000,
   });
 };
 

@@ -28,10 +28,17 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expirado o inválido
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Solo redirigir si es un error de autenticación (no de autorización)
+      const isAuthError = error.response?.data?.message?.toLowerCase().includes('token') ||
+                          error.response?.data?.message?.toLowerCase().includes('autenticación') ||
+                          error.response?.data?.error?.toLowerCase().includes('token');
+      
+      if (isAuthError) {
+        // Token expirado o inválido
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

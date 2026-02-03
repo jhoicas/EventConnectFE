@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Check, X } from 'lucide-react';
+import { Check, X, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -18,9 +19,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useUsuarios, useUpdateUsuarioEstado } from '@/features/usuarios/hooks/useUsuarios';
+import { APP_ROUTES } from '@/lib/routes';
 import type { UsuarioApi } from '@/types';
 
 const UsuariosPage = () => {
+  const navigate = useNavigate();
   const { data: usuarios = [], isLoading, isError } = useUsuarios();
   const updateEstado = useUpdateUsuarioEstado();
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<UsuarioApi | null>(null);
@@ -70,10 +73,22 @@ const UsuariosPage = () => {
             <p className="text-muted-foreground">Cargando usuarios...</p>
           </div>
         ) : isError ? (
-          <div className="flex h-64 items-center justify-center">
-            <p className="text-muted-foreground">
-              No fue posible cargar los usuarios. Intenta nuevamente.
-            </p>
+          <div className="flex flex-col items-center justify-center h-64 gap-4 p-8">
+            <div className="rounded-full bg-red-100 p-3">
+              <AlertCircle className="h-6 w-6 text-red-600" />
+            </div>
+            <div className="text-center">
+              <h3 className="font-semibold text-lg mb-2">Sin permisos</h3>
+              <p className="text-muted-foreground">
+                No tienes permisos para acceder a esta sección.
+              </p>
+            </div>
+            <Button 
+              onClick={() => navigate(APP_ROUTES.DASHBOARD)}
+              variant="outline"
+            >
+              Volver al Dashboard
+            </Button>
           </div>
         ) : usuariosOrdenados.length === 0 ? (
           <div className="flex h-64 items-center justify-center">
