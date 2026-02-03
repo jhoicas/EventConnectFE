@@ -10,7 +10,7 @@ export const usuarioService = {
   },
 
   updateEstado: async (id: number, estado: string): Promise<UsuarioApi> => {
-    const { data } = await axios.put(`${BASE_URL}/${id}`, { estado });
+    const { data } = await axios.put(`${BASE_URL}/${id}/estado`, { estado });
     return data;
   },
 };
