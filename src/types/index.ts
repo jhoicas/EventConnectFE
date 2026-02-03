@@ -19,17 +19,19 @@ export interface LoginRequest {
   Password: string;
 }
 
-export interface RegisterRequest {
+// Payload para registro de Empresa/Proveedor
+export interface RegisterEmpresaPayload {
   usuario: string;
   email: string;
   password: string;
   nombre_Completo: string;
   telefono?: string | null;
-  empresa_Id?: number | null;
-  rol_Id: number;
+  empresa_Id: number;  // 0 for new companies
+  rol_Id: number;      // 0 for default role
 }
 
-export interface RegisterClienteRequest {
+// Payload para registro de Cliente
+export interface RegisterClientePayload {
   email: string;
   password: string;
   nombre_Completo: string;
@@ -38,9 +40,13 @@ export interface RegisterClienteRequest {
   tipo_Documento?: string | null;
   direccion?: string | null;
   ciudad?: string | null;
-  empresa_Id?: number | null;
-  tipo_Cliente?: string | null;
+  empresa_Id: number;      // 0 for independent clients
+  tipo_Cliente?: string;   // 'Natural' for individual
 }
+
+// Legacy aliases for backward compatibility
+export interface RegisterRequest extends RegisterEmpresaPayload {}
+export interface RegisterClienteRequest extends RegisterClientePayload {}
 
 // Usuario (API)
 export interface UsuarioApi {

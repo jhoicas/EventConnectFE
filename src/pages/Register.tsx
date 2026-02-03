@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Loader, ArrowRight } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Loader2, Building2, User, Sparkles } from 'lucide-react';
 import { authService } from '@/features/auth/services/authService';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,318 +17,243 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-interface ClienteFormData {
-  nombre_Completo: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  telefono: string;
-  documento: string;
-  tipo_Documento: string;
-  direccion: string;
-  ciudad: string;
-}
+// Schema de validación para Empresa
+const empresaSchema = z.object({
+  usuario: z.string().min(3, 'Usuario debe tener al menos 3 caracteres'),
+  nombre_Completo: z.string().min(3, 'Nombre debe tener al menos 3 caracteres'),
+  email: z.string().email('Email inválido'),
+  telefono: z.string().optional(),
+  password: z.string().min(6, 'Contraseña debe tener al menos 6 caracteres'),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Las contraseñas no coinciden',
+  path: ['confirmPassword'],
+});
 
-interface EmpresaFormData {
-  usuario: string;
-  nombre_Completo: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  telefono: string;
-}
+// Schema de validación para Cliente
+const clienteSchema = z.object({
+  nombre_Completo: z.string().min(3, 'Nombre debe tener al menos 3 caracteres'),
+  email: z.string().email('Email inválido'),
+  telefono: z.string().optional(),
+  tipo_Documento: z.string().min(1, 'Selecciona un tipo de documento'),
+  documento: z.string().min(5, 'Documento debe tener al menos 5 caracteres'),
+  direccion: z.string().min(5, 'Dirección debe tener al menos 5 caracteres'),
+  ciudad: z.string().min(2, 'Ciudad debe tener al menos 2 caracteres'),
+  password: z.string().min(6, 'Contraseña debe tener al menos 6 caracteres'),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Las contraseñas no coinciden',
+  path: ['confirmPassword'],
+});
+
+type EmpresaFormData = z.infer<typeof empresaSchema>;
+type ClienteFormData = z.infer<typeof clienteSchema>;
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('cliente');
-  
-  // Cliente form state
-  const [clienteData, setClienteData] = useState<ClienteFormData>({
-    nombre_Completo: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    telefono: '',
-    documento: '',
-    tipo_Documento: '',
-    direccion: '',
-    ciudad: '',
-  });
-
-  // Empresa form state
-  const [empresaData, setEmpresaData] = useState<EmpresaFormData>({
-    usuario: '',
-    nombre_Completo: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    telefono: '',
-  });
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [activeTab, setActiveTab] = useState<'empresa' | 'cliente'>('cliente');
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
 
-  const validateClienteForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
+  // Form para Empresa
+  const empresaForm = useForm<EmpresaFormData>({
+    resolver: zodResolver(empresaSchema),
+    defaultValues: {
+      usuario: '',
+      nombre_Completo: '',
+      email: '',
+      telefono: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
-    if (!clienteData.nombre_Completo.trim()) {
-      newErrors.nombre_Completo = 'El nombre es requerido';
-    }
+  // Form para Cliente
+  const clienteForm = useForm<ClienteFormData>({
+    resolver: zodResolver(clienteSchema),
+    defaultValues: {
+      nombre_Completo: '',
+      email: '',
+      telefono: '',
+      tipo_Documento: '',
+      documento: '',
+      direccion: '',
+      ciudad: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
-    if (!clienteData.email.trim()) {
-      newErrors.email = 'El email es requerido';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clienteData.email)) {
-      newErrors.email = 'Email inválido';
-    }
-
-    if (!clienteData.password) {
-      newErrors.password = 'La contraseña es requerida';
-    } else if (clienteData.password.length < 6) {
-      newErrors.password = 'Mínimo 6 caracteres';
-    }
-
-    if (clienteData.password !== clienteData.confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
-    }
-
-    if (!clienteData.documento.trim()) {
-      newErrors.documento = 'El documento es requerido';
-    }
-
-    if (!clienteData.tipo_Documento) {
-      newErrors.tipo_Documento = 'Selecciona un tipo de documento';
-    }
-
-    if (!clienteData.direccion.trim()) {
-      newErrors.direccion = 'La dirección es requerida';
-    }
-
-    if (!clienteData.ciudad.trim()) {
-      newErrors.ciudad = 'La ciudad es requerida';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const validateEmpresaForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!empresaData.usuario.trim()) {
-      newErrors.usuario = 'El usuario es requerido';
-    }
-
-    if (!empresaData.nombre_Completo.trim()) {
-      newErrors.nombre_Completo = 'El nombre es requerido';
-    }
-
-    if (!empresaData.email.trim()) {
-      newErrors.email = 'El email es requerido';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(empresaData.email)) {
-      newErrors.email = 'Email inválido';
-    }
-
-    if (!empresaData.password) {
-      newErrors.password = 'La contraseña es requerida';
-    } else if (empresaData.password.length < 6) {
-      newErrors.password = 'Mínimo 6 caracteres';
-    }
-
-    if (empresaData.password !== empresaData.confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmitEmpresa = async (data: EmpresaFormData) => {
+    setIsLoading(true);
     setApiError('');
 
-    if (activeTab === 'cliente') {
-      if (!validateClienteForm()) return;
-    } else {
-      if (!validateEmpresaForm()) return;
-    }
-
-    setIsLoading(true);
-
     try {
-      if (activeTab === 'cliente') {
-        await authService.registerCliente({
-          email: clienteData.email,
-          password: clienteData.password,
-          nombre_Completo: clienteData.nombre_Completo,
-          telefono: clienteData.telefono.trim() || null,
-          documento: clienteData.documento.trim() || null,
-          tipo_Documento: clienteData.tipo_Documento || null,
-          direccion: clienteData.direccion.trim() || null,
-          ciudad: clienteData.ciudad.trim() || null,
-          empresa_Id: null,
-          tipo_Cliente: 'Persona',
-        });
-      } else {
-        // Role ID for company admin (from env or default to 2)
-        const roleId = Number(import.meta.env.VITE_ROLE_ID_ADMIN_PROVEEDOR ?? 2);
-        
-        await authService.register({
-          usuario: empresaData.usuario.trim(),
-          email: empresaData.email,
-          password: empresaData.password,
-          nombre_Completo: empresaData.nombre_Completo,
-          telefono: empresaData.telefono.trim() || null,
-          empresa_Id: null,
-          rol_Id: roleId,
-        });
-      }
-
+      await authService.registerEmpresa({
+        usuario: data.usuario,
+        email: data.email,
+        password: data.password,
+        nombre_Completo: data.nombre_Completo,
+        telefono: data.telefono || null,
+        empresa_Id: 0,
+        rol_Id: 0,
+      });
       navigate('/login?registered=true');
     } catch (error: any) {
       const message = error?.response?.data?.message ||
         error?.response?.data?.error ||
-        error?.message ||
-        'Error al registrarse. Por favor intenta de nuevo.';
+        'Error al registrar empresa. Intenta de nuevo.';
       setApiError(message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleClienteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setClienteData({ ...clienteData, [name]: value });
-    if (errors[name]) {
-      setErrors({ ...errors, [name]: '' });
-    }
-  };
+  const onSubmitCliente = async (data: ClienteFormData) => {
+    setIsLoading(true);
+    setApiError('');
 
-  const handleEmpresaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEmpresaData({ ...empresaData, [name]: value });
-    if (errors[name]) {
-      setErrors({ ...errors, [name]: '' });
+    try {
+      await authService.registerCliente({
+        email: data.email,
+        password: data.password,
+        nombre_Completo: data.nombre_Completo,
+        telefono: data.telefono || null,
+        documento: data.documento,
+        tipo_Documento: data.tipo_Documento,
+        direccion: data.direccion,
+        ciudad: data.ciudad,
+        empresa_Id: 0,
+        tipo_Cliente: 'Natural',
+      });
+      navigate('/login?registered=true');
+    } catch (error: any) {
+      const message = error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        'Error al registrar cliente. Intenta de nuevo.';
+      setApiError(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
-      {/* Left Panel - Decorative (Hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 flex-col justify-center items-center p-12 relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
-
-        {/* Content */}
-        <div className="relative z-10 text-center text-white max-w-md">
-          <h1 className="text-5xl font-bold mb-6">EventConnect</h1>
-          <p className="text-xl text-blue-100 mb-8">
-            Conecta eventos, crea experiencias y gestiona tu negocio con elegancia.
-          </p>
-          <div className="flex items-center justify-center gap-2 text-blue-100">
-            <span>Comienza ahora</span>
-            <ArrowRight className="w-5 h-5" />
+    <div className="flex min-h-screen w-full">
+      {/* Columna Izquierda - Decorativa (Hidden en móvil) */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden min-h-screen">
+        {/* Efectos de fondo */}
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
+        
+        {/* Contenido */}
+        <div className="relative z-10 flex flex-col justify-center items-center w-full px-12 text-white">
+          <div className="max-w-md text-center space-y-6">
+            <div className="flex justify-center mb-8">
+              <Sparkles className="w-16 h-16 text-blue-400" />
+            </div>
+            <h1 className="text-5xl font-bold tracking-tight">
+              EventConnect
+            </h1>
+            <p className="text-xl text-slate-300 leading-relaxed">
+              Conecta eventos, gestiona experiencias inolvidables y haz crecer tu negocio con la plataforma líder.
+            </p>
+            <div className="pt-8 space-y-3 text-sm text-slate-400">
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-2 h-2 bg-blue-400 rounded-full" />
+                <span>Gestión integral de eventos</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-2 h-2 bg-purple-400 rounded-full" />
+                <span>Proveedores verificados</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-2 h-2 bg-pink-400 rounded-full" />
+                <span>Reservas en tiempo real</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Right Panel - Form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center p-6 sm:p-8 lg:p-12">
-        <div className="max-w-md mx-auto w-full">
+      {/* Columna Derecha - Formulario */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white min-h-screen overflow-y-auto">
+        <div className="">
           {/* Header */}
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Crear Cuenta</h2>
-            <p className="text-gray-600">Únete a EventConnect hoy mismo</p>
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-slate-900">Crear Cuenta</h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Únete a EventConnect y comienza hoy
+            </p>
           </div>
 
-          {/* API Error */}
+          {/* Error API */}
           {apiError && (
-            <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
-              {apiError}
+            <div className="rounded-lg bg-red-50 border border-red-200 p-4">
+              <p className="text-sm text-red-800">{apiError}</p>
             </div>
           )}
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="cliente" className="text-sm">
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'empresa' | 'cliente')}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="cliente" className="flex items-center gap-2">
+                <User className="w-4 h-4" />
                 Soy Cliente
               </TabsTrigger>
-              <TabsTrigger value="empresa" className="text-sm">
+              <TabsTrigger value="empresa" className="flex items-center gap-2">
+                <Building2 className="w-4 h-4" />
                 Soy Empresa
               </TabsTrigger>
             </TabsList>
 
-            {/* Cliente Tab */}
-            <TabsContent value="cliente" className="space-y-0">
-              <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Tab Content: Cliente */}
+            <TabsContent value="cliente" className="mt-6">
+              <form onSubmit={clienteForm.handleSubmit(onSubmitCliente)} className="space-y-4">
                 {/* Nombre Completo */}
                 <div className="space-y-2">
-                  <Label htmlFor="cliente-nombre" className="text-sm font-medium text-gray-700">
-                    Nombre Completo
-                  </Label>
+                  <Label htmlFor="cliente-nombre">Nombre Completo</Label>
                   <Input
                     id="cliente-nombre"
-                    name="nombre_Completo"
-                    type="text"
                     placeholder="Juan García López"
-                    value={clienteData.nombre_Completo}
-                    onChange={handleClienteChange}
-                    className={errors.nombre_Completo ? 'border-red-500' : ''}
+                    {...clienteForm.register('nombre_Completo')}
                   />
-                  {errors.nombre_Completo && (
-                    <p className="text-xs text-red-600">{errors.nombre_Completo}</p>
+                  {clienteForm.formState.errors.nombre_Completo && (
+                    <p className="text-xs text-red-600">{clienteForm.formState.errors.nombre_Completo.message}</p>
                   )}
                 </div>
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <Label htmlFor="cliente-email" className="text-sm font-medium text-gray-700">
-                    Email
-                  </Label>
+                  <Label htmlFor="cliente-email">Email</Label>
                   <Input
                     id="cliente-email"
-                    name="email"
                     type="email"
                     placeholder="tu@email.com"
-                    value={clienteData.email}
-                    onChange={handleClienteChange}
-                    className={errors.email ? 'border-red-500' : ''}
+                    {...clienteForm.register('email')}
                   />
-                  {errors.email && (
-                    <p className="text-xs text-red-600">{errors.email}</p>
+                  {clienteForm.formState.errors.email && (
+                    <p className="text-xs text-red-600">{clienteForm.formState.errors.email.message}</p>
                   )}
                 </div>
 
                 {/* Teléfono */}
                 <div className="space-y-2">
-                  <Label htmlFor="cliente-phone" className="text-sm font-medium text-gray-700">
-                    Teléfono (Opcional)
-                  </Label>
+                  <Label htmlFor="cliente-telefono">Teléfono (Opcional)</Label>
                   <Input
-                    id="cliente-phone"
-                    name="telefono"
+                    id="cliente-telefono"
                     type="tel"
-                    placeholder="3001234567"
-                    value={clienteData.telefono}
-                    onChange={handleClienteChange}
+                    placeholder="+57 300 123 4567"
+                    {...clienteForm.register('telefono')}
                   />
                 </div>
 
                 {/* Documento */}
                 <div className="grid grid-cols-3 gap-3">
                   <div className="col-span-1 space-y-2">
-                    <Label htmlFor="cliente-tipo-doc" className="text-sm font-medium text-gray-700">
-                      Tipo Doc.
-                    </Label>
-                    <Select value={clienteData.tipo_Documento} onValueChange={(value) => {
-                      setClienteData({ ...clienteData, tipo_Documento: value });
-                      if (errors.tipo_Documento) {
-                        setErrors({ ...errors, tipo_Documento: '' });
-                      }
-                    }}>
-                      <SelectTrigger id="cliente-tipo-doc" className={errors.tipo_Documento ? 'border-red-500' : ''}>
+                    <Label htmlFor="cliente-tipo-doc">Tipo Doc.</Label>
+                    <Select onValueChange={(value) => clienteForm.setValue('tipo_Documento', value)}>
+                      <SelectTrigger id="cliente-tipo-doc">
                         <SelectValue placeholder="Tipo" />
                       </SelectTrigger>
                       <SelectContent>
@@ -335,115 +263,82 @@ const RegisterPage = () => {
                         <SelectItem value="CE">CE</SelectItem>
                       </SelectContent>
                     </Select>
-                    {errors.tipo_Documento && (
-                      <p className="text-xs text-red-600">{errors.tipo_Documento}</p>
+                    {clienteForm.formState.errors.tipo_Documento && (
+                      <p className="text-xs text-red-600">{clienteForm.formState.errors.tipo_Documento.message}</p>
                     )}
                   </div>
                   <div className="col-span-2 space-y-2">
-                    <Label htmlFor="cliente-documento" className="text-sm font-medium text-gray-700">
-                      Número
-                    </Label>
+                    <Label htmlFor="cliente-documento">Número</Label>
                     <Input
                       id="cliente-documento"
-                      name="documento"
-                      type="text"
                       placeholder="1234567890"
-                      value={clienteData.documento}
-                      onChange={handleClienteChange}
-                      className={errors.documento ? 'border-red-500' : ''}
+                      {...clienteForm.register('documento')}
                     />
-                    {errors.documento && (
-                      <p className="text-xs text-red-600">{errors.documento}</p>
+                    {clienteForm.formState.errors.documento && (
+                      <p className="text-xs text-red-600">{clienteForm.formState.errors.documento.message}</p>
                     )}
                   </div>
                 </div>
 
                 {/* Dirección */}
                 <div className="space-y-2">
-                  <Label htmlFor="cliente-direccion" className="text-sm font-medium text-gray-700">
-                    Dirección
-                  </Label>
+                  <Label htmlFor="cliente-direccion">Dirección</Label>
                   <Input
                     id="cliente-direccion"
-                    name="direccion"
-                    type="text"
                     placeholder="Calle 123 #45-67"
-                    value={clienteData.direccion}
-                    onChange={handleClienteChange}
-                    className={errors.direccion ? 'border-red-500' : ''}
+                    {...clienteForm.register('direccion')}
                   />
-                  {errors.direccion && (
-                    <p className="text-xs text-red-600">{errors.direccion}</p>
+                  {clienteForm.formState.errors.direccion && (
+                    <p className="text-xs text-red-600">{clienteForm.formState.errors.direccion.message}</p>
                   )}
                 </div>
 
                 {/* Ciudad */}
                 <div className="space-y-2">
-                  <Label htmlFor="cliente-ciudad" className="text-sm font-medium text-gray-700">
-                    Ciudad
-                  </Label>
+                  <Label htmlFor="cliente-ciudad">Ciudad</Label>
                   <Input
                     id="cliente-ciudad"
-                    name="ciudad"
-                    type="text"
                     placeholder="Bogotá"
-                    value={clienteData.ciudad}
-                    onChange={handleClienteChange}
-                    className={errors.ciudad ? 'border-red-500' : ''}
+                    {...clienteForm.register('ciudad')}
                   />
-                  {errors.ciudad && (
-                    <p className="text-xs text-red-600">{errors.ciudad}</p>
+                  {clienteForm.formState.errors.ciudad && (
+                    <p className="text-xs text-red-600">{clienteForm.formState.errors.ciudad.message}</p>
                   )}
                 </div>
 
                 {/* Contraseña */}
                 <div className="space-y-2">
-                  <Label htmlFor="cliente-password" className="text-sm font-medium text-gray-700">
-                    Contraseña
-                  </Label>
+                  <Label htmlFor="cliente-password">Contraseña</Label>
                   <Input
                     id="cliente-password"
-                    name="password"
                     type="password"
                     placeholder="••••••••"
-                    value={clienteData.password}
-                    onChange={handleClienteChange}
-                    className={errors.password ? 'border-red-500' : ''}
+                    {...clienteForm.register('password')}
                   />
-                  {errors.password && (
-                    <p className="text-xs text-red-600">{errors.password}</p>
+                  {clienteForm.formState.errors.password && (
+                    <p className="text-xs text-red-600">{clienteForm.formState.errors.password.message}</p>
                   )}
                 </div>
 
                 {/* Confirmar Contraseña */}
                 <div className="space-y-2">
-                  <Label htmlFor="cliente-confirm-password" className="text-sm font-medium text-gray-700">
-                    Confirmar Contraseña
-                  </Label>
+                  <Label htmlFor="cliente-confirm">Confirmar Contraseña</Label>
                   <Input
-                    id="cliente-confirm-password"
-                    name="confirmPassword"
+                    id="cliente-confirm"
                     type="password"
                     placeholder="••••••••"
-                    value={clienteData.confirmPassword}
-                    onChange={handleClienteChange}
-                    className={errors.confirmPassword ? 'border-red-500' : ''}
+                    {...clienteForm.register('confirmPassword')}
                   />
-                  {errors.confirmPassword && (
-                    <p className="text-xs text-red-600">{errors.confirmPassword}</p>
+                  {clienteForm.formState.errors.confirmPassword && (
+                    <p className="text-xs text-red-600">{clienteForm.formState.errors.confirmPassword.message}</p>
                   )}
                 </div>
 
                 {/* Submit Button */}
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-6"
-                  size="lg"
-                >
+                <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
                   {isLoading ? (
                     <>
-                      <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Creando cuenta...
                     </>
                   ) : (
@@ -453,129 +348,93 @@ const RegisterPage = () => {
               </form>
             </TabsContent>
 
-            {/* Empresa Tab */}
-            <TabsContent value="empresa" className="space-y-0">
-              <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Tab Content: Empresa */}
+            <TabsContent value="empresa" className="mt-6">
+              <form onSubmit={empresaForm.handleSubmit(onSubmitEmpresa)} className="space-y-4">
                 {/* Usuario */}
                 <div className="space-y-2">
-                  <Label htmlFor="empresa-usuario" className="text-sm font-medium text-gray-700">
-                    Usuario (username)
-                  </Label>
+                  <Label htmlFor="empresa-usuario">Usuario</Label>
                   <Input
                     id="empresa-usuario"
-                    name="usuario"
-                    type="text"
-                    placeholder="usuario.empresa"
-                    value={empresaData.usuario}
-                    onChange={handleEmpresaChange}
-                    className={errors.usuario ? 'border-red-500' : ''}
+                    placeholder="admin.empresa"
+                    {...empresaForm.register('usuario')}
                   />
-                  {errors.usuario && (
-                    <p className="text-xs text-red-600">{errors.usuario}</p>
+                  {empresaForm.formState.errors.usuario && (
+                    <p className="text-xs text-red-600">{empresaForm.formState.errors.usuario.message}</p>
                   )}
                 </div>
 
                 {/* Nombre Completo */}
                 <div className="space-y-2">
-                  <Label htmlFor="empresa-nombre" className="text-sm font-medium text-gray-700">
-                    Nombre Completo
-                  </Label>
+                  <Label htmlFor="empresa-nombre">Nombre Completo</Label>
                   <Input
                     id="empresa-nombre"
-                    name="nombre_Completo"
-                    type="text"
                     placeholder="Juan García López"
-                    value={empresaData.nombre_Completo}
-                    onChange={handleEmpresaChange}
-                    className={errors.nombre_Completo ? 'border-red-500' : ''}
+                    {...empresaForm.register('nombre_Completo')}
                   />
-                  {errors.nombre_Completo && (
-                    <p className="text-xs text-red-600">{errors.nombre_Completo}</p>
+                  {empresaForm.formState.errors.nombre_Completo && (
+                    <p className="text-xs text-red-600">{empresaForm.formState.errors.nombre_Completo.message}</p>
                   )}
                 </div>
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <Label htmlFor="empresa-email" className="text-sm font-medium text-gray-700">
-                    Email
-                  </Label>
+                  <Label htmlFor="empresa-email">Email</Label>
                   <Input
                     id="empresa-email"
-                    name="email"
                     type="email"
-                    placeholder="tu@empresa.com"
-                    value={empresaData.email}
-                    onChange={handleEmpresaChange}
-                    className={errors.email ? 'border-red-500' : ''}
+                    placeholder="admin@empresa.com"
+                    {...empresaForm.register('email')}
                   />
-                  {errors.email && (
-                    <p className="text-xs text-red-600">{errors.email}</p>
+                  {empresaForm.formState.errors.email && (
+                    <p className="text-xs text-red-600">{empresaForm.formState.errors.email.message}</p>
                   )}
                 </div>
 
                 {/* Teléfono */}
                 <div className="space-y-2">
-                  <Label htmlFor="empresa-phone" className="text-sm font-medium text-gray-700">
-                    Teléfono (Opcional)
-                  </Label>
+                  <Label htmlFor="empresa-telefono">Teléfono (Opcional)</Label>
                   <Input
-                    id="empresa-phone"
-                    name="telefono"
+                    id="empresa-telefono"
                     type="tel"
-                    placeholder="3001234567"
-                    value={empresaData.telefono}
-                    onChange={handleEmpresaChange}
+                    placeholder="+57 300 123 4567"
+                    {...empresaForm.register('telefono')}
                   />
                 </div>
 
                 {/* Contraseña */}
                 <div className="space-y-2">
-                  <Label htmlFor="empresa-password" className="text-sm font-medium text-gray-700">
-                    Contraseña
-                  </Label>
+                  <Label htmlFor="empresa-password">Contraseña</Label>
                   <Input
                     id="empresa-password"
-                    name="password"
                     type="password"
                     placeholder="••••••••"
-                    value={empresaData.password}
-                    onChange={handleEmpresaChange}
-                    className={errors.password ? 'border-red-500' : ''}
+                    {...empresaForm.register('password')}
                   />
-                  {errors.password && (
-                    <p className="text-xs text-red-600">{errors.password}</p>
+                  {empresaForm.formState.errors.password && (
+                    <p className="text-xs text-red-600">{empresaForm.formState.errors.password.message}</p>
                   )}
                 </div>
 
                 {/* Confirmar Contraseña */}
                 <div className="space-y-2">
-                  <Label htmlFor="empresa-confirm-password" className="text-sm font-medium text-gray-700">
-                    Confirmar Contraseña
-                  </Label>
+                  <Label htmlFor="empresa-confirm">Confirmar Contraseña</Label>
                   <Input
-                    id="empresa-confirm-password"
-                    name="confirmPassword"
+                    id="empresa-confirm"
                     type="password"
                     placeholder="••••••••"
-                    value={empresaData.confirmPassword}
-                    onChange={handleEmpresaChange}
-                    className={errors.confirmPassword ? 'border-red-500' : ''}
+                    {...empresaForm.register('confirmPassword')}
                   />
-                  {errors.confirmPassword && (
-                    <p className="text-xs text-red-600">{errors.confirmPassword}</p>
+                  {empresaForm.formState.errors.confirmPassword && (
+                    <p className="text-xs text-red-600">{empresaForm.formState.errors.confirmPassword.message}</p>
                   )}
                 </div>
 
                 {/* Submit Button */}
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-6"
-                  size="lg"
-                >
+                <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
                   {isLoading ? (
                     <>
-                      <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Creando cuenta...
                     </>
                   ) : (
@@ -587,10 +446,10 @@ const RegisterPage = () => {
           </Tabs>
 
           {/* Login Link */}
-          <div className="mt-6 text-center text-sm text-gray-600">
+          <div className="text-center text-sm text-slate-600">
             ¿Ya tienes cuenta?{' '}
             <Link to="/login" className="font-medium text-blue-600 hover:text-blue-700 hover:underline">
-              Inicia sesión
+              Iniciar Sesión
             </Link>
           </div>
         </div>
