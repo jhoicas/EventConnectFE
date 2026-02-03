@@ -9,6 +9,7 @@ const ROLE_IDS = {
 } as const;
 
 interface RegisterFormData {
+  usuario: string;
   nombre_Completo: string;
   email: string;
   password: string;
@@ -27,6 +28,7 @@ interface RegisterFormData {
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<RegisterFormData>({
+    usuario: '',
     nombre_Completo: '',
     email: '',
     password: '',
@@ -50,6 +52,10 @@ const RegisterPage = () => {
 
     if (!formData.nombre_Completo.trim()) {
       newErrors.nombre_Completo = 'El nombre es requerido';
+    }
+
+    if (formData.tipoRegistro === 'empresa' && !formData.usuario.trim()) {
+      newErrors.usuario = 'El usuario es requerido';
     }
 
     if (!formData.email.trim()) {
@@ -119,7 +125,7 @@ const RegisterPage = () => {
         });
       } else {
         await authService.register({
-          usuario: formData.email,
+          usuario: formData.usuario.trim(),
           email: formData.email,
           password: formData.password,
           nombre_Completo: formData.nombre_Completo,
@@ -252,6 +258,28 @@ const RegisterPage = () => {
               <p className="mt-1 text-sm text-red-600">{errors.nombre_Completo}</p>
             )}
           </div>
+
+          {formData.tipoRegistro === 'empresa' && (
+            <div>
+              <label htmlFor="usuario" className="block text-sm font-medium text-gray-700 mb-1">
+                Usuario
+              </label>
+              <input
+                id="usuario"
+                name="usuario"
+                type="text"
+                placeholder="usuario.empresa"
+                value={formData.usuario}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.usuario ? 'border-red-500' : 'border-gray-300'
+                }`}
+              />
+              {errors.usuario && (
+                <p className="mt-1 text-sm text-red-600">{errors.usuario}</p>
+              )}
+            </div>
+          )}
 
           {/* Email */}
           <div>
