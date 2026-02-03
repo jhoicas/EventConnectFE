@@ -41,15 +41,25 @@ const UsuariosPage = () => {
     return `https://api.dicebear.com/7.x/bottts/svg?seed=${safeSeed}&backgroundColor=ffd5dc`;
   };
 
-  const normalizeEstado = (estado?: string | null) =>
-    estado?.toLowerCase() === 'activo' ? 'Activo' : 'Inactivo';
+  const normalizeEstadoValue = (estado?: string | null) => {
+    const value = (estado ?? '').trim().toLowerCase();
+    return value === 'activo' ? 'activo' : 'inactivo';
+  };
 
-  const handleEstadoChange = async (usuarioId: number, nuevoEst: string) => {
+  const toApiEstado = (value: 'activo' | 'inactivo') =>
+    value === 'activo' ? 'Activo' : 'Inactivo';
+
+  const estadoOptions: Record<'activo' | 'inactivo', { label: string; dot: string }> = {
+    activo: { label: 'Activo', dot: 'bg-green-600' },
+    inactivo: { label: 'Inactivo', dot: 'bg-gray-600' },
+  };
+
+  const handleEstadoChange = async (usuarioId: number, nuevoEst: 'activo' | 'inactivo') => {
     if (usuarioId && nuevoEst) {
       try {
         await updateEstado.mutateAsync({
           id: usuarioId,
-          estado: nuevoEst,
+          estado: toApiEstado(nuevoEst),
         });
       } catch (error) {
         console.error('Error actualizando estado:', error);
@@ -131,28 +141,37 @@ const UsuariosPage = () => {
                     <TableCell className="hidden lg:table-cell text-sm">{usuario.rol}</TableCell>
                     <TableCell className="hidden xl:table-cell text-sm">{usuario.empresa_nombre || '-'}</TableCell>
                     <TableCell>
-                      <Select
-                        value={normalizeEstado(usuario.estado)}
-                        onValueChange={(value) => handleEstadoChange(usuario.id, value)}
-                      >
-                        <SelectTrigger className="w-full md:w-[140px]">
-                          <SelectValue placeholder="Seleccionar estado" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Activo">
-                            <span className="flex items-center gap-2">
-                              <span className="h-2 w-2 rounded-full bg-green-600"></span>
-                              Activo
-                            </span>
-                          </SelectItem>
-                          <SelectItem value="Inactivo">
-                            <span className="flex items-center gap-2">
-                              <span className="h-2 w-2 rounded-full bg-gray-600"></span>
-                              Inactivo
-                            </span>
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                      {(() => {
+                        const estadoValue = normalizeEstadoValue(usuario.estado);
+                        const estado = estadoOptions[estadoValue];
+                        return (
+                          <Select
+                            value={estadoValue}
+                            onValueChange={(value) => handleEstadoChange(usuario.id, value as 'activo' | 'inactivo')}
+                          >
+                            <SelectTrigger className="w-full md:w-[140px]">
+                              <span className="flex items-center gap-2">
+                                <span className={`h-2 w-2 rounded-full ${estado.dot}`}></span>
+                                <span>{estado.label}</span>
+                              </span>
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="activo">
+                                <span className="flex items-center gap-2">
+                                  <span className="h-2 w-2 rounded-full bg-green-600"></span>
+                                  Activo
+                                </span>
+                              </SelectItem>
+                              <SelectItem value="inactivo">
+                                <span className="flex items-center gap-2">
+                                  <span className="h-2 w-2 rounded-full bg-gray-600"></span>
+                                  Inactivo
+                                </span>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        );
+                      })()}
                     </TableCell>
                   </TableRow>
                 ))}
