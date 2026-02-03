@@ -20,7 +20,7 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  usuario?: string;
+  usuario: string;
   email: string;
   password: string;
   nombre_Completo: string;
@@ -34,12 +34,12 @@ export interface RegisterClienteRequest {
   password: string;
   nombre_Completo: string;
   telefono?: string | null;
-  empresa_Id?: number | null;
-  tipo_Cliente?: string | null;
   documento?: string | null;
   tipo_Documento?: string | null;
   direccion?: string | null;
   ciudad?: string | null;
+  empresa_Id?: number | null;
+  tipo_Cliente?: string | null;
 }
 
 // Usuario (API)
