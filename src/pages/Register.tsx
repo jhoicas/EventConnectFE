@@ -15,6 +15,13 @@ interface RegisterFormData {
   confirmPassword: string;
   tipoRegistro: 'persona' | 'empresa';
   aceptoTerminos: boolean;
+  telefono: string;
+  empresa_Id: string;
+  tipo_Cliente: string;
+  documento: string;
+  tipo_Documento: string;
+  direccion: string;
+  ciudad: string;
 }
 
 const RegisterPage = () => {
@@ -26,6 +33,13 @@ const RegisterPage = () => {
     confirmPassword: '',
     tipoRegistro: 'persona',
     aceptoTerminos: false,
+    telefono: '',
+    empresa_Id: '',
+    tipo_Cliente: 'Persona',
+    documento: '',
+    tipo_Documento: '',
+    direccion: '',
+    ciudad: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -58,6 +72,21 @@ const RegisterPage = () => {
       newErrors.aceptoTerminos = 'Debes aceptar los términos y condiciones';
     }
 
+    if (formData.tipoRegistro === 'persona') {
+      if (!formData.documento.trim()) {
+        newErrors.documento = 'El documento es requerido';
+      }
+      if (!formData.tipo_Documento.trim()) {
+        newErrors.tipo_Documento = 'El tipo de documento es requerido';
+      }
+      if (!formData.direccion.trim()) {
+        newErrors.direccion = 'La dirección es requerida';
+      }
+      if (!formData.ciudad.trim()) {
+        newErrors.ciudad = 'La ciudad es requerida';
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -72,19 +101,21 @@ const RegisterPage = () => {
 
     setIsLoading(true);
 
+    const empresaId = formData.empresa_Id.trim() ? Number(formData.empresa_Id) : null;
+
     try {
       if (formData.tipoRegistro === 'persona') {
         await authService.registerCliente({
           email: formData.email,
           password: formData.password,
           nombre_Completo: formData.nombre_Completo,
-          telefono: null,
-          empresa_Id: null,
-          tipo_Cliente: 'Persona',
-          documento: null,
-          tipo_Documento: null,
-          direccion: null,
-          ciudad: null,
+          telefono: formData.telefono.trim() || null,
+          empresa_Id: empresaId,
+          tipo_Cliente: formData.tipo_Cliente || 'Persona',
+          documento: formData.documento.trim() || null,
+          tipo_Documento: formData.tipo_Documento.trim() || null,
+          direccion: formData.direccion.trim() || null,
+          ciudad: formData.ciudad.trim() || null,
         });
       } else {
         await authService.register({
@@ -92,8 +123,8 @@ const RegisterPage = () => {
           email: formData.email,
           password: formData.password,
           nombre_Completo: formData.nombre_Completo,
-          telefono: null,
-          empresa_Id: null,
+          telefono: formData.telefono.trim() || null,
+          empresa_Id: empresaId,
           rol_Id: ROLE_IDS.empresa,
         });
       }
@@ -243,6 +274,22 @@ const RegisterPage = () => {
             )}
           </div>
 
+          {/* Teléfono */}
+          <div>
+            <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-1">
+              Teléfono
+            </label>
+            <input
+              id="telefono"
+              name="telefono"
+              type="text"
+              placeholder="3001234567"
+              value={formData.telefono}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
+            />
+          </div>
+
           {/* Contraseña */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
@@ -284,6 +331,121 @@ const RegisterPage = () => {
               <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
             )}
           </div>
+
+          {/* Campos por tipo */}
+          {formData.tipoRegistro === 'empresa' ? (
+            <div>
+              <label htmlFor="empresa_Id" className="block text-sm font-medium text-gray-700 mb-1">
+                Empresa ID (opcional)
+              </label>
+              <input
+                id="empresa_Id"
+                name="empresa_Id"
+                type="number"
+                placeholder="0"
+                value={formData.empresa_Id}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
+              />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="tipo_Cliente" className="block text-sm font-medium text-gray-700 mb-1">
+                  Tipo de Cliente
+                </label>
+                <input
+                  id="tipo_Cliente"
+                  name="tipo_Cliente"
+                  type="text"
+                  placeholder="Persona"
+                  value={formData.tipo_Cliente}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="documento" className="block text-sm font-medium text-gray-700 mb-1">
+                  Documento
+                </label>
+                <input
+                  id="documento"
+                  name="documento"
+                  type="text"
+                  placeholder="1020304050"
+                  value={formData.documento}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.documento ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+                {errors.documento && (
+                  <p className="mt-1 text-sm text-red-600">{errors.documento}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="tipo_Documento" className="block text-sm font-medium text-gray-700 mb-1">
+                  Tipo de Documento
+                </label>
+                <input
+                  id="tipo_Documento"
+                  name="tipo_Documento"
+                  type="text"
+                  placeholder="CC"
+                  value={formData.tipo_Documento}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.tipo_Documento ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+                {errors.tipo_Documento && (
+                  <p className="mt-1 text-sm text-red-600">{errors.tipo_Documento}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="direccion" className="block text-sm font-medium text-gray-700 mb-1">
+                  Dirección
+                </label>
+                <input
+                  id="direccion"
+                  name="direccion"
+                  type="text"
+                  placeholder="Calle 123 #45-67"
+                  value={formData.direccion}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.direccion ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+                {errors.direccion && (
+                  <p className="mt-1 text-sm text-red-600">{errors.direccion}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700 mb-1">
+                  Ciudad
+                </label>
+                <input
+                  id="ciudad"
+                  name="ciudad"
+                  type="text"
+                  placeholder="Bogotá"
+                  value={formData.ciudad}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.ciudad ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+                {errors.ciudad && (
+                  <p className="mt-1 text-sm text-red-600">{errors.ciudad}</p>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Términos */}
           <div className="flex items-start">
