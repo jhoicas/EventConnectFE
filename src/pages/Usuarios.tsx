@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { Check, X } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -7,10 +8,23 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useUsuarios } from '@/features/usuarios/hooks/useUsuarios';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { useUsuarios, useUpdateUsuarioEstado } from '@/features/usuarios/hooks/useUsuarios';
+import type { UsuarioApi } from '@/types';
 
 const UsuariosPage = () => {
   const { data: usuarios = [], isLoading, isError } = useUsuarios();
+  const updateEstado = useUpdateUsuarioEstado();
+  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<UsuarioApi | null>(null);
+  const [nuevoEstado, setNuevoEstado] = useState<string>('');
 
   const usuariosOrdenados = useMemo(
     () =>
@@ -21,12 +35,6 @@ const UsuariosPage = () => {
       }),
     [usuarios]
   );
-
-  const formatDateTime = (dateString?: string | null) => {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
-    return date.toLocaleString('es-CO');
-  };
 
   const getEstadoBadgeColor = (estado?: string) => {
     switch (estado) {
@@ -80,7 +88,7 @@ const UsuariosPage = () => {
                 <TableHead>Rol</TableHead>
                 <TableHead>Empresa</TableHead>
                 <TableHead>Estado</TableHead>
-                <TableHead>Último acceso</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -115,13 +123,101 @@ const UsuariosPage = () => {
                       {usuario.estado}
                     </span>
                   </TableCell>
-                  <TableCell>{formatDateTime(usuario.ultimo_acceso)}</TableCell>
+                  <TableCell>{usuario.email}</TableCell>
+                  <TableCell>{usuario.rol}</TableCell>
+                  <TableCell>{usuario.empresa_nombre || '-'}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getEstadoBadgeColor(
+                        usuario.estado
+                      )}`}
+                    >
+                      {usuario.estado}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      {usuario.estado === 'Activo' ? (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => {
+                            setUsuarioSeleccionado(usuario);
+                            setNuevoEstado('Inactivo');
+                          }}
+                        >
+                          <X className="h-4 w-4 mr-1" />
+                          Desactivar
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                          onClick={() => {
+                            setUsuarioSeleccionado(usuario);
+                            setNuevoEstado('Activo');
+                          }}
+                        >
+                          <Check className="h-4 w-4 mr-1" />
+                          Activar
+                        </Button>
+                      )}
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         )}
       </div>
+
+      {/* Dialog de confirmación */}
+      <Dialog open={!!usuarioSeleccionado} onOpenChange={() => setUsuarioSeleccionado(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {nuevoEstado === 'Activo' ? 'Activar usuario' : 'Desactivar usuario'}
+            </DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que deseas {nuevoEstado === 'Activo' ? 'activar' : 'desactivar'} a{' '}
+              <strong>{usuarioSeleccionado?.nombre_completo}</strong>?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setUsuarioSeleccionado(null)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={async () => {
+                if (usuarioSeleccionado) {
+                  await updateEstado.mutateAsync({
+                    id: usuarioSeleccionado.id,
+                    estado: nuevoEstado,
+                  });
+                  setUsuarioSeleccionado(null);
+                }
+              }}
+              disabled={updateEstado.isPending}
+              className={
+                nuevoEstado === 'Inactivo'
+                  ? 'bg-red-600 hover:bg-red-700'
+                  : 'bg-green-600 hover:bg-green-700'
+              }
+            >
+              {updateEstado.isPending
+                ? 'Procesando...'
+                : nuevoEstado === 'Activo'
+                  ? 'Activar'
+                  : 'Desactivar'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

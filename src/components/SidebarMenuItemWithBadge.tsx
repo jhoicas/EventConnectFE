@@ -1,16 +1,8 @@
-import { NavLink } from 'react-router-dom';
+import { useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { MenuItem } from '@/lib/menuConfig';
-import { useState } from 'react';
-import { Logo } from '@/components/Logo';
-import { useTotalNotificacionesNoLeidas } from '@/features/notificaciones/hooks/useNotificaciones';
-import { APP_ROUTES } from '@/lib/routes';
-
-interface SidebarProps {
-  menuItems: MenuItem[];
-  onItemClick?: () => void;
-}
+import { NavLink } from 'react-router-dom';
 
 interface SidebarItemProps {
   item: MenuItem;
@@ -99,30 +91,12 @@ const SidebarItem = ({ item, onItemClick, badge }: SidebarItemProps) => {
   );
 };
 
-export const Sidebar = ({ menuItems, onItemClick }: SidebarProps) => {
-  const { data: totalNoLeidas = 0 } = useTotalNotificacionesNoLeidas();
+interface SidebarMenuItemProps {
+  item: MenuItem;
+  onItemClick?: () => void;
+  badge?: number;
+}
 
-  return (
-    <aside className="w-64 border-r bg-background h-full overflow-y-auto">
-      <div className="p-4">
-        <div className="mb-6">
-          <Logo />
-        </div>
-        <nav className="space-y-1">
-          {menuItems.map((item) => {
-            const badge =
-              item.href === APP_ROUTES.CLIENTE_MENSAJES ? totalNoLeidas : 0;
-            return (
-              <SidebarItem
-                key={item.label}
-                item={item}
-                onItemClick={onItemClick}
-                badge={badge}
-              />
-            );
-          })}
-        </nav>
-      </div>
-    </aside>
-  );
-};
+export function SidebarMenuItem({ item, onItemClick, badge }: SidebarMenuItemProps) {
+  return <SidebarItem item={item} onItemClick={onItemClick} badge={badge} />;
+}

@@ -8,4 +8,9 @@ export const usuarioService = {
     const { data } = await axios.get(BASE_URL);
     return data;
   },
+
+  updateEstado: async (id: number, estado: string): Promise<UsuarioApi> => {
+    const { data } = await axios.put(`${BASE_URL}/${id}`, { estado });
+    return data;
+  },
 };
