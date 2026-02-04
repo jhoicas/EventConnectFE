@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2, Building2, User, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { authService } from '@/features/auth/services/authService';
+import { Logo } from '@/components/Logo';
 
 // Schema de validación para Empresa
 const empresaSchema = z.object({
@@ -154,6 +155,14 @@ const RegisterPage = () => {
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <Logo 
+              iconClassName="text-indigo-600" 
+              textClassName="text-gray-800"
+            />
+          </div>
+          
           <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
             Crear Cuenta
           </h1>
