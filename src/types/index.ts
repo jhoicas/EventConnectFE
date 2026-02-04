@@ -41,6 +41,7 @@ export interface RegisterClientePayload {
   direccion?: string | null;
   ciudad?: string | null;
   empresa_Id?: number | null;      // null or omit for independent clients
+   rol_Id?: number | null;
   tipo_Cliente?: string;   // 'Natural' for individual
 }
 

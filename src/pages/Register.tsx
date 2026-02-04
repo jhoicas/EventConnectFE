@@ -90,6 +90,8 @@ const RegisterPage = () => {
         password: data.password,
         nombre_Completo: data.nombre_Completo,
         telefono: data.telefono || null,
+        empresa_Id: null,
+        rol_Id: 2,
       });
       setIsSubmitted(true);
       setTimeout(() => {
@@ -123,6 +125,8 @@ const RegisterPage = () => {
         tipo_Documento: data.tipoDoc,
         direccion: data.direccion,
         ciudad: data.ciudad,
+        empresa_Id: null,
+        rol_Id: 4,
         tipo_Cliente: 'Natural',
       });
       setIsSubmitted(true);
