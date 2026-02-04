@@ -5,8 +5,7 @@ import type {
   RegisterEmpresaPayload, 
   RegisterClientePayload,
   // Legacy types for backward compatibility
-  RegisterRequest,
-  RegisterClienteRequest
+  RegisterRequest
 } from '@/types';
 
 export const authService = {
