@@ -90,16 +90,18 @@ const RegisterPage = () => {
         password: data.password,
         nombre_Completo: data.nombre_Completo,
         telefono: data.telefono || null,
-        empresa_Id: 0,
-        rol_Id: 0,
       });
       setIsSubmitted(true);
       setTimeout(() => {
         navigate('/login?registered=true');
       }, 2000);
     } catch (error: any) {
+      console.error('Error completo:', error);
+      console.error('Response data:', error?.response?.data);
       const message = error?.response?.data?.message ||
         error?.response?.data?.error ||
+        error?.response?.data?.title ||
+        JSON.stringify(error?.response?.data) ||
         'Error al registrar empresa. Intenta de nuevo.';
       setApiError(message);
     } finally {
@@ -121,7 +123,6 @@ const RegisterPage = () => {
         tipo_Documento: data.tipoDoc,
         direccion: data.direccion,
         ciudad: data.ciudad,
-        empresa_Id: 0,
         tipo_Cliente: 'Natural',
       });
       setIsSubmitted(true);
@@ -129,8 +130,12 @@ const RegisterPage = () => {
         navigate('/login?registered=true');
       }, 2000);
     } catch (error: any) {
+      console.error('Error completo:', error);
+      console.error('Response data:', error?.response?.data);
       const message = error?.response?.data?.message ||
         error?.response?.data?.error ||
+        error?.response?.data?.title ||
+        JSON.stringify(error?.response?.data) ||
         'Error al registrar cliente. Intenta de nuevo.';
       setApiError(message);
     } finally {

@@ -26,8 +26,8 @@ export interface RegisterEmpresaPayload {
   password: string;
   nombre_Completo: string;
   telefono?: string | null;
-  empresa_Id: number;  // 0 for new companies
-  rol_Id: number;      // 0 for default role
+  empresa_Id?: number | null;  // null or omit for new companies
+  rol_Id?: number | null;      // null or omit for default role
 }
 
 // Payload para registro de Cliente
@@ -40,7 +40,7 @@ export interface RegisterClientePayload {
   tipo_Documento?: string | null;
   direccion?: string | null;
   ciudad?: string | null;
-  empresa_Id: number;      // 0 for independent clients
+  empresa_Id?: number | null;      // null or omit for independent clients
   tipo_Cliente?: string;   // 'Natural' for individual
 }
 
