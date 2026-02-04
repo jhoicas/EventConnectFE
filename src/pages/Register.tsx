@@ -124,7 +124,8 @@ const RegisterPage = () => {
         tipo_Documento: data.tipoDoc,
         direccion: data.direccion,
         ciudad: data.ciudad,
-        tipo_Cliente: 'Natural',
+        empresa_Id: null,
+        tipo_Cliente: 'Persona',
       });
       setIsSubmitted(true);
       setTimeout(() => {
