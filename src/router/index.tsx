@@ -54,6 +54,7 @@ import { DataStreamingPage } from '@/pages/DataStreaming';
 import { ReportBuilderPage } from '@/pages/ReportBuilder';
 import { DataQualityPage } from '@/pages/DataQuality';
 import { MLModelsPage } from '@/pages/MLModels';
+import { DataPrivacyPage } from '@/pages/DataPrivacy';
 import DaniosPage from '@/pages/Danios';
 import AlertasPage from '@/pages/Alertas';
 import ClientePortalPage from '@/pages/ClientePortal';
@@ -265,6 +266,14 @@ export const AppRouter = () => {
             element={
               <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
                 <MLModelsPage />
+                        <Route
+                          path={APP_ROUTES.DATA_PRIVACY}
+                          element={
+                            <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
+                              <DataPrivacyPage />
+                            </RoleProtectedRoute>
+                          }
+                        />
               </RoleProtectedRoute>
             }
           />

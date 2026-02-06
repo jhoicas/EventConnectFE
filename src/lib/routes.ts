@@ -51,6 +51,7 @@ export const APP_ROUTES = {
   REPORT_BUILDER: '/report-builder',
   DATA_QUALITY: '/data-quality',
   ML_MODELS: '/ml-models',
+  DATA_PRIVACY: '/data-privacy',
   DANIOS: '/danios',
   ALERTAS: '/alertas',
   

@@ -103,6 +103,8 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Report Builder', icon: FileText, href: APP_ROUTES.REPORT_BUILDER },
     { label: 'Data Quality', icon: Shield, href: APP_ROUTES.DATA_QUALITY },
     { label: 'ML Models', icon: Brain, href: APP_ROUTES.ML_MODELS },
+        { label: 'Data Privacy', icon: Shield, href: APP_ROUTES.DATA_PRIVACY },
+      { label: 'Data Privacy', icon: Shield, href: APP_ROUTES.DATA_PRIVACY },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
     { label: 'Facturación', icon: FileText, href: APP_ROUTES.FACTURACION },
   ],

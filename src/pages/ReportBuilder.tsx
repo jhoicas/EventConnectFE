@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import {
   useListarReportes,
-  useObtenerReporte,
   useListarPlantillas,
   useListarFavoritos,
   useListarProgramaciones,
