@@ -42,6 +42,7 @@ export const APP_ROUTES = {
   CONFIGURACION: '/configuracion',
   FACTURACION: '/facturacion',
   AUDITORIA: '/auditoria',
+  INTEGRACIONES: '/integraciones',
   DANIOS: '/danios',
   ALERTAS: '/alertas',
   
