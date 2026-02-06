@@ -19,6 +19,7 @@ import {
   FileSearch,
   AlertOctagon,
   BarChart3,
+  DollarSign,
   type LucideIcon,
 } from 'lucide-react';
 import { APP_ROUTES } from './routes';
@@ -54,6 +55,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
   'Admin-Proveedor': [
     { label: 'Dashboard', icon: LayoutDashboard, href: APP_ROUTES.DASHBOARD },
     { label: 'Analytics', icon: BarChart3, href: APP_ROUTES.ANALYTICS },
+    { label: 'Optimizar Reservas', icon: DollarSign, href: APP_ROUTES.OPTIMIZAR_RESERVAS },
     {
       label: 'Reservas',
       icon: Calendar,
@@ -86,6 +88,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
   SuperAdmin: [
     { label: 'Dashboard', icon: LayoutDashboard, href: APP_ROUTES.DASHBOARD },
     { label: 'Analytics', icon: BarChart3, href: APP_ROUTES.ANALYTICS },
+    { label: 'Optimizar Reservas', icon: DollarSign, href: APP_ROUTES.OPTIMIZAR_RESERVAS },
     { label: 'Chat', icon: MessageCircle, href: APP_ROUTES.CHAT },
     {
       label: 'Catálogo',

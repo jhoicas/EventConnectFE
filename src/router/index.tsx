@@ -19,6 +19,8 @@ import LotesPage from '@/pages/Lotes';
 import ProductosPage from '@/pages/Productos';
 import DisponibilidadPage from '@/pages/Disponibilidad';
 import AnalyticsPage from '@/pages/Analytics';
+import OptimizarReservasPage from '@/pages/OptimizarReservas';
+// Used in route configuration below
 
 // Placeholder pages (to be migrated)
 import CategoriasPage from '@/pages/Categorias';
@@ -123,6 +125,7 @@ export const AppRouter = () => {
         >
           <Route path={APP_ROUTES.DASHBOARD} element={<DashboardPage />} />
           <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
+          <Route path={APP_ROUTES.OPTIMIZAR_RESERVAS} element={<OptimizarReservasPage />} />
           
           {/* Productos y Categorías */}
           <Route path={APP_ROUTES.PRODUCTOS} element={<ProductosPage />} />
