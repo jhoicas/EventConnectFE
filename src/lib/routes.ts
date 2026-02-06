@@ -35,6 +35,7 @@ export const APP_ROUTES = {
   FACTURACION: '/facturacion',
   AUDITORIA: '/auditoria',
   DANIOS: '/danios',
+  ALERTAS: '/alertas',
   
   // Operario
   OPERARIO_ENTREGAS: '/operario/entregas',

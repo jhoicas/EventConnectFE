@@ -38,6 +38,7 @@ import FacturacionPage from '@/pages/Facturacion';
 import ChatPage from '@/pages/Chat';
 import AuditoriaPage from '@/pages/Auditoria';
 import DaniosPage from '@/pages/Danios';
+import AlertasPage from '@/pages/Alertas';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -167,6 +168,14 @@ export const AppRouter = () => {
             element={
               <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor', 'Operario']}>
                 <DaniosPage />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path={APP_ROUTES.ALERTAS}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
+                <AlertasPage />
               </RoleProtectedRoute>
             }
           />
