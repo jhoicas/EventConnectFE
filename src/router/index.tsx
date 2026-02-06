@@ -39,6 +39,7 @@ import ChatPage from '@/pages/Chat';
 import AuditoriaPage from '@/pages/Auditoria';
 import DaniosPage from '@/pages/Danios';
 import AlertasPage from '@/pages/Alertas';
+import ClientePortalPage from '@/pages/ClientePortal';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -141,6 +142,14 @@ export const AppRouter = () => {
           <Route path={APP_ROUTES.CLIENTE_COTIZACIONES} element={<ClienteCotizacionesPage />} />
           <Route path={APP_ROUTES.CLIENTE_RESERVAS} element={<ClienteReservasPage />} />
           <Route path={APP_ROUTES.CLIENTE_PERFIL} element={<ClientePerfilPage />} />
+          <Route
+            path={APP_ROUTES.CLIENTE_PORTAL}
+            element={
+              <RoleProtectedRoute roles={['Cliente', 'Usuario']}>
+                <ClientePortalPage />
+              </RoleProtectedRoute>
+            }
+          />
           
           {/* Rutas de Administración */}
           <Route path={APP_ROUTES.MANTENIMIENTOS} element={<MantenimientosPage />} />

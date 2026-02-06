@@ -33,16 +33,18 @@ export interface MenuItem {
 export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
   // Menú para Cliente
   Cliente: [
-    { label: 'Explorar', icon: LayoutDashboard, href: APP_ROUTES.CLIENTE_EXPLORAR },
-    { label: 'Cotizaciones', icon: ShoppingCart, href: APP_ROUTES.CLIENTE_COTIZACIONES },
+    { label: 'Portal', icon: LayoutDashboard, href: APP_ROUTES.CLIENTE_PORTAL },
+    { label: 'Explorar', icon: Package, href: APP_ROUTES.CLIENTE_EXPLORAR },
+    { label: 'Cotizaciones', icon: FileText, href: APP_ROUTES.CLIENTE_COTIZACIONES },
     { label: 'Reservas', icon: Calendar, href: APP_ROUTES.CLIENTE_RESERVAS },
     { label: 'Mensajes', icon: MessageCircle, href: APP_ROUTES.CLIENTE_MENSAJES },
   ],
 
   // Menú para Usuario (alias de Cliente)
   Usuario: [
-    { label: 'Explorar', icon: LayoutDashboard, href: APP_ROUTES.CLIENTE_EXPLORAR },
-    { label: 'Cotizaciones', icon: ShoppingCart, href: APP_ROUTES.CLIENTE_COTIZACIONES },
+    { label: 'Portal', icon: LayoutDashboard, href: APP_ROUTES.CLIENTE_PORTAL },
+    { label: 'Explorar', icon: Package, href: APP_ROUTES.CLIENTE_EXPLORAR },
+    { label: 'Cotizaciones', icon: FileText, href: APP_ROUTES.CLIENTE_COTIZACIONES },
     { label: 'Reservas', icon: Calendar, href: APP_ROUTES.CLIENTE_RESERVAS },
     { label: 'Mensajes', icon: MessageCircle, href: APP_ROUTES.CLIENTE_MENSAJES },
   ],

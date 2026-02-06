@@ -12,6 +12,7 @@ export const APP_ROUTES = {
   CLIENTE_RESERVAS: '/cliente/reservas',
   CLIENTE_MENSAJES: '/cliente/mensajes',
   CLIENTE_PERFIL: '/cliente/perfil',
+  CLIENTE_PORTAL: '/cliente-portal',
   
   // Catálogo
   CATEGORIAS: '/categorias',
