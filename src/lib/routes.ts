@@ -49,6 +49,7 @@ export const APP_ROUTES = {
   PREDICTIVE_ANALYTICS: '/predictive-analytics',
   DATA_STREAMING: '/data-streaming',
   REPORT_BUILDER: '/report-builder',
+  DATA_QUALITY: '/data-quality',
   DANIOS: '/danios',
   ALERTAS: '/alertas',
   
