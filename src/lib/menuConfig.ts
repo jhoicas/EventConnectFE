@@ -21,6 +21,7 @@ import {
   BarChart3,
   DollarSign,
   CreditCard,
+  Bell,
   type LucideIcon,
 } from 'lucide-react';
 import { APP_ROUTES } from './routes';
@@ -58,6 +59,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Analytics', icon: BarChart3, href: APP_ROUTES.ANALYTICS },
     { label: 'Optimizar Reservas', icon: DollarSign, href: APP_ROUTES.OPTIMIZAR_RESERVAS },
     { label: 'Pagos', icon: CreditCard, href: APP_ROUTES.PAGOS },
+    { label: 'Notificaciones', icon: Bell, href: APP_ROUTES.NOTIFICACIONES },
     {
       label: 'Reservas',
       icon: Calendar,
@@ -92,6 +94,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Analytics', icon: BarChart3, href: APP_ROUTES.ANALYTICS },
     { label: 'Optimizar Reservas', icon: DollarSign, href: APP_ROUTES.OPTIMIZAR_RESERVAS },
     { label: 'Pagos', icon: CreditCard, href: APP_ROUTES.PAGOS },
+    { label: 'Notificaciones', icon: Bell, href: APP_ROUTES.NOTIFICACIONES },
     { label: 'Chat', icon: MessageCircle, href: APP_ROUTES.CHAT },
     {
       label: 'Catálogo',

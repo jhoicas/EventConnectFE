@@ -21,6 +21,7 @@ import DisponibilidadPage from '@/pages/Disponibilidad';
 import AnalyticsPage from '@/pages/Analytics';
 import OptimizarReservasPage from '@/pages/OptimizarReservas';
 import PagosPage from '@/pages/Pagos';
+import NotificacionesPage from '@/pages/Notificaciones';
 // Used in route configuration below
 
 // Placeholder pages (to be migrated)
@@ -128,6 +129,7 @@ export const AppRouter = () => {
           <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
           <Route path={APP_ROUTES.OPTIMIZAR_RESERVAS} element={<OptimizarReservasPage />} />
           <Route path={APP_ROUTES.PAGOS} element={<PagosPage />} />
+          <Route path={APP_ROUTES.NOTIFICACIONES} element={<NotificacionesPage />} />
           
           {/* Productos y Categorías */}
           <Route path={APP_ROUTES.PRODUCTOS} element={<ProductosPage />} />

@@ -8,6 +8,7 @@ export const APP_ROUTES = {
   ANALYTICS: '/analytics',
   OPTIMIZAR_RESERVAS: '/optimizar-reservas',
   PAGOS: '/pagos',
+  NOTIFICACIONES: '/notificaciones',
   
   // Cliente routes
   CLIENTE_EXPLORAR: '/cliente/explorar',
