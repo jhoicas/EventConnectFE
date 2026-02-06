@@ -63,12 +63,14 @@ import ClientePortalPage from '@/pages/ClientePortal';
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  console.log('[ProtectedRoute] isAuthenticated:', isAuthenticated);
   return isAuthenticated ? <>{children}</> : <Navigate to={APP_ROUTES.LOGIN} replace />;
 };
 
 // Public Route Component (redirect if authenticated)
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  console.log('[PublicRoute] isAuthenticated:', isAuthenticated);
   return !isAuthenticated ? <>{children}</> : <Navigate to={APP_ROUTES.DASHBOARD} replace />;
 };
 
@@ -86,6 +88,7 @@ const RoleProtectedRoute = ({
 
 export const AppRouter = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  console.log('[AppRouter] isAuthenticated:', isAuthenticated);
 
   return (
     <BrowserRouter>
