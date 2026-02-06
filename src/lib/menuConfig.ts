@@ -24,6 +24,7 @@ import {
   Bell,
   MessageCircle2,
   BookOpen,
+  Trophy,
   type LucideIcon,
 } from 'lucide-react';
 import { APP_ROUTES } from './routes';
@@ -90,6 +91,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Auditoría', icon: FileSearch, href: APP_ROUTES.AUDITORIA },
     { label: 'Integraciones', icon: FileSearch, href: APP_ROUTES.INTEGRACIONES },
     { label: 'Reportes', icon: BarChart3, href: APP_ROUTES.REPORTES },
+    { label: 'Sistema de Puntos', icon: Trophy, href: APP_ROUTES.SISTEMA_PUNTOS },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
     { label: 'Facturación', icon: FileText, href: APP_ROUTES.FACTURACION },
   ],
@@ -133,6 +135,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Auditoría', icon: FileSearch, href: APP_ROUTES.AUDITORIA },
     { label: 'Integraciones', icon: FileSearch, href: APP_ROUTES.INTEGRACIONES },
     { label: 'Reportes', icon: BarChart3, href: APP_ROUTES.REPORTES },
+    { label: 'Sistema de Puntos', icon: Trophy, href: APP_ROUTES.SISTEMA_PUNTOS },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
   ],
 

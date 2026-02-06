@@ -44,6 +44,7 @@ export const APP_ROUTES = {
   AUDITORIA: '/auditoria',
   INTEGRACIONES: '/integraciones',
   REPORTES: '/reportes',
+  SISTEMA_PUNTOS: '/sistema-puntos',
   DANIOS: '/danios',
   ALERTAS: '/alertas',
   
