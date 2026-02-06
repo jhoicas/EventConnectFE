@@ -26,7 +26,7 @@ export const AuditoriaEventoCard = ({ evento }: AuditoriaEventoCardProps) => {
           </div>
           <div className="mt-1 flex flex-wrap gap-3 text-xs text-slate-500">
             <span className="inline-flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" /> {formatDate(evento.creatodEn)}
+              <Clock className="h-3.5 w-3.5" /> {formatDate(evento.creadoEn)}
             </span>
             <span className="inline-flex items-center gap-1">
               <UserIcon className="h-3.5 w-3.5" /> {evento.usuarioNombre ?? 'Sistema'}

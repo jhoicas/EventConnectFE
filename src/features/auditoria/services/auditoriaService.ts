@@ -16,7 +16,7 @@ const API_URL = '/api/auditoria';
 
 export const auditoriaService = {
   // ===== REGISTROS DE AUDITORÍA =====
-  crearRegistro: (datos: Omit<RegistroAuditoria, 'id' | 'creatodEn' | 'actualizadoEn'>) =>
+  crearRegistro: (datos: Omit<RegistroAuditoria, 'id' | 'creadoEn' | 'actualizadoEn'>) =>
     axios.post<RegistroAuditoria>(`${API_URL}/registros`, datos),
 
   obtenerRegistro: (id: string) =>
@@ -38,7 +38,7 @@ export const auditoriaService = {
     axios.get<RegistroAuditoria[]>(`${API_URL}/recursos/${tipoRecurso}/${recursoId}/cambios`),
 
   // ===== SESIONES DE USUARIO =====
-  crearSesion: (datos: Omit<SesionUsuario, 'id' | 'creatodEn'>) =>
+  crearSesion: (datos: Omit<SesionUsuario, 'id' | 'creadoEn'>) =>
     axios.post<SesionUsuario>(`${API_URL}/sesiones`, datos),
 
   obtenerSesion: (id: string) =>
@@ -60,7 +60,7 @@ export const auditoriaService = {
     axios.post(`${API_URL}/sesiones/${id}/forzar-cierre`, {}),
 
   // ===== ALERTAS DE AUDITORÍA =====
-  crearAlerta: (datos: Omit<AlertaAuditoria, 'id' | 'creatodEn' | 'actualizadoEn'>) =>
+  crearAlerta: (datos: Omit<AlertaAuditoria, 'id' | 'creadoEn' | 'actualizadoEn'>) =>
     axios.post<AlertaAuditoria>(`${API_URL}/alertas`, datos),
 
   obtenerAlerta: (id: string) =>
@@ -105,7 +105,7 @@ export const auditoriaService = {
     axios.get(`${API_URL}/intentos-fallidos`, { params: { usuarioId, ipAddress } }),
 
   // ===== REPORTES =====
-  crearReporte: (datos: Omit<ReporteAuditoria, 'id' | 'creatodEn'>) =>
+  crearReporte: (datos: Omit<ReporteAuditoria, 'id' | 'creadoEn'>) =>
     axios.post<ReporteAuditoria>(`${API_URL}/reportes`, datos),
 
   obtenerReporte: (id: string) =>

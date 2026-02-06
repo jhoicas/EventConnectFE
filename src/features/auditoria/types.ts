@@ -35,8 +35,11 @@ export interface RegistroAuditoria {
   cambiosAntes?: Record<string, any>;
   cambiosDespues?: Record<string, any>;
   etiquetas: string[];
-  creatodEn: Date;
+  creadoEn: Date;
   actualizadoEn: Date;
+  // Alias para compatibilidad con componentes antiguos
+  fecha?: Date; // Alias de creadoEn
+  tabla?: TipoRecurso; // Alias de tipoRecurso
 }
 
 export interface SesionUsuario {
@@ -59,7 +62,7 @@ export interface SesionUsuario {
   ultimaActividad: Date;
   duracionMinutos: number;
   token: string;
-  creatodEn: Date;
+  creadoEn: Date;
   cerradoEn?: Date;
 }
 
@@ -90,16 +93,16 @@ export interface AlertaAuditoria {
   acciones: {
     descripcion: string;
     ejecutada: boolean;
-    creatodEn: Date;
+    creadoEn: Date;
   }[];
   comentarios: {
     usuario: string;
     contenido: string;
-    creatodEn: Date;
+    creadoEn: Date;
   }[];
   investigadoPor?: string;
   notas?: string;
-  creatodEn: Date;
+  creadoEn: Date;
   resueltoEn?: Date;
   actualizadoEn: Date;
 }
@@ -144,7 +147,7 @@ export interface BusquedaAuditoria {
   tipoRecurso: TipoRecurso;
   recursoNombre: string;
   descripcion: string;
-  creatodEn: Date;
+  creadoEn: Date;
   relevancia: number;
 }
 
@@ -161,7 +164,7 @@ export interface ReporteAuditoria {
   generadoPor: string;
   formato: 'pdf' | 'excel' | 'json';
   urlDescarga: string;
-  creatodEn: Date;
+  creadoEn: Date;
   expiradoEn: Date;
 }
 
@@ -184,7 +187,7 @@ export interface ExportacionAuditoria {
   porcentajeProgreso: number;
   tamanoArchivo?: number;
   urlDescarga?: string;
-  creatodEn: Date;
+  creadoEn: Date;
   completadoEn?: Date;
   razonFalla?: string;
 }
@@ -210,7 +213,7 @@ export interface ConfiguracionAuditoria {
     resumenDiario: boolean;
     cambiosConfiguracion: boolean;
   };
-  creatodEn: Date;
+  creadoEn: Date;
   actualizadoEn: Date;
 }
 

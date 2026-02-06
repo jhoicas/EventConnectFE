@@ -191,3 +191,33 @@ export const useObtenerEstadisticas = (fechaInicio: string, fechaFin: string) =>
     staleTime: 5 * 60 * 1000, // 5 minutos
   });
 };
+// Notificaciones no leídas
+export const useNotificacionesNoLeidas = () => {
+  return useQuery({
+    queryKey: ['notificaciones', 'no-leidas'],
+    queryFn: async () => {
+      const notificaciones = await notificacionesService.listarNotificaciones({
+        estado: ['enviada', 'pendiente']
+      });
+      // Filtrar solo las que no tienen leidaEn
+      return notificaciones.filter(n => !n.leidaEn);
+    },
+    staleTime: 1 * 60 * 1000, // 1 minuto
+    refetchInterval: 2 * 60 * 1000, // Refetch cada 2 minutos
+  });
+};
+
+export const useTotalNotificacionesNoLeidas = () => {
+  return useQuery({
+    queryKey: ['notificaciones', 'total-no-leidas'],
+    queryFn: async () => {
+      const notificaciones = await notificacionesService.listarNotificaciones({
+        estado: ['enviada', 'pendiente']
+      });
+      // Contar solo las que no tienen leidaEn
+      return notificaciones.filter(n => !n.leidaEn).length;
+    },
+    staleTime: 1 * 60 * 1000, // 1 minuto
+    refetchInterval: 2 * 60 * 1000, // Refetch cada 2 minutos
+  });
+};

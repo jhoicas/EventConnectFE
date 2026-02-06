@@ -23,7 +23,7 @@ export const AuditoriaHistorial = ({ items, isLoading, error }: AuditoriaHistori
   return (
     <div className="space-y-4">
       {items.map((evento) => (
-        <AuditoriaEventoCard key={`${evento.id ?? evento.creatodEn}-${evento.tipoRecurso}`} evento={evento} />
+        <AuditoriaEventoCard key={`${evento.id ?? evento.creadoEn}-${evento.tipoRecurso}`} evento={evento} />
       ))}
     </div>
   );
