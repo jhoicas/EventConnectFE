@@ -36,6 +36,8 @@ import UsuariosPage from '@/pages/Usuarios';
 import ConfiguracionPage from '@/pages/Configuracion';
 import FacturacionPage from '@/pages/Facturacion';
 import ChatPage from '@/pages/Chat';
+import AuditoriaPage from '@/pages/Auditoria';
+import DaniosPage from '@/pages/Danios';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -152,6 +154,22 @@ export const AppRouter = () => {
           <Route path={APP_ROUTES.CONFIGURACION} element={<ConfiguracionPage />} />
           <Route path={APP_ROUTES.FACTURACION} element={<FacturacionPage />} />
           <Route path={APP_ROUTES.CHAT} element={<ChatPage />} />
+          <Route
+            path={APP_ROUTES.AUDITORIA}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
+                <AuditoriaPage />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path={APP_ROUTES.DANIOS}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor', 'Operario']}>
+                <DaniosPage />
+              </RoleProtectedRoute>
+            }
+          />
         </Route>
 
         {/* 404 */}

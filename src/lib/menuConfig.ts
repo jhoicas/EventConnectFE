@@ -16,6 +16,8 @@ import {
   QrCode,
   AlertTriangle,
   FileText,
+  FileSearch,
+  AlertOctagon,
   type LucideIcon,
 } from 'lucide-react';
 import { APP_ROUTES } from './routes';
@@ -68,6 +70,8 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     },
     { label: 'Clientes', icon: Users, href: APP_ROUTES.CLIENTES },
     { label: 'Mi Equipo', icon: UserCog, href: APP_ROUTES.USUARIOS },
+    { label: 'Daños', icon: AlertOctagon, href: APP_ROUTES.DANIOS },
+    { label: 'Auditoría', icon: FileSearch, href: APP_ROUTES.AUDITORIA },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
     { label: 'Facturación', icon: FileText, href: APP_ROUTES.FACTURACION },
   ],
@@ -98,7 +102,9 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
       ],
     },
     { label: 'Mantenimientos', icon: Wrench, href: APP_ROUTES.MANTENIMIENTOS },
+    { label: 'Daños', icon: AlertOctagon, href: APP_ROUTES.DANIOS },
     { label: 'Usuarios', icon: UserCog, href: APP_ROUTES.USUARIOS },
+    { label: 'Auditoría', icon: FileSearch, href: APP_ROUTES.AUDITORIA },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
   ],
 
@@ -108,6 +114,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Tareas de Entrega', icon: Truck, href: APP_ROUTES.OPERARIO_ENTREGAS },
     { label: 'Tareas de Recogida', icon: RotateCcw, href: APP_ROUTES.OPERARIO_RECOGIDAS },
     { label: 'Escáner QR', icon: QrCode, href: APP_ROUTES.OPERARIO_SCANNER },
+    { label: 'Reportar Daño', icon: AlertOctagon, href: APP_ROUTES.DANIOS },
     { label: 'Reportar Incidente', icon: AlertTriangle, href: APP_ROUTES.OPERARIO_INCIDENTES },
   ],
 };

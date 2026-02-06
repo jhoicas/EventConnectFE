@@ -33,6 +33,8 @@ export const APP_ROUTES = {
   USUARIOS: '/usuarios',
   CONFIGURACION: '/configuracion',
   FACTURACION: '/facturacion',
+  AUDITORIA: '/auditoria',
+  DANIOS: '/danios',
   
   // Operario
   OPERARIO_ENTREGAS: '/operario/entregas',
