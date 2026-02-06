@@ -49,6 +49,7 @@ import { IntegracionesPage } from '@/pages/Integraciones';
 import { ReportesPage } from '@/pages/Reportes';
 import { SistemaPuntosPage } from '@/pages/SistemaPuntos';
 import { BusinessIntelligencePage } from '@/pages/BusinessIntelligence';
+import { PredictiveAnalyticsPage } from '@/pages/PredictiveAnalytics';
 import DaniosPage from '@/pages/Danios';
 import AlertasPage from '@/pages/Alertas';
 import ClientePortalPage from '@/pages/ClientePortal';
@@ -220,6 +221,14 @@ export const AppRouter = () => {
             element={
               <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
                 <BusinessIntelligencePage />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path={APP_ROUTES.PREDICTIVE_ANALYTICS}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
+                <PredictiveAnalyticsPage />
               </RoleProtectedRoute>
             }
           />
