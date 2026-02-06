@@ -3,8 +3,9 @@ export const APP_ROUTES = {
   LOGIN: '/login',
   REGISTER: '/registro',
   
-  // Protected routes
+  // Dashboard
   DASHBOARD: '/dashboard',
+  ANALYTICS: '/analytics',
   
   // Cliente routes
   CLIENTE_EXPLORAR: '/cliente/explorar',
