@@ -51,6 +51,7 @@ import { SistemaPuntosPage } from '@/pages/SistemaPuntos';
 import { BusinessIntelligencePage } from '@/pages/BusinessIntelligence';
 import { PredictiveAnalyticsPage } from '@/pages/PredictiveAnalytics';
 import { DataStreamingPage } from '@/pages/DataStreaming';
+import { ReportBuilderPage } from '@/pages/ReportBuilder';
 import DaniosPage from '@/pages/Danios';
 import AlertasPage from '@/pages/Alertas';
 import ClientePortalPage from '@/pages/ClientePortal';
@@ -238,6 +239,14 @@ export const AppRouter = () => {
             element={
               <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
                 <DataStreamingPage />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path={APP_ROUTES.REPORT_BUILDER}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
+                <ReportBuilderPage />
               </RoleProtectedRoute>
             }
           />

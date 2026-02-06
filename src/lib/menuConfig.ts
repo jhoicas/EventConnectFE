@@ -98,6 +98,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Business Intelligence', icon: Zap, href: APP_ROUTES.BUSINESS_INTELLIGENCE },
     { label: 'Predictive Analytics', icon: LineChart, href: APP_ROUTES.PREDICTIVE_ANALYTICS },
     { label: 'Data Streaming', icon: Radio, href: APP_ROUTES.DATA_STREAMING },
+    { label: 'Report Builder', icon: FileText, href: APP_ROUTES.REPORT_BUILDER },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
     { label: 'Facturación', icon: FileText, href: APP_ROUTES.FACTURACION },
   ],
@@ -145,6 +146,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Business Intelligence', icon: Zap, href: APP_ROUTES.BUSINESS_INTELLIGENCE },
     { label: 'Predictive Analytics', icon: LineChart, href: APP_ROUTES.PREDICTIVE_ANALYTICS },
     { label: 'Data Streaming', icon: Radio, href: APP_ROUTES.DATA_STREAMING },
+    { label: 'Report Builder', icon: FileText, href: APP_ROUTES.REPORT_BUILDER },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
   ],
 

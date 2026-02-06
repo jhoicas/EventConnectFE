@@ -48,6 +48,7 @@ export const APP_ROUTES = {
   BUSINESS_INTELLIGENCE: '/business-intelligence',
   PREDICTIVE_ANALYTICS: '/predictive-analytics',
   DATA_STREAMING: '/data-streaming',
+  REPORT_BUILDER: '/report-builder',
   DANIOS: '/danios',
   ALERTAS: '/alertas',
   
