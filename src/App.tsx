@@ -4,15 +4,18 @@ import { Provider } from 'react-redux';
 import { queryClient } from '@/lib/queryClient';
 import { store } from '@/store/reduxStore';
 import { AppRouter } from '@/router';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 function App() {
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <AppRouter />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <AppRouter />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </Provider>
+    </ErrorBoundary>
   );
 }
 
