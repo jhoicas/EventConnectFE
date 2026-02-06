@@ -89,7 +89,7 @@ const AuditoriaPage = () => {
 
         <TabsContent value="timeline" className="space-y-4">
           <AuditoriaTimeline
-            items={timelineQuery.data?.items ?? []}
+            items={(timelineQuery.data?.items as any) ?? []}
             isLoading={timelineQuery.isLoading}
             error={timelineQuery.isError ? 'No se pudo cargar el timeline.' : undefined}
           />
@@ -107,7 +107,7 @@ const AuditoriaPage = () => {
             <Button
               variant="outline"
               onClick={() => setTimelinePage((prev) => prev + 1)}
-              disabled={timelineQuery.data && timelineQuery.data.items.length < timelinePageSize}
+              disabled={timelineQuery.data && (timelineQuery.data as any)?.items?.length < timelinePageSize}
             >
               Siguiente
             </Button>
@@ -130,7 +130,7 @@ const AuditoriaPage = () => {
             <div className="text-sm text-slate-500">Ingresa un término para buscar.</div>
           ) : (
             <AuditoriaTimeline
-              items={buscarQuery.data?.items ?? []}
+              items={(buscarQuery.data?.items as any) ?? []}
               isLoading={buscarQuery.isLoading}
               error={buscarQuery.isError ? 'No se pudo buscar.' : undefined}
             />
@@ -148,7 +148,7 @@ const AuditoriaPage = () => {
               <Button
                 variant="outline"
                 onClick={() => setSearchPage((prev) => prev + 1)}
-                disabled={buscarQuery.data && buscarQuery.data.items.length < 20}
+                disabled={buscarQuery.data && (buscarQuery.data as any)?.items?.length < 20}
               >
                 Siguiente
               </Button>
@@ -162,7 +162,7 @@ const AuditoriaPage = () => {
             <div className="text-sm text-slate-500">Selecciona al menos un filtro.</div>
           ) : (
             <AuditoriaTimeline
-              items={filtradoQuery.data?.items ?? []}
+              items={(filtradoQuery.data?.items as any) ?? []}
               isLoading={filtradoQuery.isLoading}
               error={filtradoQuery.isError ? 'No se pudo filtrar.' : undefined}
             />
@@ -180,7 +180,7 @@ const AuditoriaPage = () => {
               <Button
                 variant="outline"
                 onClick={() => setFilterPage((prev) => prev + 1)}
-                disabled={filtradoQuery.data && filtradoQuery.data.items.length < 20}
+                disabled={filtradoQuery.data && (filtradoQuery.data as any)?.items?.length < 20}
               >
                 Siguiente
               </Button>
@@ -228,10 +228,10 @@ const AuditoriaPage = () => {
             <div className="rounded-xl border border-slate-200 bg-white p-4">
               <p className="text-xs uppercase text-slate-500">Por acción</p>
               <div className="mt-2 space-y-1 text-sm text-slate-700">
-                {Object.entries(resumenQuery.data?.porAccion ?? {}).map(([accion, total]) => (
+                {Object.entries(resumenQuery.data?.porAccion ?? {}).map(([accion, total]: [string, any]) => (
                   <div key={accion} className="flex items-center justify-between">
                     <span>{accion}</span>
-                    <span className="font-medium">{total}</span>
+                    <span className="font-medium">{String(total)}</span>
                   </div>
                 ))}
               </div>
@@ -239,10 +239,10 @@ const AuditoriaPage = () => {
             <div className="rounded-xl border border-slate-200 bg-white p-4">
               <p className="text-xs uppercase text-slate-500">Por tabla</p>
               <div className="mt-2 space-y-1 text-sm text-slate-700">
-                {Object.entries(resumenQuery.data?.porTabla ?? {}).map(([tabla, total]) => (
+                {Object.entries(resumenQuery.data?.porTabla ?? {}).map(([tabla, total]: [string, any]) => (
                   <div key={tabla} className="flex items-center justify-between">
                     <span>{tabla}</span>
-                    <span className="font-medium">{total}</span>
+                    <span className="font-medium">{String(total)}</span>
                   </div>
                 ))}
               </div>

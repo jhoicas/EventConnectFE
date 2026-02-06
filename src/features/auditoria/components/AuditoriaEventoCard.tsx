@@ -7,10 +7,10 @@ interface AuditoriaEventoCardProps {
   evento: AuditoriaEvento;
 }
 
-const formatDate = (value?: string) => {
+const formatDate = (value?: string | Date) => {
   if (!value) return '-';
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
+  if (Number.isNaN(date.getTime())) return String(value);
   return date.toLocaleString();
 };
 
@@ -22,18 +22,18 @@ export const AuditoriaEventoCard = ({ evento }: AuditoriaEventoCardProps) => {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="text-sm font-semibold text-slate-800">
-            {evento.accion ?? 'Acción'} · {evento.tabla ?? 'Tabla'}#{evento.registroId ?? '-'}
+            {evento.tipoAccion ?? 'Acción'} · {evento.tipoRecurso ?? 'Recurso'}#{evento.recursoId ?? '-'}
           </div>
           <div className="mt-1 flex flex-wrap gap-3 text-xs text-slate-500">
             <span className="inline-flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" /> {formatDate(evento.fecha)}
+              <Clock className="h-3.5 w-3.5" /> {formatDate(evento.creatodEn)}
             </span>
             <span className="inline-flex items-center gap-1">
-              <UserIcon className="h-3.5 w-3.5" /> {evento.usuario ?? 'Sistema'}
+              <UserIcon className="h-3.5 w-3.5" /> {evento.usuarioNombre ?? 'Sistema'}
             </span>
-            {evento.ip && (
+            {evento.ipAddress && (
               <span className="inline-flex items-center gap-1">
-                <FileText className="h-3.5 w-3.5" /> {evento.ip}
+                <FileText className="h-3.5 w-3.5" /> {evento.ipAddress}
               </span>
             )}
           </div>
@@ -54,7 +54,7 @@ export const AuditoriaEventoCard = ({ evento }: AuditoriaEventoCardProps) => {
 
       {open && (
         <div className="mt-4">
-          <AuditoriaDiff before={evento.datos_anteriores} after={evento.datos_nuevos} />
+          <AuditoriaDiff before={evento.cambiosAntes} after={evento.cambiosDespues} />
         </div>
       )}
     </div>
