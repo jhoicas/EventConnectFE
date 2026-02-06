@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { useListarNotificaciones } from '@/features/notificaciones/hooks/useNotificaciones';
+import type { Notificacion } from '@/features/notificaciones/types';
 import { APP_ROUTES } from '@/lib/routes';
 
 export const NotificationBell = () => {
@@ -19,7 +20,7 @@ export const NotificationBell = () => {
   });
 
   // Filtrar solo notificaciones no leídas
-  const notificacionesNoLeidas = notificaciones.filter(n => !n.leidaEn);
+  const notificacionesNoLeidas = notificaciones.filter((n: Notificacion) => !n.leidaEn);
   const totalNoLeidas = notificacionesNoLeidas.length;
 
   const handleNavigateToMessages = () => {
@@ -53,7 +54,7 @@ export const NotificationBell = () => {
         ) : (
           <>
             <div className="max-h-96 overflow-y-auto">
-              {notificacionesNoLeidas.map((notificacion) => (
+              {notificacionesNoLeidas.map((notificacion: Notificacion) => (
                 <DropdownMenuItem
                   key={notificacion.id}
                   onClick={handleNavigateToMessages}
