@@ -27,6 +27,7 @@ import {
   Trophy,
   Zap,
   LineChart,
+  Radio,
   type LucideIcon,
 } from 'lucide-react';
 import { APP_ROUTES } from './routes';
@@ -96,6 +97,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Sistema de Puntos', icon: Trophy, href: APP_ROUTES.SISTEMA_PUNTOS },
     { label: 'Business Intelligence', icon: Zap, href: APP_ROUTES.BUSINESS_INTELLIGENCE },
     { label: 'Predictive Analytics', icon: LineChart, href: APP_ROUTES.PREDICTIVE_ANALYTICS },
+    { label: 'Data Streaming', icon: Radio, href: APP_ROUTES.DATA_STREAMING },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
     { label: 'Facturación', icon: FileText, href: APP_ROUTES.FACTURACION },
   ],
@@ -142,6 +144,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Sistema de Puntos', icon: Trophy, href: APP_ROUTES.SISTEMA_PUNTOS },
     { label: 'Business Intelligence', icon: Zap, href: APP_ROUTES.BUSINESS_INTELLIGENCE },
     { label: 'Predictive Analytics', icon: LineChart, href: APP_ROUTES.PREDICTIVE_ANALYTICS },
+    { label: 'Data Streaming', icon: Radio, href: APP_ROUTES.DATA_STREAMING },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
   ],
 

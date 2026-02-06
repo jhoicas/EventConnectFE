@@ -47,6 +47,7 @@ export const APP_ROUTES = {
   SISTEMA_PUNTOS: '/sistema-puntos',
   BUSINESS_INTELLIGENCE: '/business-intelligence',
   PREDICTIVE_ANALYTICS: '/predictive-analytics',
+  DATA_STREAMING: '/data-streaming',
   DANIOS: '/danios',
   ALERTAS: '/alertas',
   
