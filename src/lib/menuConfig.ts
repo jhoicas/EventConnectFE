@@ -22,7 +22,6 @@ import {
   DollarSign,
   CreditCard,
   Bell,
-  MessageCircle2,
   BookOpen,
   Trophy,
   Zap,
@@ -69,7 +68,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Optimizar Reservas', icon: DollarSign, href: APP_ROUTES.OPTIMIZAR_RESERVAS },
     { label: 'Pagos', icon: CreditCard, href: APP_ROUTES.PAGOS },
     { label: 'Notificaciones', icon: Bell, href: APP_ROUTES.NOTIFICACIONES },
-    { label: 'Reseñas', icon: MessageCircle2, href: APP_ROUTES.RESENAS },
+    { label: 'Reseñas', icon: MessageCircle, href: APP_ROUTES.RESENAS },
     { label: 'Documentación', icon: BookOpen, href: APP_ROUTES.DOCUMENTACION },
     {
       label: 'Reservas',
@@ -117,7 +116,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Optimizar Reservas', icon: DollarSign, href: APP_ROUTES.OPTIMIZAR_RESERVAS },
     { label: 'Pagos', icon: CreditCard, href: APP_ROUTES.PAGOS },
     { label: 'Notificaciones', icon: Bell, href: APP_ROUTES.NOTIFICACIONES },
-    { label: 'Reseñas', icon: MessageCircle2, href: APP_ROUTES.RESENAS },
+    { label: 'Reseñas', icon: MessageCircle, href: APP_ROUTES.RESENAS },
     { label: 'Documentación', icon: BookOpen, href: APP_ROUTES.DOCUMENTACION },
     { label: 'Chat', icon: MessageCircle, href: APP_ROUTES.CHAT },
     {

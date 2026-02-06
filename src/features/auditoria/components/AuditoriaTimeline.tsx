@@ -23,7 +23,7 @@ export const AuditoriaTimeline = ({ items, isLoading, error }: AuditoriaTimeline
   return (
     <div className="space-y-4">
       {items.map((evento) => (
-        <AuditoriaEventoCard key={`${evento.id ?? evento.fecha}-${evento.tabla}`} evento={evento} />
+        <AuditoriaEventoCard key={`${evento.id ?? evento.creatodEn}-${evento.tipoRecurso}`} evento={evento} />
       ))}
     </div>
   );

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { authStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/authStore';
 
 export function useDanioAuthStore() {
   const [userRole, setUserRole] = useState<string>('');
 
   useEffect(() => {
-    const user = authStore.getState().user;
+    const user = useAuthStore.getState().user;
     if (user) {
       setUserRole(user.rol || '');
     }

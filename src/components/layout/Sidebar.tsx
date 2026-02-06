@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { MenuItem } from '@/lib/menuConfig';
 import { useState } from 'react';
 import { Logo } from '@/components/Logo';
-import { useTotalNotificacionesNoLeidas } from '@/features/notificaciones/hooks/useNotificaciones';
+import { useListarNotificaciones } from '@/features/notificaciones/hooks/useNotificaciones';
 import { APP_ROUTES } from '@/lib/routes';
 
 interface SidebarProps {
@@ -100,7 +100,11 @@ const SidebarItem = ({ item, onItemClick, badge }: SidebarItemProps) => {
 };
 
 export const Sidebar = ({ menuItems, onItemClick }: SidebarProps) => {
-  const { data: totalNoLeidas = 0 } = useTotalNotificacionesNoLeidas();
+  const { data: notificaciones = [] } = useListarNotificaciones({ 
+    estado: ['pendiente', 'enviada']
+  });
+  // Filtrar solo notificaciones no leídas
+  const totalNoLeidas = notificaciones.filter(n => !n.leidaEn).length;
 
   return (
     <aside className="w-64 border-r bg-background h-full overflow-y-auto">
