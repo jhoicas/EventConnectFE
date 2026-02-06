@@ -55,6 +55,7 @@ import { ReportBuilderPage } from '@/pages/ReportBuilder';
 import { DataQualityPage } from '@/pages/DataQuality';
 import { MLModelsPage } from '@/pages/MLModels';
 import { DataPrivacyPage } from '@/pages/DataPrivacy';
+import { AdminAnalyticsDashboardPage } from '@/pages/AdminAnalyticsDashboard';
 import DaniosPage from '@/pages/Danios';
 import AlertasPage from '@/pages/Alertas';
 import ClientePortalPage from '@/pages/ClientePortal';
@@ -139,6 +140,14 @@ export const AppRouter = () => {
         >
           <Route path={APP_ROUTES.DASHBOARD} element={<DashboardPage />} />
           <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
+          <Route
+            path={APP_ROUTES.ADMIN_ANALYTICS}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
+                <AdminAnalyticsDashboardPage />
+              </RoleProtectedRoute>
+            }
+          />
           <Route path={APP_ROUTES.OPTIMIZAR_RESERVAS} element={<OptimizarReservasPage />} />
           <Route path={APP_ROUTES.PAGOS} element={<PagosPage />} />
           <Route path={APP_ROUTES.NOTIFICACIONES} element={<NotificacionesPage />} />

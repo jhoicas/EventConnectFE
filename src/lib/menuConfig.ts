@@ -65,6 +65,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
   'Admin-Proveedor': [
     { label: 'Dashboard', icon: LayoutDashboard, href: APP_ROUTES.DASHBOARD },
     { label: 'Analytics', icon: BarChart3, href: APP_ROUTES.ANALYTICS },
+    { label: 'Dashboard Analítica', icon: BarChart3, href: APP_ROUTES.ADMIN_ANALYTICS },
     { label: 'Optimizar Reservas', icon: DollarSign, href: APP_ROUTES.OPTIMIZAR_RESERVAS },
     { label: 'Pagos', icon: CreditCard, href: APP_ROUTES.PAGOS },
     { label: 'Notificaciones', icon: Bell, href: APP_ROUTES.NOTIFICACIONES },
@@ -103,8 +104,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Report Builder', icon: FileText, href: APP_ROUTES.REPORT_BUILDER },
     { label: 'Data Quality', icon: Shield, href: APP_ROUTES.DATA_QUALITY },
     { label: 'ML Models', icon: Brain, href: APP_ROUTES.ML_MODELS },
-        { label: 'Data Privacy', icon: Shield, href: APP_ROUTES.DATA_PRIVACY },
-      { label: 'Data Privacy', icon: Shield, href: APP_ROUTES.DATA_PRIVACY },
+    { label: 'Data Privacy', icon: Shield, href: APP_ROUTES.DATA_PRIVACY },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
     { label: 'Facturación', icon: FileText, href: APP_ROUTES.FACTURACION },
   ],
@@ -113,6 +113,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
   SuperAdmin: [
     { label: 'Dashboard', icon: LayoutDashboard, href: APP_ROUTES.DASHBOARD },
     { label: 'Analytics', icon: BarChart3, href: APP_ROUTES.ANALYTICS },
+    { label: 'Dashboard Analítica', icon: BarChart3, href: APP_ROUTES.ADMIN_ANALYTICS },
     { label: 'Optimizar Reservas', icon: DollarSign, href: APP_ROUTES.OPTIMIZAR_RESERVAS },
     { label: 'Pagos', icon: CreditCard, href: APP_ROUTES.PAGOS },
     { label: 'Notificaciones', icon: Bell, href: APP_ROUTES.NOTIFICACIONES },
@@ -155,6 +156,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Report Builder', icon: FileText, href: APP_ROUTES.REPORT_BUILDER },
     { label: 'Data Quality', icon: Shield, href: APP_ROUTES.DATA_QUALITY },
     { label: 'ML Models', icon: Brain, href: APP_ROUTES.ML_MODELS },
+    { label: 'Data Privacy', icon: Shield, href: APP_ROUTES.DATA_PRIVACY },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
   ],
 

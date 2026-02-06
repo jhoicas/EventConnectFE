@@ -48,6 +48,7 @@ export const APP_ROUTES = {
   BUSINESS_INTELLIGENCE: '/business-intelligence',
   PREDICTIVE_ANALYTICS: '/predictive-analytics',
   DATA_STREAMING: '/data-streaming',
+  ADMIN_ANALYTICS: '/admin-analytics',
   REPORT_BUILDER: '/report-builder',
   DATA_QUALITY: '/data-quality',
   ML_MODELS: '/ml-models',
