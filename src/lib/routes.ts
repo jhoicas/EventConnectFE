@@ -9,6 +9,7 @@ export const APP_ROUTES = {
   OPTIMIZAR_RESERVAS: '/optimizar-reservas',
   PAGOS: '/pagos',
   NOTIFICACIONES: '/notificaciones',
+  RESENAS: '/resenas',
   
   // Cliente routes
   CLIENTE_EXPLORAR: '/cliente/explorar',
