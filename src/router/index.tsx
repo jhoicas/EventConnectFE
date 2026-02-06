@@ -17,6 +17,7 @@ import ActivosPage from '@/pages/Activos';
 import BodegasPage from '@/pages/Bodegas';
 import LotesPage from '@/pages/Lotes';
 import ProductosPage from '@/pages/Productos';
+import DisponibilidadPage from '@/pages/Disponibilidad';
 
 // Placeholder pages (to be migrated)
 import CategoriasPage from '@/pages/Categorias';
@@ -40,6 +41,7 @@ import AuditoriaPage from '@/pages/Auditoria';
 import DaniosPage from '@/pages/Danios';
 import AlertasPage from '@/pages/Alertas';
 import ClientePortalPage from '@/pages/ClientePortal';
+import DisponibilidadPage from '@/pages/Disponibilidad';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -135,6 +137,7 @@ export const AppRouter = () => {
           <Route path={APP_ROUTES.ACTIVOS} element={<ActivosPage />} />
           <Route path={APP_ROUTES.BODEGAS} element={<BodegasPage />} />
           <Route path={APP_ROUTES.LOTES} element={<LotesPage />} />
+          <Route path={APP_ROUTES.DISPONIBILIDAD} element={<DisponibilidadPage />} />
           
           {/* Rutas de Cliente */}
           <Route path={APP_ROUTES.CLIENTE_MENSAJES} element={<ClienteMensajesPage />} />

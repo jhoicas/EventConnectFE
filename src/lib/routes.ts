@@ -29,6 +29,7 @@ export const APP_ROUTES = {
   BODEGAS: '/bodegas',
   LOTES: '/lotes',
   MANTENIMIENTOS: '/mantenimientos',
+  DISPONIBILIDAD: '/disponibilidad',
   
   // Administración
   USUARIOS: '/usuarios',

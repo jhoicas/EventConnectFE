@@ -67,6 +67,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
       href: APP_ROUTES.ACTIVOS,
       submenu: [
         { label: 'Activos', icon: Warehouse, href: APP_ROUTES.ACTIVOS },
+        { label: 'Disponibilidad', icon: Calendar, href: APP_ROUTES.DISPONIBILIDAD },
         { label: 'Lotes', icon: TrendingUp, href: APP_ROUTES.LOTES },
       ],
     },
@@ -100,6 +101,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
       href: APP_ROUTES.ACTIVOS,
       submenu: [
         { label: 'Activos', icon: Warehouse, href: APP_ROUTES.ACTIVOS },
+        { label: 'Disponibilidad', icon: Calendar, href: APP_ROUTES.DISPONIBILIDAD },
         { label: 'Bodegas', icon: FileBox, href: APP_ROUTES.BODEGAS },
         { label: 'Lotes', icon: TrendingUp, href: APP_ROUTES.LOTES },
       ],
