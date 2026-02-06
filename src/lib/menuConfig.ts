@@ -29,6 +29,7 @@ import {
   LineChart,
   Radio,
   Shield,
+  Brain,
   type LucideIcon,
 } from 'lucide-react';
 import { APP_ROUTES } from './routes';
@@ -101,6 +102,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Data Streaming', icon: Radio, href: APP_ROUTES.DATA_STREAMING },
     { label: 'Report Builder', icon: FileText, href: APP_ROUTES.REPORT_BUILDER },
     { label: 'Data Quality', icon: Shield, href: APP_ROUTES.DATA_QUALITY },
+    { label: 'ML Models', icon: Brain, href: APP_ROUTES.ML_MODELS },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
     { label: 'Facturación', icon: FileText, href: APP_ROUTES.FACTURACION },
   ],
@@ -150,6 +152,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Data Streaming', icon: Radio, href: APP_ROUTES.DATA_STREAMING },
     { label: 'Report Builder', icon: FileText, href: APP_ROUTES.REPORT_BUILDER },
     { label: 'Data Quality', icon: Shield, href: APP_ROUTES.DATA_QUALITY },
+    { label: 'ML Models', icon: Brain, href: APP_ROUTES.ML_MODELS },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
   ],
 

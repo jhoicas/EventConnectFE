@@ -50,6 +50,7 @@ export const APP_ROUTES = {
   DATA_STREAMING: '/data-streaming',
   REPORT_BUILDER: '/report-builder',
   DATA_QUALITY: '/data-quality',
+  ML_MODELS: '/ml-models',
   DANIOS: '/danios',
   ALERTAS: '/alertas',
   
