@@ -10,6 +10,7 @@ export const APP_ROUTES = {
   PAGOS: '/pagos',
   NOTIFICACIONES: '/notificaciones',
   RESENAS: '/resenas',
+  DOCUMENTACION: '/documentacion',
   
   // Cliente routes
   CLIENTE_EXPLORAR: '/cliente/explorar',

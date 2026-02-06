@@ -23,6 +23,7 @@ import {
   CreditCard,
   Bell,
   MessageCircle2,
+  BookOpen,
   type LucideIcon,
 } from 'lucide-react';
 import { APP_ROUTES } from './routes';
@@ -62,6 +63,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Pagos', icon: CreditCard, href: APP_ROUTES.PAGOS },
     { label: 'Notificaciones', icon: Bell, href: APP_ROUTES.NOTIFICACIONES },
     { label: 'Reseñas', icon: MessageCircle2, href: APP_ROUTES.RESENAS },
+    { label: 'Documentación', icon: BookOpen, href: APP_ROUTES.DOCUMENTACION },
     {
       label: 'Reservas',
       icon: Calendar,
@@ -98,6 +100,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Pagos', icon: CreditCard, href: APP_ROUTES.PAGOS },
     { label: 'Notificaciones', icon: Bell, href: APP_ROUTES.NOTIFICACIONES },
     { label: 'Reseñas', icon: MessageCircle2, href: APP_ROUTES.RESENAS },
+    { label: 'Documentación', icon: BookOpen, href: APP_ROUTES.DOCUMENTACION },
     { label: 'Chat', icon: MessageCircle, href: APP_ROUTES.CHAT },
     {
       label: 'Catálogo',
