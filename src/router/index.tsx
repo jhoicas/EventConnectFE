@@ -46,6 +46,7 @@ import FacturacionPage from '@/pages/Facturacion';
 import ChatPage from '@/pages/Chat';
 import AuditoriaPage from '@/pages/Auditoria';
 import { IntegracionesPage } from '@/pages/Integraciones';
+import { ReportesPage } from '@/pages/Reportes';
 import DaniosPage from '@/pages/Danios';
 import AlertasPage from '@/pages/Alertas';
 import ClientePortalPage from '@/pages/ClientePortal';
@@ -193,6 +194,14 @@ export const AppRouter = () => {
             element={
               <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
                 <IntegracionesPage />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path={APP_ROUTES.REPORTES}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
+                <ReportesPage />
               </RoleProtectedRoute>
             }
           />

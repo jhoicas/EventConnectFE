@@ -89,6 +89,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Daños', icon: AlertOctagon, href: APP_ROUTES.DANIOS },
     { label: 'Auditoría', icon: FileSearch, href: APP_ROUTES.AUDITORIA },
     { label: 'Integraciones', icon: FileSearch, href: APP_ROUTES.INTEGRACIONES },
+    { label: 'Reportes', icon: BarChart3, href: APP_ROUTES.REPORTES },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
     { label: 'Facturación', icon: FileText, href: APP_ROUTES.FACTURACION },
   ],
@@ -131,6 +132,7 @@ export const MENU_BY_ROLE: Record<UserRole, MenuItem[]> = {
     { label: 'Usuarios', icon: UserCog, href: APP_ROUTES.USUARIOS },
     { label: 'Auditoría', icon: FileSearch, href: APP_ROUTES.AUDITORIA },
     { label: 'Integraciones', icon: FileSearch, href: APP_ROUTES.INTEGRACIONES },
+    { label: 'Reportes', icon: BarChart3, href: APP_ROUTES.REPORTES },
     { label: 'Configuración', icon: Settings, href: APP_ROUTES.CONFIGURACION },
   ],
 
