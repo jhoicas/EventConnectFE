@@ -275,14 +275,14 @@ export const AppRouter = () => {
             element={
               <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
                 <MLModelsPage />
-                        <Route
-                          path={APP_ROUTES.DATA_PRIVACY}
-                          element={
-                            <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
-                              <DataPrivacyPage />
-                            </RoleProtectedRoute>
-                          }
-                        />
+              </RoleProtectedRoute>
+            }
+          />
+          <Route
+            path={APP_ROUTES.DATA_PRIVACY}
+            element={
+              <RoleProtectedRoute roles={['SuperAdmin', 'Admin-Proveedor']}>
+                <DataPrivacyPage />
               </RoleProtectedRoute>
             }
           />
