@@ -7,6 +7,7 @@ export const APP_ROUTES = {
   DASHBOARD: '/dashboard',
   ANALYTICS: '/analytics',
   OPTIMIZAR_RESERVAS: '/optimizar-reservas',
+  PAGOS: '/pagos',
   
   // Cliente routes
   CLIENTE_EXPLORAR: '/cliente/explorar',
