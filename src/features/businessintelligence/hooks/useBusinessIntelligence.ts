@@ -217,10 +217,9 @@ export const useObtenerResumenEjecutivo = (periodo: string) => {
 
 // ==================== MUTATIONS ====================
 
-const queryClient = useQueryClient();
-
 // Dashboards
 export const useCrearDashboard = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: Partial<Dashboard>) => businessIntelligenceService.crearDashboard(datos),
     onSuccess: () => {
@@ -230,6 +229,7 @@ export const useCrearDashboard = () => {
 };
 
 export const useActualizarDashboard = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ dashboardId, datos }: { dashboardId: string; datos: Partial<Dashboard> }) =>
       businessIntelligenceService.actualizarDashboard(dashboardId, datos),
@@ -241,6 +241,7 @@ export const useActualizarDashboard = () => {
 };
 
 export const useEliminarDashboard = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (dashboardId: string) => businessIntelligenceService.eliminarDashboard(dashboardId),
     onSuccess: () => {
@@ -250,6 +251,7 @@ export const useEliminarDashboard = () => {
 };
 
 export const useDuplicarDashboard = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ dashboardId, nombre }: { dashboardId: string; nombre: string }) =>
       businessIntelligenceService.duplicarDashboard(dashboardId, nombre),
@@ -260,6 +262,7 @@ export const useDuplicarDashboard = () => {
 };
 
 export const useCompartirDashboard = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
       dashboardId,
@@ -277,6 +280,7 @@ export const useCompartirDashboard = () => {
 };
 
 export const useRevocarAcceso = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ dashboardId, usuarioId }: { dashboardId: string; usuarioId: string }) =>
       businessIntelligenceService.revocarAcceso(dashboardId, usuarioId),
@@ -288,6 +292,7 @@ export const useRevocarAcceso = () => {
 
 // KPIs
 export const useCrearKPI = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: Partial<KPI>) => businessIntelligenceService.crearKPI(datos),
     onSuccess: () => {
@@ -297,6 +302,7 @@ export const useCrearKPI = () => {
 };
 
 export const useActualizarKPI = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ kpiId, datos }: { kpiId: string; datos: Partial<KPI> }) =>
       businessIntelligenceService.actualizarKPI(kpiId, datos),
@@ -308,6 +314,7 @@ export const useActualizarKPI = () => {
 };
 
 export const useEliminarKPI = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (kpiId: string) => businessIntelligenceService.eliminarKPI(kpiId),
     onSuccess: () => {
@@ -331,6 +338,7 @@ export const useCalcularMetrica = () => {
 
 // Alertas
 export const useCrearAlerta = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: any) => businessIntelligenceService.crearAlerta(datos),
     onSuccess: () => {
@@ -340,6 +348,7 @@ export const useCrearAlerta = () => {
 };
 
 export const useActualizarAlerta = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ alertaId, datos }: { alertaId: string; datos: any }) =>
       businessIntelligenceService.actualizarAlerta(alertaId, datos),
@@ -350,6 +359,7 @@ export const useActualizarAlerta = () => {
 };
 
 export const useEliminarAlerta = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (alertaId: string) => businessIntelligenceService.eliminarAlerta(alertaId),
     onSuccess: () => {
@@ -359,6 +369,7 @@ export const useEliminarAlerta = () => {
 };
 
 export const useActivarAlerta = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (alertaId: string) => businessIntelligenceService.activarAlerta(alertaId),
     onSuccess: () => {
@@ -368,6 +379,7 @@ export const useActivarAlerta = () => {
 };
 
 export const useDesactivarAlerta = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (alertaId: string) => businessIntelligenceService.desactivarAlerta(alertaId),
     onSuccess: () => {
@@ -378,6 +390,7 @@ export const useDesactivarAlerta = () => {
 
 // Pronósticos
 export const useCrearPronostico = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
       kpiId,
@@ -395,6 +408,7 @@ export const useCrearPronostico = () => {
 };
 
 export const useEliminarPronostico = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (pronosticoId: string) => businessIntelligenceService.eliminarPronostico(pronosticoId),
     onSuccess: () => {
@@ -404,6 +418,7 @@ export const useEliminarPronostico = () => {
 };
 
 export const useGenerarPronostico = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ kpiId, periodoFinal }: { kpiId: string; periodoFinal: Date }) =>
       businessIntelligenceService.generarPronostico(kpiId, periodoFinal),
@@ -415,6 +430,7 @@ export const useGenerarPronostico = () => {
 
 // Exportaciones
 export const useCrearExportacion = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
       dashboardId,
@@ -432,6 +448,7 @@ export const useCrearExportacion = () => {
 };
 
 export const useProgramarExportacion = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
       dashboardId,
@@ -457,6 +474,7 @@ export const useDescargarExportacion = () => {
 };
 
 export const useCancelarExportacion = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (exportacionId: string) => businessIntelligenceService.cancelarExportacion(exportacionId),
     onSuccess: () => {
@@ -467,6 +485,7 @@ export const useCancelarExportacion = () => {
 
 // Configuración
 export const useActualizarConfiguracion = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: any) => businessIntelligenceService.actualizarConfiguracion(datos),
     onSuccess: () => {
@@ -483,6 +502,7 @@ export const useValidarFormula = () => {
 };
 
 export const useSincronizarDatos = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => businessIntelligenceService.sincronizarDatos(),
     onSuccess: () => {

@@ -256,10 +256,9 @@ export const useObtenerTendencias = (periodo: string = 'mes') => {
 
 // ==================== MUTATIONS ====================
 
-const queryClient = useQueryClient();
-
 // Perfil
 export const useActualizarPerfilJugador = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, datos }: { usuarioId: string; datos: Partial<PerfilJugador> }) =>
       sistemapuntosService.actualizarPerfilJugador(usuarioId, datos),
@@ -270,6 +269,7 @@ export const useActualizarPerfilJugador = () => {
 };
 
 export const useActualizarPreferenciasNotificacion = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, preferencias }: { usuarioId: string; preferencias: any }) =>
       sistemapuntosService.actualizarPreferenciasNotificacion(usuarioId, preferencias),
@@ -281,6 +281,7 @@ export const useActualizarPreferenciasNotificacion = () => {
 
 // Logros
 export const useDesbloquearLogro = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, logroId }: { usuarioId: string; logroId: string }) =>
       sistemapuntosService.desbloquearLogro(usuarioId, logroId),
@@ -292,6 +293,7 @@ export const useDesbloquearLogro = () => {
 };
 
 export const useCrearLogro = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: Partial<Logro>) => sistemapuntosService.crearLogro(datos),
     onSuccess: () => {
@@ -301,6 +303,7 @@ export const useCrearLogro = () => {
 };
 
 export const useActualizarLogro = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ logroId, datos }: { logroId: string; datos: Partial<Logro> }) =>
       sistemapuntosService.actualizarLogro(logroId, datos),
@@ -311,6 +314,7 @@ export const useActualizarLogro = () => {
 };
 
 export const useEliminarLogro = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (logroId: string) => sistemapuntosService.eliminarLogro(logroId),
     onSuccess: () => {
@@ -321,6 +325,7 @@ export const useEliminarLogro = () => {
 
 // Insignias
 export const useDesbloquearInsignia = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, insigniaId }: { usuarioId: string; insigniaId: string }) =>
       sistemapuntosService.desbloquearInsignia(usuarioId, insigniaId),
@@ -332,6 +337,7 @@ export const useDesbloquearInsignia = () => {
 };
 
 export const useCrearInsignia = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: Partial<Insignia>) => sistemapuntosService.crearInsignia(datos),
     onSuccess: () => {
@@ -341,6 +347,7 @@ export const useCrearInsignia = () => {
 };
 
 export const useActualizarInsignia = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ insigniaId, datos }: { insigniaId: string; datos: Partial<Insignia> }) =>
       sistemapuntosService.actualizarInsignia(insigniaId, datos),
@@ -352,6 +359,7 @@ export const useActualizarInsignia = () => {
 
 // Recompensas
 export const useCanjearRecompensa = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, recompensaId }: { usuarioId: string; recompensaId: string }) =>
       sistemapuntosService.canjearRecompensa(usuarioId, recompensaId),
@@ -364,6 +372,7 @@ export const useCanjearRecompensa = () => {
 };
 
 export const useCrearRecompensa = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: Partial<Recompensa>) => sistemapuntosService.crearRecompensa(datos),
     onSuccess: () => {
@@ -373,6 +382,7 @@ export const useCrearRecompensa = () => {
 };
 
 export const useActualizarRecompensa = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ recompensaId, datos }: { recompensaId: string; datos: Partial<Recompensa> }) =>
       sistemapuntosService.actualizarRecompensa(recompensaId, datos),
@@ -384,6 +394,7 @@ export const useActualizarRecompensa = () => {
 
 // Retos
 export const useUnirsseAReto = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, retoId }: { usuarioId: string; retoId: string }) =>
       sistemapuntosService.unirsseAReto(usuarioId, retoId),
@@ -395,6 +406,7 @@ export const useUnirsseAReto = () => {
 };
 
 export const useCompletarReto = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, retoId }: { usuarioId: string; retoId: string }) =>
       sistemapuntosService.completarReto(usuarioId, retoId),
@@ -408,6 +420,7 @@ export const useCompletarReto = () => {
 };
 
 export const useCrearReto = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: Partial<Reto>) => sistemapuntosService.crearReto(datos),
     onSuccess: () => {
@@ -417,6 +430,7 @@ export const useCrearReto = () => {
 };
 
 export const useActualizarReto = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ retoId, datos }: { retoId: string; datos: Partial<Reto> }) =>
       sistemapuntosService.actualizarReto(retoId, datos),
@@ -427,6 +441,7 @@ export const useActualizarReto = () => {
 };
 
 export const useEliminarReto = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (retoId: string) => sistemapuntosService.eliminarReto(retoId),
     onSuccess: () => {
@@ -437,6 +452,7 @@ export const useEliminarReto = () => {
 
 // Puntos
 export const useAgregarPuntos = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, cantidad, motivo }: { usuarioId: string; cantidad: number; motivo: string }) =>
       sistemapuntosService.agregarPuntos(usuarioId, cantidad, motivo),
@@ -449,6 +465,7 @@ export const useAgregarPuntos = () => {
 };
 
 export const useRestarPuntos = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ usuarioId, cantidad, motivo }: { usuarioId: string; cantidad: number; motivo: string }) =>
       sistemapuntosService.restarPuntos(usuarioId, cantidad, motivo),
@@ -462,6 +479,7 @@ export const useRestarPuntos = () => {
 
 // Notificaciones
 export const useMarcarNotificacionLeida = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (notificacionId: string) => sistemapuntosService.marcarNotificacionLeida(notificacionId),
     onSuccess: () => {
@@ -471,6 +489,7 @@ export const useMarcarNotificacionLeida = () => {
 };
 
 export const useMarcarTodasComoLeidas = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (usuarioId: string) => sistemapuntosService.marcarTodasComoLeidas(usuarioId),
     onSuccess: () => {
@@ -480,6 +499,7 @@ export const useMarcarTodasComoLeidas = () => {
 };
 
 export const useEliminarNotificacion = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (notificacionId: string) => sistemapuntosService.eliminarNotificacion(notificacionId),
     onSuccess: () => {
@@ -490,6 +510,7 @@ export const useEliminarNotificacion = () => {
 
 // Configuración
 export const useActualizarConfiguracion = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (datos: any) => sistemapuntosService.actualizarConfiguracion(datos),
     onSuccess: () => {
@@ -500,6 +521,7 @@ export const useActualizarConfiguracion = () => {
 
 // Utilidades
 export const useSubidaNivel = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (usuarioId: string) => sistemapuntosService.subidaNivel(usuarioId),
     onSuccess: () => {
@@ -509,6 +531,7 @@ export const useSubidaNivel = () => {
 };
 
 export const useReiniciarProgreso = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (usuarioId: string) => sistemapuntosService.reiniciarProgreso(usuarioId),
     onSuccess: () => {

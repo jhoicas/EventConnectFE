@@ -1,20 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
 
-try {
-  const rootElement = document.getElementById('root');
-  if (!rootElement) {
-    throw new Error('No se encontró el elemento #root');
-  }
-
-  createRoot(rootElement).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  )
-} catch (error) {
+const renderFallback = (error: unknown) => {
   console.error('Error during initial render:', error);
   const message = error instanceof Error ? error.message : String(error);
   const stack = error instanceof Error ? error.stack : '';
@@ -25,4 +13,20 @@ try {
       <pre style="white-space: pre-wrap; background: #f5f5f5; padding: 12px; border-radius: 6px;">${stack ?? ''}</pre>
     </div>
   `;
+};
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  renderFallback(new Error('No se encontró el elemento #root'));
+} else {
+  Promise.resolve()
+    .then(() => import('./App.tsx'))
+    .then(({ default: App }) => {
+      createRoot(rootElement).render(
+        <StrictMode>
+          <App />
+        </StrictMode>,
+      );
+    })
+    .catch(renderFallback);
 }
