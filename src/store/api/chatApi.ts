@@ -17,7 +17,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://eventconnect-
 export const chatApi = createApi({
   reducerPath: 'chatApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${API_BASE_URL}/chat`,
+    baseUrl: `${API_BASE_URL.replace(/\/api$/, '')}/api/chat`,
     prepareHeaders: (headers) => {
       // Obtener token del localStorage
       const token = localStorage.getItem('token');

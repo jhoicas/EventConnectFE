@@ -547,3 +547,105 @@ export interface CreateCotizacionDto {
   cantidad_Solicitada: number;
   observaciones?: string;
 }
+
+// ============ Catálogos ============
+export interface CatalogoEstadoReserva {
+  id: number;
+  codigo: string;
+  nombre: string;
+  descripcion?: string;
+  activo: boolean;
+}
+
+export interface CatalogoEstadoActivo {
+  id: number;
+  codigo: string;
+  nombre: string;
+  descripcion?: string;
+  activo: boolean;
+}
+
+export interface CatalogoMetodoPago {
+  id: number;
+  codigo: string;
+  nombre: string;
+  descripcion?: string;
+  requiere_Validacion: boolean;
+  activo: boolean;
+}
+
+export interface CatalogoTipoMantenimiento {
+  id: number;
+  codigo: string;
+  nombre: string;
+  descripcion?: string;
+  frecuencia_Dias: number;
+  activo: boolean;
+}
+
+// ============ Logística ============
+export interface EvidenciaEntrega {
+  id: number;
+  entrega_Id: number;
+  latitud: number;
+  longitud: number;
+  foto_URL: string;
+  fecha_Creacion: string;
+}
+
+export interface CompletarEntregaRequest {
+  entrega_Id: number;
+  latitud: number;
+  longitud: number;
+  foto_URL: string;
+  observaciones?: string;
+}
+
+// ============ Landing ============
+export interface ContenidoLanding {
+  id: number;
+  seccion: string;
+  titulo: string;
+  imagen_URL: string;
+  descripcion?: string;
+  orden: number;
+  activo: boolean;
+  fecha_Creacion: string;
+  fecha_Actualizacion: string;
+}
+
+// ============ Solicitud Cotización ============
+export interface SolicitudCotizacion {
+  id: number;
+  cliente_Id: number;
+  titulo: string;
+  descripcion: string;
+  archivo_URL?: string;
+  estado: 'Pendiente' | 'En Proceso' | 'Cotizada' | 'Completada' | 'Cancelada';
+  fecha_Solicitud: string;
+  fecha_Respuesta?: string;
+  fecha_Creacion: string;
+  fecha_Actualizacion: string;
+}
+
+export interface CreateSolicitudCotizacionDto {
+  titulo: string;
+  descripcion: string;
+  archivo_URL?: string;
+}
+
+// ============ Empresa ============
+export interface Empresa {
+  id: number;
+  razon_Social: string;
+  nit: string;
+  logo_URL?: string;
+  telefono?: string;
+  email?: string;
+  direccion?: string;
+  ciudad?: string;
+  sector?: string;
+  activo: boolean;
+  fecha_Creacion: string;
+  fecha_Actualizacion: string;
+}

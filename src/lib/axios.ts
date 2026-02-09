@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const RAW_API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'https://eventconnect-api-8oih6.ondigitalocean.app/api';
+  import.meta.env.VITE_API_BASE_URL || 'hhttps://eventconnect-api-8oih6.ondigitalocean.app/api';
 
 const API_BASE_URL = RAW_API_BASE_URL.endsWith('/api')
   ? RAW_API_BASE_URL
