@@ -30,7 +30,7 @@ const DashboardLayout = () => {
 
       {/* Mobile Sidebar - Sheet */}
       <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
-        <SheetContent side="left" className="w-64 p-0">
+        <SheetContent side="left" className="w-64 p-0 bg-background">
           <Sidebar menuItems={menuItems} onItemClick={handleMobileSidebarClose} />
         </SheetContent>
       </Sheet>

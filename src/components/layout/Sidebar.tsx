@@ -107,7 +107,7 @@ export const Sidebar = ({ menuItems, onItemClick }: SidebarProps) => {
   const totalNoLeidas = notificaciones.filter(n => !n.leidaEn).length;
 
   return (
-    <aside className="w-64 border-r bg-background h-full overflow-y-auto">
+    <aside className="w-64 border-r bg-background h-full overflow-y-auto flex flex-col">
       <div className="p-4">
         <div className="mb-6">
           <Logo />
